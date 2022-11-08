@@ -1,17 +1,13 @@
-package com.github.veerdone.yblog.cloud.base.model;
+package com.github.veerdone.yblog.cloud.base.Vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.veerdone.yblog.cloud.base.ListTypeHandler;
+import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
+import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
+import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@TableName(value = "yblog_article_info", autoResultMap = true)
-public class ArticleInfo implements Serializable {
-    public static final Long serialVersionUID = 43435345435454L;
-
+public class ArticleInfoVo {
     private Long id;
 
     private String title;
@@ -20,28 +16,27 @@ public class ArticleInfo implements Serializable {
 
     private Integer views;
 
+    private Long userId;
+
     private Integer collection;
 
     private Integer likes;
-
-    private Integer status;
 
     private Integer comments;
 
     private String coverPicture;
 
-    private Integer deleted;
-
     private Long createTime;
 
-    private Long updateTime;
+    private UserInfo userInfo;
 
-    private Long userId;
-
-    @TableField(typeHandler = ListTypeHandler.class)
     private List<Long> label;
 
     private Long classify;
+
+    private ArticleClassify articleClassify;
+
+    private List<ArticleLabel> articleLabelList;
 
     public Long getId() {
         return id;
@@ -91,14 +86,6 @@ public class ArticleInfo implements Serializable {
         this.likes = likes;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Integer getComments() {
         return comments;
     }
@@ -115,14 +102,6 @@ public class ArticleInfo implements Serializable {
         this.coverPicture = coverPicture;
     }
 
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
     public Long getCreateTime() {
         return createTime;
     }
@@ -131,12 +110,12 @@ public class ArticleInfo implements Serializable {
         this.createTime = createTime;
     }
 
-    public Long getUpdateTime() {
-        return updateTime;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public void setUpdateTime(Long updateTime) {
-        this.updateTime = updateTime;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public List<Long> getLabel() {
@@ -155,6 +134,22 @@ public class ArticleInfo implements Serializable {
         this.classify = classify;
     }
 
+    public ArticleClassify getArticleClassify() {
+        return articleClassify;
+    }
+
+    public void setArticleClassify(ArticleClassify articleClassify) {
+        this.articleClassify = articleClassify;
+    }
+
+    public List<ArticleLabel> getArticleLabelList() {
+        return articleLabelList;
+    }
+
+    public void setArticleLabelList(List<ArticleLabel> articleLabelList) {
+        this.articleLabelList = articleLabelList;
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -171,33 +166,33 @@ public class ArticleInfo implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ArticleInfo that = (ArticleInfo) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(views, that.views) && Objects.equals(collection, that.collection) && Objects.equals(likes, that.likes) && Objects.equals(status, that.status) && Objects.equals(comments, that.comments) && Objects.equals(coverPicture, that.coverPicture) && Objects.equals(deleted, that.deleted) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime) && Objects.equals(userId, that.userId) && Objects.equals(label, that.label) && Objects.equals(classify, that.classify);
+        ArticleInfoVo that = (ArticleInfoVo) o;
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(views, that.views) && Objects.equals(userId, that.userId) && Objects.equals(collection, that.collection) && Objects.equals(likes, that.likes) && Objects.equals(comments, that.comments) && Objects.equals(coverPicture, that.coverPicture) && Objects.equals(createTime, that.createTime) && Objects.equals(userInfo, that.userInfo) && Objects.equals(label, that.label) && Objects.equals(classify, that.classify) && Objects.equals(articleClassify, that.articleClassify) && Objects.equals(articleLabelList, that.articleLabelList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, views, collection, likes, status, comments, coverPicture, deleted, createTime, updateTime, userId, label, classify);
+        return Objects.hash(id, title, description, views, userId, collection, likes, comments, coverPicture, createTime, userInfo, label, classify, articleClassify, articleLabelList);
     }
 
     @Override
     public String toString() {
-        return "ArticleInfo{" +
+        return "ArticleInfoVo{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", views=" + views +
+                ", userId=" + userId +
                 ", collection=" + collection +
                 ", likes=" + likes +
-                ", status=" + status +
                 ", comments=" + comments +
                 ", coverPicture='" + coverPicture + '\'' +
-                ", deleted=" + deleted +
                 ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", userId=" + userId +
+                ", userInfo=" + userInfo +
                 ", label=" + label +
                 ", classify=" + classify +
+                ", articleClassify=" + articleClassify +
+                ", articleLabelList=" + articleLabelList +
                 '}';
     }
 }

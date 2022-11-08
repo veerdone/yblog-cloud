@@ -1,11 +1,17 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @TableName("yblog_article_label")
-public class ArticleLabel {
+public class ArticleLabel implements Serializable {
+    public static final Long serialVersionUID = 545454545424234L;
+
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     private String labelName;

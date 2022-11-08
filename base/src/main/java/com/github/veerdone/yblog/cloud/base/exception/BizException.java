@@ -16,6 +16,10 @@ public class BizException extends RuntimeException {
         this.errCode = errCode;
     }
 
+    public BizException(BizExceptionEnum exceptionEnum) {
+        this(exceptionEnum.getMessage(), exceptionEnum.getCode(), exceptionEnum.getErrCode());
+    }
+
     public int getCode() {
         return code;
     }
