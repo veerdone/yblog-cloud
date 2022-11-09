@@ -21,6 +21,11 @@ public class ArticleLabelServiceImpl implements ArticleLabelService {
     }
 
     @Override
+    public ArticleLabel getById(Long id) {
+        return articleLabelMapper.selectById(id);
+    }
+
+    @Override
     public List<ArticleLabel> listByClassifyId(Long classifyId) {
         if (Objects.isNull(classifyId) || classifyId <= 0) {
             return articleLabelMapper.selectList(null);

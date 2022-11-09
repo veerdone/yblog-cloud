@@ -1,15 +1,16 @@
-package com.github.veerdone.yblog.cloud.article;
+package com.github.veerdone.yblog.cloud.user;
+
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableDubbo
 @SpringBootApplication
-@MapperScan("com.github.veerdone.yblog.cloud.article.mapper")
-public class ArticleApplication {
+@EnableDubbo
+@MapperScan("com.github.veerdone.yblog.cloud.user.mapper")
+public class UserApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ArticleApplication.class);
+        SpringApplication.run(UserApplication.class);
     }
 }

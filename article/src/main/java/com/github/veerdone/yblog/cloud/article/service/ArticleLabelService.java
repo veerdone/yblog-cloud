@@ -7,5 +7,7 @@ import java.util.List;
 public interface ArticleLabelService {
     void create(ArticleLabel articleLabel);
 
+    ArticleLabel getById(Long id);
+
     List<ArticleLabel> listByClassifyId(Long classifyId);
 }

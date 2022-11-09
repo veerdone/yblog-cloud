@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.base.Vo;
 
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
+import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class ArticleInfoVo {
 
     private Long createTime;
 
-    private UserInfo userInfo;
+    private UserData UserData;
 
     private List<Long> label;
 
@@ -110,14 +111,6 @@ public class ArticleInfoVo {
         this.createTime = createTime;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
     public List<Long> getLabel() {
         return label;
     }
@@ -158,6 +151,14 @@ public class ArticleInfoVo {
         this.userId = userId;
     }
 
+    public com.github.veerdone.yblog.cloud.base.model.UserData getUserData() {
+        return UserData;
+    }
+
+    public void setUserData(com.github.veerdone.yblog.cloud.base.model.UserData userData) {
+        UserData = userData;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -167,12 +168,12 @@ public class ArticleInfoVo {
             return false;
         }
         ArticleInfoVo that = (ArticleInfoVo) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(views, that.views) && Objects.equals(userId, that.userId) && Objects.equals(collection, that.collection) && Objects.equals(likes, that.likes) && Objects.equals(comments, that.comments) && Objects.equals(coverPicture, that.coverPicture) && Objects.equals(createTime, that.createTime) && Objects.equals(userInfo, that.userInfo) && Objects.equals(label, that.label) && Objects.equals(classify, that.classify) && Objects.equals(articleClassify, that.articleClassify) && Objects.equals(articleLabelList, that.articleLabelList);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(views, that.views) && Objects.equals(userId, that.userId) && Objects.equals(collection, that.collection) && Objects.equals(likes, that.likes) && Objects.equals(comments, that.comments) && Objects.equals(coverPicture, that.coverPicture) && Objects.equals(createTime, that.createTime) && Objects.equals(UserData, that.UserData) && Objects.equals(label, that.label) && Objects.equals(classify, that.classify) && Objects.equals(articleClassify, that.articleClassify) && Objects.equals(articleLabelList, that.articleLabelList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, views, userId, collection, likes, comments, coverPicture, createTime, userInfo, label, classify, articleClassify, articleLabelList);
+        return Objects.hash(id, title, description, views, userId, collection, likes, comments, coverPicture, createTime, UserData, label, classify, articleClassify, articleLabelList);
     }
 
     @Override
@@ -188,7 +189,7 @@ public class ArticleInfoVo {
                 ", comments=" + comments +
                 ", coverPicture='" + coverPicture + '\'' +
                 ", createTime=" + createTime +
-                ", userInfo=" + userInfo +
+                ", UserData=" + UserData +
                 ", label=" + label +
                 ", classify=" + classify +
                 ", articleClassify=" + articleClassify +

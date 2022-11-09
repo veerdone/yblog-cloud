@@ -7,5 +7,7 @@ import java.util.List;
 public interface ArticleClassifyService {
     void create(ArticleClassify articleClassify);
 
+    ArticleClassify getById(Long id);
+
     List<ArticleClassify> list();
 }

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>article</artifactId>
+    <artifactId>user</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -59,7 +59,6 @@
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-rpc-triple</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

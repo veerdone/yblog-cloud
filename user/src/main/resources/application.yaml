@@ -7,17 +7,17 @@ spring:
     nacos:
       server-addr: localhost:8888
   application:
-    name: article-service
+    name: user-service
 
 dubbo:
   registry:
     address: nacos://localhost:8888
     register-mode: instance
   application:
-    name: article-api
+    name: user-api
   protocol:
     name: tri
     port: -1
 
 server:
-  port: 8080
+  port: 8081

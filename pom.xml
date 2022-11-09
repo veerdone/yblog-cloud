@@ -12,6 +12,8 @@
         <module>base</module>
         <module>article</module>
         <module>common</module>
+        <module>user</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
@@ -27,6 +29,7 @@
         <hutool.version>5.8.9</hutool.version>
         <page-helper.version>1.4.5</page-helper.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
+        <protobuf.version>3.19.6</protobuf.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +96,12 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
             </dependency>
 
         </dependencies>
