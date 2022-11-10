@@ -1,6 +1,5 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
-
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -8,15 +7,21 @@ import java.util.Objects;
 
 @TableName("yblog_user_info")
 public class UserInfo implements Serializable {
-    public static final Long serialVersionUID = 53535353534343L;
+    public static final Long serialVersionUID = 5353454545345453L;
 
     private Long id;
 
-    private Long account;
+    private String userName;
 
-    private String pass;
+    private Integer sex;
 
-    private String email;
+    private String selfDescription;
+
+    private Integer fan;
+
+    private Integer collection;
+
+    private Integer likes;
 
     private Long createTime;
 
@@ -30,28 +35,52 @@ public class UserInfo implements Serializable {
         this.id = id;
     }
 
-    public Long getAccount() {
-        return account;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAccount(Long account) {
-        this.account = account;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getPass() {
-        return pass;
+    public Integer getSex() {
+        return sex;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSelfDescription() {
+        return selfDescription;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSelfDescription(String selfDescription) {
+        this.selfDescription = selfDescription;
+    }
+
+    public Integer getFan() {
+        return fan;
+    }
+
+    public void setFan(Integer fan) {
+        this.fan = fan;
+    }
+
+    public Integer getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Integer collection) {
+        this.collection = collection;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
     }
 
     public Long getCreateTime() {
@@ -79,21 +108,24 @@ public class UserInfo implements Serializable {
             return false;
         }
         UserInfo userInfo = (UserInfo) o;
-        return Objects.equals(id, userInfo.id) && Objects.equals(account, userInfo.account) && Objects.equals(pass, userInfo.pass) && Objects.equals(email, userInfo.email) && Objects.equals(createTime, userInfo.createTime) && Objects.equals(updateTime, userInfo.updateTime);
+        return Objects.equals(id, userInfo.id) && Objects.equals(userName, userInfo.userName) && Objects.equals(sex, userInfo.sex) && Objects.equals(selfDescription, userInfo.selfDescription) && Objects.equals(fan, userInfo.fan) && Objects.equals(collection, userInfo.collection) && Objects.equals(likes, userInfo.likes) && Objects.equals(createTime, userInfo.createTime) && Objects.equals(updateTime, userInfo.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, pass, email, createTime, updateTime);
+        return Objects.hash(id, userName, sex, selfDescription, fan, collection, likes, createTime, updateTime);
     }
 
     @Override
     public String toString() {
-        return "UserInfo{" +
+        return "UserData{" +
                 "id=" + id +
-                ", account=" + account +
-                ", pass='" + pass + '\'' +
-                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                ", sex=" + sex +
+                ", selfDescription='" + selfDescription + '\'' +
+                ", fan=" + fan +
+                ", collection=" + collection +
+                ", likes=" + likes +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

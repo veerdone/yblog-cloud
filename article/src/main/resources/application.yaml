@@ -13,8 +13,6 @@ dubbo:
   registry:
     address: nacos://localhost:8888
     register-mode: instance
-  application:
-    name: article-api
   protocol:
     name: tri
     port: -1

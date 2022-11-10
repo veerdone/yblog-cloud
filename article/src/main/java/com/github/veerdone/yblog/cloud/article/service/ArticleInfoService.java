@@ -8,4 +8,6 @@ import java.util.List;
 public interface ArticleInfoService {
 
     List<ArticleInfoVo> listArticleInfoVo(ArticleInfo articleInfo);
+
+    void test();
 }

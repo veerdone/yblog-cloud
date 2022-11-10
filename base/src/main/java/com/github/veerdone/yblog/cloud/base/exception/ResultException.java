@@ -11,6 +11,10 @@ public class ResultException extends RuntimeException{
         this.code = code;
     }
 
+    public ResultException(ResultExceptionEnum exceptionEnum) {
+        this(exceptionEnum.getMsg(), exceptionEnum.getErrCode(), exceptionEnum.getCode());
+    }
+
     public String getErrCode() {
         return errCode;
     }
