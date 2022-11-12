@@ -1,12 +1,12 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
-import com.github.veerdone.yblog.cloud.base.client.RpcResult;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
 import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
@@ -37,13 +38,22 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Resource
     private ArticleLabelService articleLabelService;
 
-    @DubboReference
+    @DubboReference(check = false)
     private UserClient userClient;
+
+    @Override
+    public void create(ArticleInfo articleInfo) {
+        articleInfoMapper.insert(articleInfo);
+    }
 
     @Page
     @Override
     public List<ArticleInfoVo> listArticleInfoVo(ArticleInfo articleInfo) {
-        List<ArticleInfo> articleInfoList = articleInfoMapper.selectList(null);
+        LambdaQueryWrapper<ArticleInfo> wrapper = new LambdaQueryWrapper<>();
+        if (Objects.isNull(articleInfo)) {
+            wrapper.eq(ArticleInfo::getStatus, 1);
+        }
+        List<ArticleInfo> articleInfoList = articleInfoMapper.selectList(wrapper);
         if (CollectionUtil.isEmpty(articleInfoList)) {
             return Collections.emptyList();
         }
@@ -51,7 +61,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
         for (ArticleInfo articleInfoItem : articleInfoList) {
             ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toVo(articleInfoItem);
-            UserInfo userInfo = userClient.getUserInfoById(articleInfoItem.getUserId()).getData();
+            UserInfo userInfo = userClient.getUserInfoById(articleInfoItem.getUserId());
             articleInfoVo.setUserInfo(userInfo);
 
             ArticleClassify articleClassify = articleClassifyService.getById(articleInfoItem.getClassify());
@@ -68,11 +78,5 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         }
 
         return articleInfoVoList;
-    }
-
-    @Override
-    public void test() {
-        RpcResult<UserInfo> userInfoById = userClient.getUserInfoById(1L);
-        log.info("", userInfoById.getBizException());
     }
 }

@@ -10,6 +10,16 @@
         <module name="user" />
         <module name="article" />
         <module name="gateway" />
+        <module name="third-party" />
+      </profile>
+      <profile name="Annotation profile for yblog_cloud" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../../java_tools/maven_warehouse/org/mapstruct/mapstruct-processor/1.5.2.Final/mapstruct-processor-1.5.2.Final.jar" />
+          <entry name="$PROJECT_DIR$/../../../java_tools/maven_warehouse/org/mapstruct/mapstruct/1.5.2.Final/mapstruct-1.5.2.Final.jar" />
+        </processorPath>
         <module name="base" />
       </profile>
     </annotationProcessing>

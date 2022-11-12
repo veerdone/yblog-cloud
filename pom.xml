@@ -14,6 +14,7 @@
         <module>common</module>
         <module>user</module>
         <module>gateway</module>
+        <module>third-party</module>
     </modules>
 
     <properties>
@@ -30,6 +31,9 @@
         <page-helper.version>1.4.5</page-helper.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <protobuf.version>3.19.6</protobuf.version>
+        <dubbo.version>3.2.0-beta.1</dubbo.version>
+        <tencentcloud.api.version>3.1.530</tencentcloud.api.version>
+        <qiniuyun.version>7.11.0</qiniuyun.version>
     </properties>
 
     <dependencyManagement>
@@ -45,7 +49,7 @@
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-bom</artifactId>
-                <version>3.1.0</version>
+                <version>${dubbo.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -104,6 +108,23 @@
                 <version>${protobuf.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-ses</artifactId>
+                <version>${tencentcloud.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-common</artifactId>
+                <version>${tencentcloud.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniuyun.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

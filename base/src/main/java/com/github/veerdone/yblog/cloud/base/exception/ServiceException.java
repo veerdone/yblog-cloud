@@ -1,17 +1,17 @@
 package com.github.veerdone.yblog.cloud.base.exception;
 
-public class ResultException extends RuntimeException{
+public class ServiceException extends RuntimeException{
     private String errCode;
 
     private int code;
 
-    public ResultException(String message, String errCode, int code) {
+    public ServiceException(String message, String errCode, int code) {
         super(message);
         this.errCode = errCode;
         this.code = code;
     }
 
-    public ResultException(ResultExceptionEnum exceptionEnum) {
+    public ServiceException(ServiceExceptionEnum exceptionEnum) {
         this(exceptionEnum.getMsg(), exceptionEnum.getErrCode(), exceptionEnum.getCode());
     }
 

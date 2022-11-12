@@ -3,8 +3,8 @@ package com.github.veerdone.yblog.cloud.user.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.user.CreateUserDto;
-import com.github.veerdone.yblog.cloud.base.exception.ResultException;
-import com.github.veerdone.yblog.cloud.base.exception.ResultExceptionEnum;
+import com.github.veerdone.yblog.cloud.base.exception.ServiceException;
+import com.github.veerdone.yblog.cloud.base.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.common.util.PassEncoderUtil;
@@ -33,7 +33,7 @@ public class UserDataServiceImpl implements UserDataService {
         userData.setEmail(dto.getEmail());
         LambdaQueryWrapper<UserData> wrapper = new LambdaQueryWrapper<>(userData);
         if (Objects.nonNull(userDataMapper.selectOne(wrapper))) {
-            throw new ResultException(ResultExceptionEnum.EMAIL_EXIST);
+            throw new ServiceException(ServiceExceptionEnum.EMAIL_EXIST);
         }
         userData.setPass(PassEncoderUtil.encode(dto.getPass()));
         String account = String.valueOf(System.currentTimeMillis()).substring(0, 6) + RandomUtil.randomString(5);
