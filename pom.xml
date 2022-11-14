@@ -15,6 +15,11 @@
         <module>user</module>
         <module>gateway</module>
         <module>third-party</module>
+        <module>common/util</module>
+        <module>common/redis</module>
+        <module>common/response</module>
+        <module>common/page</module>
+        <module>common/constant</module>
     </modules>
 
     <properties>

@@ -15,6 +15,10 @@ public class CreateUserDto {
     @Length(min = 8, max = 20, message = "密码最短为8个字符, 最长为20个字符")
     private String pass;
 
+    @NotEmpty(message = "验证码不能为空")
+    @Length(min = 6, max = 6, message = "验证码为6个字符")
+    private String captcha;
+
     public String getEmail() {
         return email;
     }
@@ -29,5 +33,13 @@ public class CreateUserDto {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 }

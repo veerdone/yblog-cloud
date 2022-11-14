@@ -13,7 +13,7 @@ import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
-import com.github.veerdone.yblog.cloud.common.aop.Page;
+import com.github.veerdone.yblog.cloud.common.page.Page;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

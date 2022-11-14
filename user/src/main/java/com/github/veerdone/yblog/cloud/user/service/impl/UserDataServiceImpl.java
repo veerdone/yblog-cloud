@@ -7,10 +7,12 @@ import com.github.veerdone.yblog.cloud.base.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.base.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
+import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.util.PassEncoderUtil;
 import com.github.veerdone.yblog.cloud.user.mapper.UserDataMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserDataService;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,9 @@ public class UserDataServiceImpl implements UserDataService {
     @Resource
     private UserInfoService userInfoService;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
     @Transactional
     public UserInfo create(CreateUserDto dto) {
@@ -35,6 +40,13 @@ public class UserDataServiceImpl implements UserDataService {
         if (Objects.nonNull(userDataMapper.selectOne(wrapper))) {
             throw new ServiceException(ServiceExceptionEnum.EMAIL_EXIST);
         }
+
+        String key = CacheKey.USER_REGISTER_CAPTCHA + dto.getEmail();
+        Object cacheCaptcha = redisTemplate.opsForValue().get(key);
+        if (Objects.isNull(cacheCaptcha) || !Objects.equals(cacheCaptcha, dto.getCaptcha())) {
+            throw new ServiceException(ServiceExceptionEnum.CAPTCHA_MISTAKE);
+        }
+
         userData.setPass(PassEncoderUtil.encode(dto.getPass()));
         String account = String.valueOf(System.currentTimeMillis()).substring(0, 6) + RandomUtil.randomString(5);
         userData.setAccount(Long.valueOf(account));
@@ -44,6 +56,9 @@ public class UserDataServiceImpl implements UserDataService {
         userInfo.setId(userData.getId());
         userInfo.setUserName("用户" + RandomUtil.randomString(6));
 
-        return userInfoService.create(userInfo);
+        UserInfo result = userInfoService.create(userInfo);
+        redisTemplate.delete(key);
+
+        return result;
     }
 }

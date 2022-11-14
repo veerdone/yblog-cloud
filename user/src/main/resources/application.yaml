@@ -8,6 +8,9 @@ spring:
       server-addr: localhost:8888
   application:
     name: user-service
+  profiles:
+    active:
+      - redis
 
 dubbo:
   registry:

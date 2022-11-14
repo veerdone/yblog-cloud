@@ -1,9 +1,13 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,12 +18,18 @@ public class ArticleClassify implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    @NotEmpty(message = "分类名称不能为空")
+    @Length(max = 20, message = "分类名称最多为20个字符")
     private String classifyName;
 
+    @NotEmpty(message = "url不能为空")
+    @Length(max = 20, message = "url 最多为20个字符")
     private String url;
 
+    @TableField(fill = FieldFill.INSERT)
     private Long createTime;
 
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateTime;
 
     public Long getId() {

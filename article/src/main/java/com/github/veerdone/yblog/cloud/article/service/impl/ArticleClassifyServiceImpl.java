@@ -1,6 +1,5 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleClassifyMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;

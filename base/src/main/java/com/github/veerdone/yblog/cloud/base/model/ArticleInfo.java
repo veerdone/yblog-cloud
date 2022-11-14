@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.veerdone.yblog.cloud.base.ListTypeHandler;
@@ -32,8 +33,10 @@ public class ArticleInfo implements Serializable {
 
     private Integer deleted;
 
+    @TableField(fill = FieldFill.INSERT)
     private Long createTime;
 
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateTime;
 
     private Long userId;

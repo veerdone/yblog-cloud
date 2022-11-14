@@ -15,5 +15,9 @@ spring:
           uri: lb://article-service
           predicates:
             - Path=/article/**
+        - id: third-party
+          uri: lb://third-party-service
+          predicates:
+            - Path=/email/**
   application:
     name: yblog-gateway

@@ -1,5 +1,7 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
@@ -23,8 +25,10 @@ public class UserInfo implements Serializable {
 
     private Integer likes;
 
+    @TableField(fill = FieldFill.INSERT)
     private Long createTime;
 
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateTime;
 
     public Long getId() {

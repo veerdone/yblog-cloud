@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active:
+      - redis
+  cloud:
+    nacos:
+      server-addr: localhost:8888
+  application:
+    name: third-party-service
+server:
+  port: 8083

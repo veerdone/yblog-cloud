@@ -6,10 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="constant" />
         <module name="common" />
+        <module name="util" />
+        <module name="response" />
+        <module name="page" />
         <module name="user" />
         <module name="article" />
         <module name="gateway" />
+        <module name="redis" />
         <module name="third-party" />
       </profile>
       <profile name="Annotation profile for yblog_cloud" enabled="true">

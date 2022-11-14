@@ -1,0 +1,6 @@
+spring:
+  redis:
+    username: yu
+    host: merry74751.redis.rds.aliyuncs.com
+    port: 6399
+    password: Hardmore74751
