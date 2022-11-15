@@ -29,6 +29,7 @@ public class ArticleLabelController {
     @GetMapping("/list")
     public ListResult<ArticleLabel> list(@RequestParam(value = "classify_id", required = false) Long classifyId) {
         List<ArticleLabel> articleLabelList = articleLabelService.listByClassifyId(classifyId);
+
         return PageUtil.response(articleLabelList);
     }
 

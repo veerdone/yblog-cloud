@@ -54,6 +54,8 @@ public class UserDataServiceImpl implements UserDataService {
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(userData.getId());
+        userInfo.setCreateTime(userData.getCreateTime());
+        userInfo.setUpdateTime(userData.getUpdateTime());
         userInfo.setUserName("用户" + RandomUtil.randomString(6));
 
         UserInfo result = userInfoService.create(userInfo);

@@ -6,6 +6,7 @@ import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
+import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
 import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
@@ -44,6 +45,27 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public void create(ArticleInfo articleInfo) {
         articleInfoMapper.insert(articleInfo);
+        // todo 调用审核服务
+    }
+
+    @Override
+    public void updateById(ArticleInfo articleInfo) {
+        articleInfo.setStatus(0);
+        articleInfoMapper.updateById(articleInfo);
+
+        //todo 调用审核服务
+    }
+
+    @Override
+    public ArticleDetailVo getArticleDetailVoById(Long id) {
+        ArticleInfo articleInfo = articleInfoMapper.selectById(id);
+        ArticleDetailVo articleDetailVo = ArticleConvert.INSTANCE.toArticleDetailVo(articleInfo);
+
+        articleDetailVo.setArticleClassify(articleClassifyService.getById(articleInfo.getClassify()));
+        List<ArticleLabel> articleLabelList = getArticleLabelListByIds(articleInfo.getLabel());
+        articleDetailVo.setArticleLabelList(articleLabelList);
+
+        return articleDetailVo;
     }
 
     @Page
@@ -60,23 +82,29 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
         for (ArticleInfo articleInfoItem : articleInfoList) {
-            ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toVo(articleInfoItem);
+            ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfoItem);
             UserInfo userInfo = userClient.getUserInfoById(articleInfoItem.getUserId());
             articleInfoVo.setUserInfo(userInfo);
 
             ArticleClassify articleClassify = articleClassifyService.getById(articleInfoItem.getClassify());
             articleInfoVo.setArticleClassify(articleClassify);
 
-            List<Long> label = articleInfoItem.getLabel();
-            List<ArticleLabel> articleLabelList = new ArrayList<>(label.size());
-            for (Long labelId : label) {
-                articleLabelList.add(articleLabelService.getById(labelId));
-            }
+            List<ArticleLabel> articleLabelList = getArticleLabelListByIds(articleInfoItem.getLabel());
             articleInfoVo.setArticleLabelList(articleLabelList);
 
             articleInfoVoList.add(articleInfoVo);
         }
 
         return articleInfoVoList;
+    }
+
+
+    private List<ArticleLabel> getArticleLabelListByIds(List<Long> ids) {
+        List<ArticleLabel> articleLabelList = new ArrayList<>(ids.size());
+        for (Long id : ids) {
+            articleLabelList.add(articleLabelService.getById(id));
+        }
+
+        return articleLabelList;
     }
 }

@@ -28,6 +28,7 @@ public class ArticleClassifyController {
     @GetMapping("/list")
     public ListResult<ArticleClassify> list() {
         List<ArticleClassify> articleClassifyList = articleClassifyService.list();
+
         return PageUtil.response(articleClassifyList);
     }
 }

@@ -30,4 +30,99 @@ public class ArticleDetailVo {
 
     private List<ArticleLabel> articleLabelList;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
+    }
+
+    public Integer getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Integer collection) {
+        this.collection = collection;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getComments() {
+        return comments;
+    }
+
+    public void setComments(Integer comments) {
+        this.comments = comments;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public ArticleClassify getArticleClassify() {
+        return articleClassify;
+    }
+
+    public void setArticleClassify(ArticleClassify articleClassify) {
+        this.articleClassify = articleClassify;
+    }
+
+    public List<ArticleLabel> getArticleLabelList() {
+        return articleLabelList;
+    }
+
+    public void setArticleLabelList(List<ArticleLabel> articleLabelList) {
+        this.articleLabelList = articleLabelList;
+    }
 }

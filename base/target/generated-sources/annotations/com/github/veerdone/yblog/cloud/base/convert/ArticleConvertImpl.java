@@ -1,6 +1,8 @@
 package com.github.veerdone.yblog.cloud.base.convert;
 
 import com.github.veerdone.yblog.cloud.base.Dto.post.CreateArticleDto;
+import com.github.veerdone.yblog.cloud.base.Dto.post.UpdateArticleDto;
+import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import java.util.ArrayList;
@@ -9,13 +11,13 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-11-14T10:56:28+0800",
+    date = "2022-11-15T16:40:08+0800",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17 (Oracle Corporation)"
 )
 public class ArticleConvertImpl implements ArticleConvert {
 
     @Override
-    public ArticleInfoVo toVo(ArticleInfo articleInfo) {
+    public ArticleInfoVo toArticleInfoVo(ArticleInfo articleInfo) {
         if ( articleInfo == null ) {
             return null;
         }
@@ -60,5 +62,47 @@ public class ArticleConvertImpl implements ArticleConvert {
         articleInfo.setUserId( dto.getUserId() );
 
         return articleInfo;
+    }
+
+    @Override
+    public ArticleInfo toArticleInfo(UpdateArticleDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        ArticleInfo articleInfo = new ArticleInfo();
+
+        articleInfo.setId( dto.getId() );
+        articleInfo.setDescription( dto.getDescription() );
+        articleInfo.setCoverPicture( dto.getCoverPicture() );
+        List<Long> list = dto.getLabel();
+        if ( list != null ) {
+            articleInfo.setLabel( new ArrayList<Long>( list ) );
+        }
+        articleInfo.setClassify( dto.getClassify() );
+        articleInfo.setUserId( dto.getUserId() );
+
+        return articleInfo;
+    }
+
+    @Override
+    public ArticleDetailVo toArticleDetailVo(ArticleInfo articleInfo) {
+        if ( articleInfo == null ) {
+            return null;
+        }
+
+        ArticleDetailVo articleDetailVo = new ArticleDetailVo();
+
+        articleDetailVo.setId( articleInfo.getId() );
+        articleDetailVo.setTitle( articleInfo.getTitle() );
+        articleDetailVo.setViews( articleInfo.getViews() );
+        articleDetailVo.setCollection( articleInfo.getCollection() );
+        articleDetailVo.setLikes( articleInfo.getLikes() );
+        articleDetailVo.setStatus( articleInfo.getStatus() );
+        articleDetailVo.setComments( articleInfo.getComments() );
+        articleDetailVo.setUserId( articleInfo.getUserId() );
+        articleDetailVo.setCreateTime( articleInfo.getCreateTime() );
+
+        return articleDetailVo;
     }
 }

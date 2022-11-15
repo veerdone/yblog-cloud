@@ -20,6 +20,7 @@ public class ArticleInfoController {
     @PostMapping("/list")
     public ListResult<ArticleInfoVo> list() {
         List<ArticleInfoVo> articleInfoVoList = articleInfoService.listArticleInfoVo(null);
+
         return PageUtil.response(articleInfoVoList);
     }
 }

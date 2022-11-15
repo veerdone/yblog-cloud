@@ -1,5 +1,6 @@
-package com.github.veerdone.third.party.oss.service;
+package com.github.veerdone.third.party.oss.service.impl;
 
+import com.github.veerdone.third.party.oss.service.ImageService;
 import com.github.veerdone.yblog.cloud.base.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.base.exception.ServiceExceptionEnum;
 import com.google.gson.Gson;

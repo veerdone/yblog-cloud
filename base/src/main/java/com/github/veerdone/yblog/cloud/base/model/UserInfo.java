@@ -25,6 +25,8 @@ public class UserInfo implements Serializable {
 
     private Integer likes;
 
+    private String avatar;
+
     @TableField(fill = FieldFill.INSERT)
     private Long createTime;
 
@@ -87,6 +89,14 @@ public class UserInfo implements Serializable {
         this.likes = likes;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public Long getCreateTime() {
         return createTime;
     }
@@ -112,17 +122,17 @@ public class UserInfo implements Serializable {
             return false;
         }
         UserInfo userInfo = (UserInfo) o;
-        return Objects.equals(id, userInfo.id) && Objects.equals(userName, userInfo.userName) && Objects.equals(sex, userInfo.sex) && Objects.equals(selfDescription, userInfo.selfDescription) && Objects.equals(fan, userInfo.fan) && Objects.equals(collection, userInfo.collection) && Objects.equals(likes, userInfo.likes) && Objects.equals(createTime, userInfo.createTime) && Objects.equals(updateTime, userInfo.updateTime);
+        return Objects.equals(id, userInfo.id) && Objects.equals(userName, userInfo.userName) && Objects.equals(sex, userInfo.sex) && Objects.equals(selfDescription, userInfo.selfDescription) && Objects.equals(fan, userInfo.fan) && Objects.equals(collection, userInfo.collection) && Objects.equals(likes, userInfo.likes) && Objects.equals(avatar, userInfo.avatar) && Objects.equals(createTime, userInfo.createTime) && Objects.equals(updateTime, userInfo.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, sex, selfDescription, fan, collection, likes, createTime, updateTime);
+        return Objects.hash(id, userName, sex, selfDescription, fan, collection, likes, avatar, createTime, updateTime);
     }
 
     @Override
     public String toString() {
-        return "UserData{" +
+        return "UserInfo{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
                 ", sex=" + sex +
@@ -130,6 +140,7 @@ public class UserInfo implements Serializable {
                 ", fan=" + fan +
                 ", collection=" + collection +
                 ", likes=" + likes +
+                ", avatar='" + avatar + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
