@@ -20,6 +20,7 @@
         <module>common/response</module>
         <module>common/page</module>
         <module>common/constant</module>
+        <module>comment</module>
     </modules>
 
     <properties>

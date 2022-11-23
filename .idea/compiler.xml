@@ -10,6 +10,7 @@
         <module name="common" />
         <module name="util" />
         <module name="response" />
+        <module name="comment" />
         <module name="page" />
         <module name="user" />
         <module name="article" />
