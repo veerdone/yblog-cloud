@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private UserClient userClient;
 
     @Override
-    public List<CommentVo> listByComment(ListQueryCommentDto dto) {
+    public List<CommentVo> listByQuery(ListQueryCommentDto dto) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Comment::getItemId, dto.getItemId())
                 .eq(Comment::getType, dto.getType())

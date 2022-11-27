@@ -6,5 +6,5 @@ import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
 import java.util.List;
 
 public interface CommentService {
-    List<CommentVo> listByComment(ListQueryCommentDto dto);
+    List<CommentVo> listByQuery(ListQueryCommentDto dto);
 }
