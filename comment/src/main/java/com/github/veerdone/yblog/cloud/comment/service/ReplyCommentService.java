@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ReplyCommentService {
 
-    List<ReplyCommentVo> list(Long itemId, Long commentId);
+    List<ReplyCommentVo> list(Long itemId, Long commentId, Integer type);
 }

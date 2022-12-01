@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -42,16 +43,18 @@ public class CommentServiceImpl implements CommentService {
             return Collections.emptyList();
         }
 
+        List<Long> userIds = commentList.stream().map(Comment::getUserId).collect(Collectors.toList());
+        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+
         List<CommentVo> commentVoList = new ArrayList<>();
-        for (Comment comment : commentList) {
+        for (int i = 0; i < commentList.size(); i++) {
+            Comment comment = commentList.get(i);
             CommentVo commentVo = CommentConvert.INSTANCE.toVo(comment);
-            UserInfo userInfo = userClient.getUserInfoById(comment.getUserId());
-            commentVo.setUserInfo(userInfo);
-            List<ReplyCommentVo> replyCommentVoList = replyCommentService.list(comment.getItemId(), comment.getId());
+            commentVo.setUserInfo(userInfoList.get(i));
+            List<ReplyCommentVo> replyCommentVoList = replyCommentService.list(comment.getItemId(), comment.getId(), dto.getType());
             commentVo.setReplyCommentList(replyCommentVoList);
             commentVoList.add(commentVo);
         }
-
         return commentVoList;
     }
 }

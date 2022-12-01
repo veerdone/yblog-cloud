@@ -1,6 +1,6 @@
 package com.github.veerdone.third.party.oss.service.impl;
 
-import com.github.veerdone.third.party.oss.service.ImageService;
+import com.github.veerdone.third.party.oss.service.ImageServer;
 import com.github.veerdone.yblog.cloud.base.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.base.exception.ServiceExceptionEnum;
 import com.google.gson.Gson;
@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-public class QiniuyunImageServiceImpl implements ImageService {
-    private static final Logger log = LoggerFactory.getLogger(QiniuyunImageServiceImpl.class);
+public class QiniuyunImageServerImpl implements ImageServer {
+    private static final Logger log = LoggerFactory.getLogger(QiniuyunImageServerImpl.class);
     
     @Value("${config.qiniuyun.accessKey}")
     private String accessKey;
@@ -44,14 +44,13 @@ public class QiniuyunImageServiceImpl implements ImageService {
         Auth auth = Auth.create(accessKey, secretKey);
         String uploadToken = auth.uploadToken(bucket);
 
-        DefaultPutRet putRet = null;
+        DefaultPutRet putRet = new DefaultPutRet();
         try {
             Response response = uploadManager.put(multipartFile.getBytes(), null, uploadToken);
             putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
         } catch (QiniuException e) {
             try {
-                log.warn("图片上传失败: ");
-                log.warn("{}", e.response.bodyString());
+                log.warn("图片上传失败: {}", e.response.bodyString());
                 log.warn("",e);
             } catch (QiniuException ex) {
                 log.warn("", ex);

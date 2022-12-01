@@ -1,6 +1,6 @@
 package com.github.veerdone.third.party.email.service.impl;
 
-import com.github.veerdone.third.party.email.service.EmailService;
+import com.github.veerdone.third.party.email.service.EmailServer;
 import com.google.gson.JsonObject;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TencentEmailServiceImpl implements EmailService, InitializingBean {
-    private static final Logger log = LoggerFactory.getLogger(TencentEmailServiceImpl.class);
+public class TencentEmailServerImpl implements EmailServer, InitializingBean {
+    private static final Logger log = LoggerFactory.getLogger(TencentEmailServerImpl.class);
 
     private final TencentEmailConfig tencentEmailConfig;
 
@@ -26,7 +26,7 @@ public class TencentEmailServiceImpl implements EmailService, InitializingBean {
     @Value("${config.email.captcha.templateId}")
     private Long templateId;
 
-    public TencentEmailServiceImpl(TencentEmailConfig tencentEmailConfig) {
+    public TencentEmailServerImpl(TencentEmailConfig tencentEmailConfig) {
         this.tencentEmailConfig = tencentEmailConfig;
     }
 

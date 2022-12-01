@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReplyCommentServiceImpl implements ReplyCommentService {
@@ -26,23 +27,28 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     private UserClient userClient;
 
     @Override
-    public List<ReplyCommentVo> list(Long itemId, Long commentId) {
+    public List<ReplyCommentVo> list(Long itemId, Long commentId, Integer type) {
         LambdaQueryWrapper<ReplyComment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ReplyComment::getItemId, itemId)
                 .eq(ReplyComment::getCommentId, commentId)
+                .eq(ReplyComment::getType, type)
                 .eq(ReplyComment::getStatus, 1);
         List<ReplyComment> replyCommentList = replyCommentMapper.selectList(wrapper);
         if (CollectionUtil.isEmpty(replyCommentList)) {
             return Collections.emptyList();
         }
 
+        List<Long> replyUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyUserId).collect(Collectors.toList());
+        List<Long> replyToUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyToUserId).collect(Collectors.toList());
+        List<UserInfo> replyUserInfoList = userClient.getUserInfoByIds(replyUserInfoIds);
+        List<UserInfo> replyToUserInfoList = userClient.getUserInfoByIds(replyToUserInfoIds);
+
         List<ReplyCommentVo> replyCommentVoList = new ArrayList<>();
-        for (ReplyComment replyComment : replyCommentList) {
+        for (int i = 0; i < replyCommentList.size(); i++) {
+            ReplyComment replyComment = replyCommentList.get(i);
             ReplyCommentVo replyCommentVo = CommentConvert.INSTANCE.toVo(replyComment);
-            UserInfo replyUserInfo = userClient.getUserInfoById(replyCommentVo.getReplyUserId());
-            replyCommentVo.setReplyUserInfo(replyUserInfo);
-            UserInfo replyToUserInfo = userClient.getUserInfoById(replyCommentVo.getReplyToUserId());
-            replyCommentVo.setReplyToUserInfo(replyToUserInfo);
+            replyCommentVo.setReplyUserInfo(replyUserInfoList.get(i));
+            replyCommentVo.setReplyToUserInfo(replyToUserInfoList.get(i));
             replyCommentVoList.add(replyCommentVo);
         }
 

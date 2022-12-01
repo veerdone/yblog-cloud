@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.base.Vo;
 
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
+import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class ArticleDetailVo {
     private ArticleClassify articleClassify;
 
     private List<ArticleLabel> articleLabelList;
+
+    private UserInfo userInfo;
 
     public Long getId() {
         return id;
@@ -124,5 +127,13 @@ public class ArticleDetailVo {
 
     public void setArticleLabelList(List<ArticleLabel> articleLabelList) {
         this.articleLabelList = articleLabelList;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 }

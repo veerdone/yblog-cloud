@@ -11,4 +11,9 @@ public class PageUtil {
         long total = pageInfo.getTotal();
         return ListResult.result(list, total);
     }
+
+    public static <T> boolean hasMore(List<T> list) {
+        PageInfo<T> pageInfo = new PageInfo<>(list);
+        return pageInfo.isHasNextPage();
+    }
 }

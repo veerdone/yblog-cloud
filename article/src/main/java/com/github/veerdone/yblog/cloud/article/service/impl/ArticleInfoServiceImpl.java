@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
@@ -39,7 +40,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Resource
     private ArticleLabelService articleLabelService;
 
-    @DubboReference(check = false)
+    @DubboReference
     private UserClient userClient;
 
     @Override
@@ -65,6 +66,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         List<ArticleLabel> articleLabelList = getArticleLabelListByIds(articleInfo.getLabel());
         articleDetailVo.setArticleLabelList(articleLabelList);
 
+        UserInfo userInfo = userClient.getUserInfoById(articleInfo.getUserId());
+        articleDetailVo.setUserInfo(userInfo);
+
         return articleDetailVo;
     }
 
@@ -80,11 +84,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             return Collections.emptyList();
         }
 
+        List<Long> userIds = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
+        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
-        for (ArticleInfo articleInfoItem : articleInfoList) {
+        for (int i = 0; i < articleInfoList.size(); i++) {
+            ArticleInfo articleInfoItem = articleInfoList.get(i);
             ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfoItem);
-            UserInfo userInfo = userClient.getUserInfoById(articleInfoItem.getUserId());
-            articleInfoVo.setUserInfo(userInfo);
+            articleInfoVo.setUserInfo(userInfoList.get(i));
 
             ArticleClassify articleClassify = articleClassifyService.getById(articleInfoItem.getClassify());
             articleInfoVo.setArticleClassify(articleClassify);

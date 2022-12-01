@@ -1,6 +1,6 @@
 package com.github.veerdone.third.party.controller;
 
-import com.github.veerdone.third.party.email.service.SendEmailService;
+import com.github.veerdone.third.party.email.service.EmailService;
 import com.github.veerdone.yblog.cloud.common.util.async.AsyncExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +13,12 @@ import javax.annotation.Resource;
 @RequestMapping("/email")
 public class EmailController {
     @Resource
-    private SendEmailService sendEmailService;
+    private EmailService emailService;
 
     @GetMapping("/register_captcha")
     public void register_captcha(@RequestParam("email") String email) {
         AsyncExecutor.execute(() -> {
-            sendEmailService.userRegisterCaptcha(email);
+            emailService.userRegisterCaptcha(email);
         });
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +43,23 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoMapper.insert(userInfo);
 
         return this.getUserInfoById(userInfo.getId());
+    }
+
+    @Override
+    public List<UserInfo> getUserInfoByIds(List<Long> ids) {
+        List<UserInfo> userInfoList = new ArrayList<>(ids.size());
+        for (int i = 0; i < ids.size(); i++) {
+            int prei = i - 1;
+            if (prei > 0 && ids.get(prei).equals(ids.get(i))) {
+                userInfoList.add(userInfoList.get(prei));
+                continue;
+            }
+
+            UserInfo userInfo = this.getUserInfoById(ids.get(i));
+            userInfoList.add(userInfo);
+        }
+
+        return userInfoList;
     }
 
     @Override
