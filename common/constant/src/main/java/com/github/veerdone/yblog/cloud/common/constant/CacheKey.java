@@ -5,4 +5,8 @@ public class CacheKey {
     public static final String USER_INFO_QUERY_BY_ID = "user:info:query:by:id:";
     public static final String ARTICLE_CLASSIFY_QUERY_BY_ID = "article:classify:query:by:id:";
     public static final String ARTICLE_LABEL_QUERY_BY_ID = "article:label:query:by:id:";
+
+    public static final String ARTICLE_REVIEW_STREAM_KEY = "stream:article:review";
+
+    public static final String ARTICLE_REVIEW_STREAM_GROUP = "article-review-stream-group";
 }

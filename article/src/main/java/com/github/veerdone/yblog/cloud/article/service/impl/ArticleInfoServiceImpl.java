@@ -14,10 +14,13 @@ import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
+import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.page.Page;
+import com.github.veerdone.yblog.cloud.common.redis.RecordUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,13 +43,17 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Resource
     private ArticleLabelService articleLabelService;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @DubboReference
     private UserClient userClient;
 
     @Override
     public void create(ArticleInfo articleInfo) {
         articleInfoMapper.insert(articleInfo);
-        // todo 调用审核服务
+
+        redisTemplate.opsForStream().add(RecordUtil.objectRecord(CacheKey.ARTICLE_REVIEW_STREAM_KEY, articleInfo));
     }
 
     @Override
@@ -54,7 +61,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         articleInfo.setStatus(0);
         articleInfoMapper.updateById(articleInfo);
 
-        //todo 调用审核服务
+        redisTemplate.opsForStream().add(RecordUtil.objectRecord(CacheKey.ARTICLE_REVIEW_STREAM_KEY, articleInfo));
     }
 
     @Override

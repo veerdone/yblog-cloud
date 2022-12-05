@@ -21,6 +21,7 @@
         <module>common/page</module>
         <module>common/constant</module>
         <module>comment</module>
+        <module>interact-review</module>
     </modules>
 
     <properties>
