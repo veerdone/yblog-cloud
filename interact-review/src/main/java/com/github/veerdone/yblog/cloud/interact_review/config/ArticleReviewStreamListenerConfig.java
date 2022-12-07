@@ -66,7 +66,7 @@ public class ArticleReviewStreamListenerConfig implements DisposableBean {
     @Override
     public void destroy() throws Exception {
         if (Objects.nonNull(listenerContainer)) {
-            log.info("{} close listener, wait {} seconds...", this.getClass(), closeSleepTime);
+            log.info("[{}] close listener, wait {} seconds...", this.getClass(), closeSleepTime);
             listenerContainer.stop();
             Thread.sleep(2000);
         }

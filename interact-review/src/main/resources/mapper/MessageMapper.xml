@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.veerdone.yblog.cloud.interact_review.mapper.MessageMapper">
+
+    <select id="countNotReadGroupByMsgType" resultMap="keyValue">
+        SELECT
+            msg_type as `key`,
+            count(*) as `value`
+        FROM
+            yblog_message
+        WHERE
+            receiver_id = #{userId}
+            AND
+            `status` = 0
+        GROUP BY
+            msg_type
+    </select>
+
+    <resultMap id="keyValue" type="com.github.veerdone.yblog.cloud.base.KeyValue">
+        <id column="key" property="key" javaType="java.lang.String" />
+        <result column="value" property="value" javaType="java.lang.Integer" />
+    </resultMap>
+</mapper>

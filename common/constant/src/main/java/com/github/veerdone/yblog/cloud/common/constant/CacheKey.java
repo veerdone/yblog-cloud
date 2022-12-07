@@ -9,4 +9,6 @@ public class CacheKey {
     public static final String ARTICLE_REVIEW_STREAM_KEY = "stream:article:review";
 
     public static final String ARTICLE_REVIEW_STREAM_GROUP = "article-review-stream-group";
+
+    public static final String ARTICLE_THUMBS_UP = "article:thumbs:up:";
 }
