@@ -1,6 +1,7 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
@@ -62,6 +63,16 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         articleInfoMapper.updateById(articleInfo);
 
         redisTemplate.opsForStream().add(RecordUtil.objectRecord(CacheKey.ARTICLE_REVIEW_STREAM_KEY, articleInfo));
+    }
+
+    @Override
+    public void updateByWrapper(Wrapper<ArticleInfo> wrapper) {
+        articleInfoMapper.update(null, wrapper);
+    }
+
+    @Override
+    public ArticleInfo getById(Long id) {
+        return articleInfoMapper.selectById(id);
     }
 
     @Override

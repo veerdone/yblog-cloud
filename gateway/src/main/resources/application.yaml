@@ -19,5 +19,14 @@ spring:
           uri: lb://third-party-service
           predicates:
             - Path=/email/**
+        - id: comment
+          uri: lb://comment-service
+          predicates:
+            - Path=/comment/**
+        - id: interact-review
+          uri: lb://interact-review-service
+          predicates:
+            - Path=/interact/**
+            - Path=/review/**
   application:
     name: yblog-gateway

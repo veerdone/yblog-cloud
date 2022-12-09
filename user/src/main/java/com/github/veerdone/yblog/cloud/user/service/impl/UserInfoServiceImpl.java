@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
@@ -67,5 +68,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         redisTemplate.delete(CacheKey.USER_INFO_QUERY_BY_ID + dto.getId());
         UserInfo userInfo = UserConvert.INSTANCE.toUserInfo(dto);
         userInfoMapper.updateById(userInfo);
+    }
+
+    @Override
+    public void updateByWrapper(Wrapper<UserInfo> wrapper) {
+        userInfoMapper.update(null, wrapper);
     }
 }

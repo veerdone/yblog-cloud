@@ -59,6 +59,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.veerdone</groupId>
             <artifactId>redis</artifactId>
             <version>${project.parent.version}</version>
@@ -79,6 +84,12 @@
         <dependency>
             <groupId>com.github.veerdone</groupId>
             <artifactId>response</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.veerdone</groupId>
+            <artifactId>util</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

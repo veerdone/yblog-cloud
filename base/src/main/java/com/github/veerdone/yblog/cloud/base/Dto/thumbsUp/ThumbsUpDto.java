@@ -1,6 +1,6 @@
 package com.github.veerdone.yblog.cloud.base.Dto.thumbsUp;
 
-public class SaveThumbsUpDto {
+public class ThumbsUpDto {
     private Long userId;
 
     private Long itemId;
