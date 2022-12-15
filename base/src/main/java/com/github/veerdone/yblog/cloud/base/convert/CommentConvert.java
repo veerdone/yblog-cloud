@@ -1,5 +1,7 @@
 package com.github.veerdone.yblog.cloud.base.convert;
 
+import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateCommentDto;
+import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateReplyCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ReplyCommentVo;
 import com.github.veerdone.yblog.cloud.base.model.Comment;
@@ -14,4 +16,8 @@ public interface CommentConvert {
     CommentVo toVo(Comment comment);
 
     ReplyCommentVo toVo(ReplyComment replyComment);
+
+    Comment toComment(CreateCommentDto dto);
+
+    ReplyComment toReplyComment(CreateReplyCommentDto dto);
 }
