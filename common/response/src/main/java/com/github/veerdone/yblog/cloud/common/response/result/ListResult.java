@@ -8,7 +8,9 @@ public class ListResult<T> extends BaseResult {
     private List<T> list;
 
     @JsonSerialize(using = LocalLongSerialize.class)
-    private long total;
+    private Long total;
+
+    private Boolean hasMore;
 
     public ListResult() {
     }
@@ -19,6 +21,13 @@ public class ListResult<T> extends BaseResult {
         this.total = total;
     }
 
+    public ListResult(int code, String message, List<T> list, long total, Boolean hasMore) {
+        super(code, message);
+        this.list = list;
+        this.total = total;
+        this.hasMore = hasMore;
+    }
+
     public ListResult(int code, String message, String errCode, List<T> list, Long total) {
         super(code, message, errCode);
         this.list = list;
@@ -27,6 +36,10 @@ public class ListResult<T> extends BaseResult {
 
     public static <T> ListResult<T> result(List<T> t, Long total) {
         return new ListResult<>(0, "ok", t, total);
+    }
+
+    public static <T> ListResult<T> result(List<T> t, Long total, boolean hasMore) {
+        return new ListResult<>(0, "ok", t, total, hasMore);
     }
 
     public List<T> getList() {
@@ -43,5 +56,13 @@ public class ListResult<T> extends BaseResult {
 
     public void setTotal(Long total) {
         this.total = total;
+    }
+
+    public Boolean getHasMore() {
+        return hasMore;
+    }
+
+    public void setHasMore(Boolean hasMore) {
+        this.hasMore = hasMore;
     }
 }
