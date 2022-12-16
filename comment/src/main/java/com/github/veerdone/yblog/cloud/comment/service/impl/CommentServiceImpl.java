@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.comment.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateCommentDto;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.ListQueryCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ReplyCommentVo;
@@ -9,6 +10,7 @@ import com.github.veerdone.yblog.cloud.base.client.UserClient;
 import com.github.veerdone.yblog.cloud.base.convert.CommentConvert;
 import com.github.veerdone.yblog.cloud.base.model.Comment;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
+import com.github.veerdone.yblog.cloud.comment.factory.CommentHandlerStrategyFactory;
 import com.github.veerdone.yblog.cloud.comment.mapper.CommentMapper;
 import com.github.veerdone.yblog.cloud.comment.service.CommentService;
 import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
@@ -31,6 +33,21 @@ public class CommentServiceImpl implements CommentService {
 
     @DubboReference
     private UserClient userClient;
+
+    @Override
+    public void create(CreateCommentDto dto) {
+        CommentHandlerStrategyFactory.getHandler(dto.getType()).createComment(dto);
+    }
+
+    @Override
+    public void delete(Long itemId, Integer type) {
+        replyCommentService.deleteByCommentId(itemId, type);
+
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getItemId, itemId)
+                .eq(Comment::getType, type);
+        commentMapper.delete(wrapper);
+    }
 
     @Override
     public List<CommentVo> listByQuery(ListQueryCommentDto dto) {

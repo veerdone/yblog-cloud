@@ -25,6 +25,9 @@ public class CreateReplyCommentDto {
     @NotNull(message = "reply_user_id 不能为空")
     private Long replyToUserId;
 
+    @NotNull(message = "type 不能为空")
+    private Integer type;
+
     public Long getItemId() {
         return itemId;
     }
@@ -73,6 +76,14 @@ public class CreateReplyCommentDto {
         this.replyToUserId = replyToUserId;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -82,12 +93,12 @@ public class CreateReplyCommentDto {
             return false;
         }
         CreateReplyCommentDto that = (CreateReplyCommentDto) o;
-        return Objects.equals(itemId, that.itemId) && Objects.equals(commentId, that.commentId) && Objects.equals(replyUserId, that.replyUserId) && Objects.equals(replyCommentContent, that.replyCommentContent) && Objects.equals(replyCommentId, that.replyCommentId) && Objects.equals(replyToUserId, that.replyToUserId);
+        return Objects.equals(itemId, that.itemId) && Objects.equals(commentId, that.commentId) && Objects.equals(replyUserId, that.replyUserId) && Objects.equals(replyCommentContent, that.replyCommentContent) && Objects.equals(replyCommentId, that.replyCommentId) && Objects.equals(replyToUserId, that.replyToUserId) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemId, commentId, replyUserId, replyCommentContent, replyCommentId, replyToUserId);
+        return Objects.hash(itemId, commentId, replyUserId, replyCommentContent, replyCommentId, replyToUserId, type);
     }
 
     @Override
@@ -99,6 +110,7 @@ public class CreateReplyCommentDto {
                 ", replyCommentContent='" + replyCommentContent + '\'' +
                 ", replyCommentId=" + replyCommentId +
                 ", replyToUserId=" + replyToUserId +
+                ", type=" + type +
                 '}';
     }
 }
