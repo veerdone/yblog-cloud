@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.common.response.result.BaseResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -32,7 +34,8 @@ public class HashFilter implements GlobalFilter, Ordered {
         String hash = queryParams.getFirst("hash");
         String timestamp = queryParams.getFirst("timestamp");
         if (StrUtil.isBlank(hash) || StrUtil.isBlank(timestamp)) {
-            return fail(exchange.getResponse());
+            throw new ServiceException(ServiceExceptionEnum.CAPTCHA_MISTAKE);
+//            return fail(exchange.getResponse());
         }
 
         long queryTimestamp = Long.parseLong(timestamp);
@@ -42,8 +45,8 @@ public class HashFilter implements GlobalFilter, Ordered {
         if ((-500 <= poor && poor <= 500) && Objects.equals(s, hash)) {
             return chain.filter(exchange);
         }
-
-        return fail(exchange.getResponse());
+        throw new ServiceException(ServiceExceptionEnum.CAPTCHA_MISTAKE);
+//        return fail(exchange.getResponse());
     }
 
     private Mono<Void> fail(ServerHttpResponse response) {

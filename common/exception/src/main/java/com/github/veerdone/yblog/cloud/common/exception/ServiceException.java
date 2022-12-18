@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.base.exception;
+package com.github.veerdone.yblog.cloud.common.exception;
 
 public class ServiceException extends RuntimeException{
     private String errCode;

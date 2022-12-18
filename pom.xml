@@ -22,6 +22,7 @@
         <module>common/constant</module>
         <module>comment</module>
         <module>interact-review</module>
+        <module>common/exception</module>
     </modules>
 
     <properties>

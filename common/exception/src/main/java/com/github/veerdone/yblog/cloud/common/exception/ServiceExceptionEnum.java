@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.base.exception;
+package com.github.veerdone.yblog.cloud.common.exception;
 
 public enum ServiceExceptionEnum {
     EMAIL_EXIST(10001, "邮箱已存在", "EMAIL_EXIST"),

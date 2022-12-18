@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.common.response;
 
+import com.github.veerdone.yblog.cloud.common.exception.BizException;
 import com.github.veerdone.yblog.cloud.common.response.result.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,11 @@ public class ExceptionController {
     public BaseResult methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
         String message = getMessage(e);
         return new BaseResult(100401,  message, "PARAMS_MISTAKE");
+    }
+
+    @ExceptionHandler(BizException.class)
+    public BaseResult bizExceptionHandler(BizException e) {
+        return new BaseResult(e.getCode(), e.getMessage(), e.getErrCode());
     }
 
     @ExceptionHandler(RuntimeException.class)
