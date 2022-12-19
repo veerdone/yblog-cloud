@@ -89,6 +89,12 @@
             <artifactId>response</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.veerdone</groupId>
+            <artifactId>exception</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,8 +1,8 @@
 package com.github.veerdone.third.party.oss.service.impl;
 
 import com.github.veerdone.third.party.oss.service.ImageServer;
-import com.github.veerdone.yblog.cloud.base.exception.ServiceException;
-import com.github.veerdone.yblog.cloud.base.exception.ServiceExceptionEnum;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
