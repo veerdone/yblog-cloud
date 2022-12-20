@@ -21,15 +21,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
-    /**
-     * Create a new {@code DefaultErrorWebExceptionHandler} instance.
-     *
-     * @param errorAttributes    the error attributes
-     * @param resources          the resources configuration properties
-     * @param errorProperties    the error configuration properties
-     * @param applicationContext the current application context
-     * @since 2.4.0
-     */
     public JsonExceptionHandler(ErrorAttributes errorAttributes,
                                 WebProperties.Resources resources,
                                 ErrorProperties errorProperties,
@@ -72,7 +63,7 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
     }
 
     private Map<String, Object> buildResponse(int code, String errCode, String msg) {
-        Map<String, Object> map = new HashMap<>(4);
+        Map<String, Object> map = new HashMap<>(3);
         map.put("code", code);
         map.put("err_code",errCode);
         map.put("msg", msg);

@@ -3,7 +3,8 @@ package com.github.veerdone.yblog.cloud.common.exception;
 public enum ServiceExceptionEnum {
     EMAIL_EXIST(10001, "邮箱已存在", "EMAIL_EXIST"),
     CAPTCHA_MISTAKE(10102, "验证码错误", "CAPTCHA_MISTAKE"),
-    UNKNOWN_EXCEPTION(50500, "系统繁忙,请稍后再试", "SYSTEM_BUSY")
+    NOT_FOUND(404, "请求路径不存在", "NOT_FOUND"),
+    UNKNOWN_EXCEPTION(500, "系统繁忙,请稍后再试", "SYSTEM_BUSY")
     ;
     private final int code;
 

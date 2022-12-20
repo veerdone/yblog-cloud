@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @AutoConfiguration
-@Import({ExceptionController.class, ResponseAdvice.class})
+@Import({ExceptionController.class, ResponseAdvice.class, CustomBasicErrorController.class})
 public class ResponseAutoConfiguration {
 
     @Bean
