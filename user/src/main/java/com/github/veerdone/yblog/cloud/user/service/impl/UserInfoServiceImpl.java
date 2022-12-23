@@ -5,6 +5,7 @@ import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
+import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
 import com.github.veerdone.yblog.cloud.user.mapper.UserInfoMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,6 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo create(UserInfo userInfo) {
         userInfoMapper.insert(userInfo);
+        UserRegisterFactory.asyncAfterHandler(userInfo);
 
         return this.getUserInfoById(userInfo.getId());
     }
