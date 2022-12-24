@@ -16,8 +16,36 @@
 
 package com.github.veerdone.yblog.cloud.user.service;
 
+import com.github.veerdone.yblog.cloud.base.KeyValue;
 import com.github.veerdone.yblog.cloud.base.model.UserRegisterLog;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface UserRegisterLogService {
     void create(UserRegisterLog userRegisterLog);
+
+    /**
+     * the total number of registered users last week
+     * @return total number
+     */
+    Long countRegisterOfLastWeek();
+
+    /**
+     * number of registered users in each day of this month
+     * @return key is date, value is total number of everyday
+     */
+    List<KeyValue<LocalDate, Long>> countCurrentMonthGroupByDay();
+
+    /**
+     * number of registered users per day in the past 7 days
+     * @return key is date, value is total number of everyday
+     */
+    List<KeyValue<LocalDate, Long>> countGroupByLastSevenDay();
+
+    /**
+     * number of registered users per month
+     * @return key is month, value is total number of month
+     */
+    List<KeyValue<LocalDate, Long>> countGroupByMonth();
 }

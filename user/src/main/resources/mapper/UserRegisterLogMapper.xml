@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.veerdone.yblog.cloud.user.mapper.UserRegisterLogMapper">
+    <select id="countCurrentMonthGroupByDay" resultMap="keyValue">
+        SELECT
+            create_date as `key`,
+            COUNT(*) AS `value`
+        FROM
+            yblog_user_register_log
+        WHERE
+            create_month = #{month}
+        AND
+            create_year = #{year}
+        GROUP BY
+            create_date
+    </select>
+
+
+    <select id="countGroupByLastSevenDay" resultMap="keyValue">
+        SELECT
+            create_date as `key`,
+            COUNT(*) AS `value`
+        FROM
+            yblog_user_register_log
+        WHERE
+            create_date &gt;= #{start}
+        AND
+            create_date &lt; #{end}
+        GROUP BY
+            create_date
+    </select>
+
+    <select id="countGroupByMonth" resultMap="keyValue">
+        SELECT
+            create_month AS `key`,
+            COUNT(*) AS `value`
+        FROM
+            yblog_user_register_log
+        WHERE
+            create_year = #{year}
+        GROUP BY
+            create_month
+    </select>
+
+
+    <resultMap id="keyValue" type="com.github.veerdone.yblog.cloud.base.KeyValue">
+        <result column="key" property="key" javaType="java.time.LocalDate" />
+        <result column="value" property="value" javaType="java.lang.Long" />
+    </resultMap>
+</mapper>
