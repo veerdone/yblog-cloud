@@ -19,6 +19,8 @@ package com.github.veerdone.yblog.cloud.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.base.KeyValue;
 import com.github.veerdone.yblog.cloud.base.model.UserRegisterLog;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.user.mapper.UserRegisterLogMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserRegisterLogService;
 import org.springframework.stereotype.Service;
@@ -28,16 +30,13 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserRegisterLogServiceImpl implements UserRegisterLogService {
     @Resource
     private UserRegisterLogMapper userRegisterLogMapper;
 
-    @Override
-    public void create(UserRegisterLog userRegisterLog) {
-        userRegisterLogMapper.insert(userRegisterLog);
-    }
 
     @Override
     public Long countRegisterOfLastWeek() {
@@ -52,10 +51,16 @@ public class UserRegisterLogServiceImpl implements UserRegisterLogService {
     }
 
     @Override
-    public List<KeyValue<LocalDate, Long>> countCurrentMonthGroupByDay() {
+    public List<KeyValue<LocalDate, Long>> countGroupByDayInMonth(Integer month) {
+        if (Objects.nonNull(month) && month > 12) {
+            throw new ServiceException(ServiceExceptionEnum.PARAM_MISTAKE);
+        }
         LocalDate date = LocalDate.now();
-        int month = date.getMonthValue();
+        if (Objects.isNull(month) || month == 0) {
+            month = date.getMonthValue();
+        }
         int year = date.getYear();
+
         return userRegisterLogMapper.countCurrentMonthGroupByDay(year, month);
     }
 
@@ -68,9 +73,16 @@ public class UserRegisterLogServiceImpl implements UserRegisterLogService {
     }
 
     @Override
-    public List<KeyValue<LocalDate, Long>> countGroupByMonth() {
-        int year = LocalDate.now().getYear();
+    public List<KeyValue<LocalDate, Long>> countGroupByMonthInYear(Integer year) {
+        if (Objects.isNull(year) || year == 0) {
+            year = LocalDate.now().getYear();
+        }
 
         return userRegisterLogMapper.countGroupByMonth(year);
+    }
+
+    @Override
+    public void create(UserRegisterLog userRegisterLog) {
+        userRegisterLogMapper.insert(userRegisterLog);
     }
 }
