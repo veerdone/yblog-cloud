@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface UserRegisterLogService {
-    void create(UserRegisterLog userRegisterLog);
 
     /**
      * the total number of registered users last week
@@ -33,9 +32,10 @@ public interface UserRegisterLogService {
 
     /**
      * number of registered users in each day of this month
+     * @param month value between 1 and 12, if value is null, default value is current month
      * @return key is date, value is total number of everyday
      */
-    List<KeyValue<LocalDate, Long>> countCurrentMonthGroupByDay();
+    List<KeyValue<LocalDate, Long>> countGroupByDayInMonth(Integer month);
 
     /**
      * number of registered users per day in the past 7 days
@@ -45,7 +45,10 @@ public interface UserRegisterLogService {
 
     /**
      * number of registered users per month
+     * @param year default value is current year
      * @return key is month, value is total number of month
      */
-    List<KeyValue<LocalDate, Long>> countGroupByMonth();
+    List<KeyValue<LocalDate, Long>> countGroupByMonthInYear(Integer year);
+
+    void create(UserRegisterLog userRegisterLog);
 }
