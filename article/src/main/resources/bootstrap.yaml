@@ -1,11 +1,12 @@
 spring:
   cloud:
     nacos:
-      server-addr: localhost:8888
+      server-addr: 192.168.2.10:8888
       discovery:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
       config:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+        file-extension: yaml
   application:
     name: article-service
 

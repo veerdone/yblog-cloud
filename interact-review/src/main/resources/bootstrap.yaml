@@ -1,6 +1,8 @@
+server:
+  port: 8084
 spring:
   application:
-    name: user-service
+    name: interact-review-application
   cloud:
     nacos:
       server-addr: 192.168.2.10:8888
@@ -9,5 +11,3 @@ spring:
       config:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
         file-extension: yaml
-server:
-  port: 8081

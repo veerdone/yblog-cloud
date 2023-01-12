@@ -52,6 +52,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     public List<UserInfo> getUserInfoByIds(List<Long> ids) {
         List<UserInfo> userInfoList = new ArrayList<>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i).equals(0L)) {
+                userInfoList.add(null);
+                continue;
+            }
             int prei = i - 1;
             if (prei > 0 && ids.get(prei).equals(ids.get(i))) {
                 userInfoList.add(userInfoList.get(prei));

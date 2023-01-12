@@ -3,11 +3,10 @@ spring:
     name: yblog-gateway
   cloud:
     nacos:
+      server-addr: 192.168.2.10:8888
       discovery:
-        server-addr: localhost:8888
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
       config:
-        server-addr: localhost:8888
         file-extension: yaml
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
 server:

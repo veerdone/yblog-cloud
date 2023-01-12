@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleContentMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleContentService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
@@ -43,11 +44,13 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(dto);
         articleInfoService.updateById(articleInfo);
 
-        ArticleContent articleContent = new ArticleContent();
-        articleContent.setId(dto.getId());
-        articleContent.setContent(dto.getContent());
+        if (StrUtil.isNotBlank(dto.getContent())) {
+            ArticleContent articleContent = new ArticleContent();
+            articleContent.setId(dto.getId());
+            articleContent.setContent(dto.getContent());
 
-        articleContentMapper.updateById(articleContent);
+            articleContentMapper.updateById(articleContent);
+        }
     }
 
     @Override

@@ -7,6 +7,8 @@ public class UpdateArticleDto {
     @NotNull(message = "id不能为空")
     private Long id;
 
+    private String title;
+
     private String content;
 
     private String description;
@@ -19,6 +21,14 @@ public class UpdateArticleDto {
     private List<Long> label;
 
     private Long classify;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Long getId() {
         return id;

@@ -49,7 +49,7 @@ public class UserDataServiceImpl implements UserDataService {
         }
 
         userData.setPass(PassEncoderUtil.encode(dto.getPass()));
-        String account = String.valueOf(System.currentTimeMillis()).substring(0, 6) + RandomUtil.randomString(5);
+        String account = String.valueOf(System.currentTimeMillis()).substring(0, 6) + RandomUtil.randomNumbers(5);
         userData.setAccount(Long.valueOf(account));
 
         UserRegisterFactory.beforeHandler(userData);

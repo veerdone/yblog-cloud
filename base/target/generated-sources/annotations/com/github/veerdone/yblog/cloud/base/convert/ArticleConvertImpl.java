@@ -11,7 +11,7 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-01-12T17:26:52+0800",
+    date = "2023-01-12T22:37:54+0800",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class ArticleConvertImpl implements ArticleConvert {
@@ -73,6 +73,7 @@ public class ArticleConvertImpl implements ArticleConvert {
         ArticleInfo articleInfo = new ArticleInfo();
 
         articleInfo.setId( dto.getId() );
+        articleInfo.setTitle( dto.getTitle() );
         articleInfo.setDescription( dto.getDescription() );
         articleInfo.setCoverPicture( dto.getCoverPicture() );
         List<Long> list = dto.getLabel();

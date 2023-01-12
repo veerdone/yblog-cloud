@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reply/comment")
+@RequestMapping("/comment/reply")
 public class ReplyCommentController {
     @Resource
     private ReplyCommentService replyCommentService;
