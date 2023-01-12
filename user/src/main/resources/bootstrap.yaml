@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: user-service
+  cloud:
+    nacos:
+      server-addr: localhost:8888
+      discovery:
+        namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+      config:
+        namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+        file-extension: yaml
+server:
+  port: 8081

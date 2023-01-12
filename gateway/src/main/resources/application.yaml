@@ -1,10 +1,5 @@
-server:
-  port: 8082
-
 spring:
   cloud:
-    nacos:
-      server-addr: localhost:8888
     gateway:
       routes:
         - id: user-service
@@ -28,5 +23,3 @@ spring:
           predicates:
             - Path=/interact/**
             - Path=/review/**
-  application:
-    name: yblog-gateway

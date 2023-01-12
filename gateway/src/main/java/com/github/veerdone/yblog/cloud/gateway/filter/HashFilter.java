@@ -5,6 +5,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -17,12 +18,16 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 @Component
+@RefreshScope
 public class HashFilter implements GlobalFilter, Ordered {
     @Value("${config.filter.hash.key:key}")
     private String key;
 
     @Value("${config.filter.hash.enable:true}")
     private boolean enable;
+
+    @Value("${config.filter.hash.timePoor:500}")
+    private int timePoor;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -45,7 +50,7 @@ public class HashFilter implements GlobalFilter, Ordered {
             long currentTimeMillis = System.currentTimeMillis();
             String hash = SecureUtil.md5(currentTimeMillis + key);
             long poor = currentTimeMillis - queryTimestamp;
-            if ((-500 <= poor && poor <= 500) && Objects.equals(hash, requestHash)) {
+            if ((-timePoor <= poor && poor <= timePoor) && Objects.equals(hash, requestHash)) {
                 return chain.filter(exchange);
             }
             throw new ServiceException(ServiceExceptionEnum.CAPTCHA_MISTAKE);

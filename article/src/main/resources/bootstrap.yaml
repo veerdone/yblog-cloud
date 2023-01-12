@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: localhost:8888
+      discovery:
+        namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+      config:
+        namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+  application:
+    name: article-service
+
+server:
+  port: 8080

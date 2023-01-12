@@ -3,24 +3,16 @@ spring:
     url: jdbc:mysql://localhost:3306/yblog_user?characterEncoding=UTF8
     username: root
     password: root
-  cloud:
-    nacos:
-      server-addr: localhost:8888
-  application:
-    name: article-service
   profiles:
     active:
       - redis
 
 dubbo:
   registry:
-    address: nacos://localhost:8888
+    address: nacos://localhost:8888?namespace=4238579d-355d-4a8f-907c-7da94b094dd4
     register-mode: instance
   protocol:
     name: tri
     port: -1
   application:
     name: article-api
-
-server:
-  port: 8080

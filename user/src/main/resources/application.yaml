@@ -1,26 +1,17 @@
 spring:
+  profiles:
+    active:
+      - redis
   datasource:
     url: jdbc:mysql://localhost:3306/yblog_user?characterEncoding=UTF8
     username: root
     password: root
-  cloud:
-    nacos:
-      server-addr: localhost:8888
-  application:
-    name: user-service
-  profiles:
-    active:
-      - redis
-
 dubbo:
   registry:
-    address: nacos://localhost:8888
+    address: nacos://localhost:8888?namespace=4238579d-355d-4a8f-907c-7da94b094dd4
     register-mode: instance
   application:
     name: user-api
   protocol:
     name: tri
     port: -1
-
-server:
-  port: 8081
