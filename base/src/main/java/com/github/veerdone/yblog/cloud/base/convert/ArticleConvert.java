@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.base.convert;
 
+import com.github.veerdone.yblog.cloud.base.Dto.ArticleDocumentDto;
 import com.github.veerdone.yblog.cloud.base.Dto.post.CreateArticleDto;
 import com.github.veerdone.yblog.cloud.base.Dto.post.UpdateArticleDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
@@ -14,9 +15,13 @@ public interface ArticleConvert {
 
     ArticleInfoVo toArticleInfoVo(ArticleInfo articleInfo);
 
+    ArticleInfoVo toArticleInfoVo(ArticleDocumentDto dto);
+
     ArticleInfo toArticleInfo(CreateArticleDto dto);
 
     ArticleInfo toArticleInfo(UpdateArticleDto dto);
 
     ArticleDetailVo toArticleDetailVo(ArticleInfo articleInfo);
+
+    ArticleDocumentDto toDocumentDto(ArticleInfo articleInfo);
 }

@@ -1,7 +1,11 @@
 package com.github.veerdone.yblog.cloud.article.controller;
 
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
+import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
+import com.github.veerdone.yblog.cloud.common.elasticsearch.ElasticUtil;
+import com.github.veerdone.yblog.cloud.common.response.result.ListResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +21,18 @@ public class ArticleInfoController {
 
     @PostMapping("/list")
     public List<ArticleInfoVo> list() {
-        List<ArticleInfoVo> articleInfoVoList = articleInfoService.listArticleInfoVo(null);
+        return articleInfoService.listArticleInfoVo(null);
+    }
 
-        return articleInfoVoList;
+    @GetMapping("/search")
+    public ListResult<ArticleInfoVo> search(ArticleSearchDto dto) {
+        try {
+            List<ArticleInfoVo> articleInfoVoList = articleInfoService.searchArticleVo(dto);
+            Number total = ElasticUtil.getLocalTotal();
+
+            return ListResult.result(articleInfoVoList, total.longValue());
+        } finally {
+            ElasticUtil.cleanPage();
+        }
     }
 }

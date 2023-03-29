@@ -40,6 +40,14 @@ public class ArticleLabelServiceImpl implements ArticleLabelService {
     }
 
     @Override
+    public List<ArticleLabel> getByIds(List<Long> ids) {
+        LambdaQueryWrapper<ArticleLabel> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(ArticleLabel::getId, ids);
+
+        return articleLabelMapper.selectList(wrapper);
+    }
+
+    @Override
     public List<ArticleLabel> listByClassifyId(Long classifyId) {
         if (Objects.isNull(classifyId) || classifyId <= 0) {
             return articleLabelMapper.selectList(null);

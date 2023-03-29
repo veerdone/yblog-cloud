@@ -13,6 +13,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ElasticUtil {
+    private static final ThreadLocal<Number> LOCAL_TOTAL = new ThreadLocal<>();
+
+    public static void setLocalTotal(Number number) {
+        LOCAL_TOTAL.set(number);
+    }
+
+    public static Number getLocalTotal() {
+        return LOCAL_TOTAL.get();
+    }
+
+    public static void cleanPage() {
+        LOCAL_TOTAL.remove();
+    }
+
     public static <T> List<T> searchResp(SearchResponse<T> searchResponse) {
         HitsMetadata<T> hits = searchResponse.hits();
         if (Objects.nonNull(hits)) {

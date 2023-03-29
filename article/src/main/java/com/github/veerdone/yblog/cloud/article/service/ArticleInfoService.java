@@ -1,6 +1,7 @@
 package com.github.veerdone.yblog.cloud.article.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
@@ -46,4 +47,6 @@ public interface ArticleInfoService {
      * @return list of articleInfoVo
      */
     List<ArticleInfoVo> listArticleInfoVo(ArticleInfo articleInfo);
+
+    List<ArticleInfoVo> searchArticleVo(ArticleSearchDto dto);
 }

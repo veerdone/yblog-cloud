@@ -1,8 +1,10 @@
 package com.github.veerdone.yblog.cloud.user.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
+import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
@@ -41,7 +43,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo create(UserInfo userInfo) {
+    public UserInfo register(UserData userData) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(userData.getId());
+        userInfo.setCreateTime(userData.getCreateTime());
+        userInfo.setUpdateTime(userData.getUpdateTime());
+        userInfo.setUserName("用户" + RandomUtil.randomString(6));
+
         userInfoMapper.insert(userInfo);
         UserRegisterFactory.asyncAfterHandler(userInfo);
 

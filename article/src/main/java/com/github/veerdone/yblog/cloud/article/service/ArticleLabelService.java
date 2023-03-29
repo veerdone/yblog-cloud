@@ -18,6 +18,8 @@ public interface ArticleLabelService {
      */
     ArticleLabel getById(Long id);
 
+    List<ArticleLabel> getByIds(List<Long> ids);
+
     /**
      * query list of articleClassify by id
      * @param classifyId classify id

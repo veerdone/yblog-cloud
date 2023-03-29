@@ -13,6 +13,8 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Objects;
+
 @AutoConfiguration
 @EnableConfigurationProperties(ElasticSource.class)
 public class ElasticAutoConfiguration implements DisposableBean {
@@ -39,6 +41,8 @@ public class ElasticAutoConfiguration implements DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-        client.shutdown()._transport().close();
+        if (Objects.nonNull(this.client)) {
+            client.shutdown()._transport().close();
+        }
     }
 }

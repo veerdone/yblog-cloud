@@ -7,6 +7,9 @@ import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
+import com.github.veerdone.yblog.cloud.article.service.ElasticService;
+import com.github.veerdone.yblog.cloud.base.Dto.ArticleDocumentDto;
+import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
@@ -47,6 +50,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Resource
+    private ElasticService elasticService;
+
     @DubboReference
     private UserClient userClient;
 
@@ -81,7 +87,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleDetailVo articleDetailVo = ArticleConvert.INSTANCE.toArticleDetailVo(articleInfo);
 
         articleDetailVo.setArticleClassify(articleClassifyService.getById(articleInfo.getClassify()));
-        List<ArticleLabel> articleLabelList = getArticleLabelListByIds(articleInfo.getLabel());
+        List<ArticleLabel> articleLabelList = articleLabelService.getByIds(articleInfo.getLabel());
         articleDetailVo.setArticleLabelList(articleLabelList);
 
         UserInfo userInfo = userClient.getUserInfoById(articleInfo.getUserId());
@@ -109,13 +115,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         for (int i = 0; i < articleInfoList.size(); i++) {
             ArticleInfo articleInfoItem = articleInfoList.get(i);
             ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfoItem);
-            articleInfoVo.setUserInfo(userInfoList.get(i));
 
-            ArticleClassify articleClassify = articleClassifyService.getById(articleInfoItem.getClassify());
-            articleInfoVo.setArticleClassify(articleClassify);
-
-            List<ArticleLabel> articleLabelList = getArticleLabelListByIds(articleInfoItem.getLabel());
-            articleInfoVo.setArticleLabelList(articleLabelList);
+            setArticleInfoVoField(articleInfoVo, userInfoList.get(i), articleInfoItem.getClassify(), articleInfoItem.getLabel());
 
             articleInfoVoList.add(articleInfoVo);
         }
@@ -123,13 +124,34 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoVoList;
     }
 
+    @Override
+    public List<ArticleInfoVo> searchArticleVo(ArticleSearchDto dto) {
+        List<ArticleDocumentDto> articleDocumentDtoList = elasticService.search(dto);
 
-    private List<ArticleLabel> getArticleLabelListByIds(List<Long> ids) {
-        List<ArticleLabel> articleLabelList = new ArrayList<>(ids.size());
-        for (Long id : ids) {
-            articleLabelList.add(articleLabelService.getById(id));
+        List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleDocumentDtoList.size());
+        List<Long> userIds = articleDocumentDtoList.stream().map(ArticleDocumentDto::getUserId).collect(Collectors.toList());
+        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+
+        for (int i = 0; i < articleDocumentDtoList.size(); i++) {
+            ArticleDocumentDto articleDocumentDto = articleDocumentDtoList.get(i);
+            ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleDocumentDto);
+
+            setArticleInfoVoField(articleInfoVo, userInfoList.get(i), articleDocumentDto.getClassify(), articleDocumentDto.getLabel());
+
+            articleInfoVoList.add(articleInfoVo);
         }
 
-        return articleLabelList;
+        return articleInfoVoList;
     }
+
+    private void setArticleInfoVoField(ArticleInfoVo articleInfoVo, UserInfo userInfo, Long classifyId, List<Long> labelIdList) {
+        articleInfoVo.setUserInfo(userInfo);
+
+        ArticleClassify articleClassify = articleClassifyService.getById(classifyId);
+        articleInfoVo.setArticleClassify(articleClassify);
+
+        List<ArticleLabel> articleLabelList = articleLabelService.getByIds(labelIdList);
+        articleInfoVo.setArticleLabelList(articleLabelList);
+    }
+
 }

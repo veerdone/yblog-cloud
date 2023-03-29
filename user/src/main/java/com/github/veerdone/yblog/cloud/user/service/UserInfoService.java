@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
+import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface UserInfoService {
      * @param userInfo user info
      * @return complete create user info
      */
-    UserInfo create(UserInfo userInfo);
+    UserInfo register(UserData userInfo);
 
     /**
      * query user info by ids

@@ -26,6 +26,16 @@ public class UserData implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateTime;
 
+    private Integer role;
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }
@@ -82,24 +92,25 @@ public class UserData implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserData userInfo = (UserData) o;
-        return Objects.equals(id, userInfo.id) && Objects.equals(account, userInfo.account) && Objects.equals(pass, userInfo.pass) && Objects.equals(email, userInfo.email) && Objects.equals(createTime, userInfo.createTime) && Objects.equals(updateTime, userInfo.updateTime);
+        UserData userData = (UserData) o;
+        return Objects.equals(id, userData.id) && Objects.equals(account, userData.account) && Objects.equals(pass, userData.pass) && Objects.equals(email, userData.email) && Objects.equals(createTime, userData.createTime) && Objects.equals(updateTime, userData.updateTime) && Objects.equals(role, userData.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, pass, email, createTime, updateTime);
+        return Objects.hash(id, account, pass, email, createTime, updateTime, role);
     }
 
     @Override
     public String toString() {
-        return "UserInfo{" +
+        return "UserData{" +
                 "id=" + id +
                 ", account=" + account +
                 ", pass='" + pass + '\'' +
                 ", email='" + email + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", role=" + role +
                 '}';
     }
 }
