@@ -2,14 +2,8 @@ package com.github.veerdone.yblog.cloud.article.controller;
 
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
-import com.github.veerdone.yblog.cloud.common.page.PageUtil;
-import com.github.veerdone.yblog.cloud.common.response.result.ListResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,9 +20,9 @@ public class ArticleClassifyController {
     }
 
     @GetMapping("/list")
-    public ListResult<ArticleClassify> list() {
+    public List<ArticleClassify> list() {
         List<ArticleClassify> articleClassifyList = articleClassifyService.list();
 
-        return PageUtil.response(articleClassifyList);
+        return articleClassifyList;
     }
 }

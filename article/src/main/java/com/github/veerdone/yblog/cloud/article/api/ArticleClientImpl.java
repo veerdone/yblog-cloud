@@ -28,6 +28,16 @@ public class ArticleClientImpl implements ArticleClient {
     }
 
     @Override
+    public ArticleInfo updateStatusAndGet(Long id, Integer status) {
+        LambdaUpdateWrapper<ArticleInfo> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(ArticleInfo::getId, id)
+                .set(ArticleInfo::getStatus, status);
+        articleInfoService.updateByWrapper(wrapper);
+
+        return articleInfoService.getById(id);
+    }
+
+    @Override
     public void incrOrDecrColumn(IncrOrDecrColumnDto dto) {
         LambdaUpdateWrapper<ArticleInfo> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(ArticleInfo::getId, dto.getItemId())

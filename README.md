@@ -14,7 +14,7 @@ Cloud、Dubbo、Redis、Mysql等技术
 | comment         | 评论模块    |
 | gateway         | 网关      |
 | common          | 通用模块    |
-| interact-review | 交互和审核模块 |
+| interact-reviewHandler | 交互和审核模块 |
 | third-party     | 第三方模块   |
 | user            | 用户模块    |
 

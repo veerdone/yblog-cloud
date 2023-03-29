@@ -69,9 +69,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.veerdone</groupId>
-            <artifactId>page</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client-java</artifactId>
         </dependency>
 
         <dependency>

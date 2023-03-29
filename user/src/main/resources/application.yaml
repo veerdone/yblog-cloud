@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    active:
-      - redis
   datasource:
     url: jdbc:mysql://192.168.2.10:3306/yblog_user?characterEncoding=UTF8
     username: root

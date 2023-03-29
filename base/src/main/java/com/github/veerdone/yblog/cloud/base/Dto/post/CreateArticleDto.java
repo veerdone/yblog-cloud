@@ -15,14 +15,16 @@ public class CreateArticleDto {
     private Long userId;
 
     @NotBlank(message = "标题不能为空")
-    @Length(max = 30, message = "标题最多30个字符")
+    @Length(max = 90, message = "标题最多30个字符")
     private String title;
 
     @NotBlank(message = "内容不能为空")
     private String content;
 
+    @Length(max = 200, message = "描述最多200个字符")
     private String description;
 
+    @Length(max = 200, message = "封面图片最长为200个字符")
     private String coverPicture;
 
     @NotEmpty(message = "最少选择一个标签")

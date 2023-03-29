@@ -23,6 +23,7 @@
         <module>comment</module>
         <module>interact-review</module>
         <module>common/exception</module>
+        <module>common/elasticsearch</module>
     </modules>
 
     <properties>
@@ -42,6 +43,8 @@
         <dubbo.version>3.2.0-beta.1</dubbo.version>
         <tencentcloud.api.version>3.1.530</tencentcloud.api.version>
         <qiniuyun.version>7.11.0</qiniuyun.version>
+        <rocketmq.version>5.0.4</rocketmq.version>
+        <elasticsearch.version>7.17.4</elasticsearch.version>
     </properties>
 
     <dependencyManagement>
@@ -133,6 +136,19 @@
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniuyun.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client-java</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>co.elastic.clients</groupId>
+                <artifactId>elasticsearch-java</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

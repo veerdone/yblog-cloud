@@ -1,7 +1,7 @@
 package com.github.veerdone.yblog.cloud.interact_review.service.impl;
 
 import com.github.veerdone.yblog.cloud.base.model.ThumbsUp;
-import com.github.veerdone.yblog.cloud.interact_review.factory.ThumbsUpHandlerStrategyFactory;
+import com.github.veerdone.yblog.cloud.interact_review.factory.thumbs.ThumbsUpHandlerStrategyFactory;
 import com.github.veerdone.yblog.cloud.interact_review.service.ThumbsUpService;
 import org.springframework.stereotype.Service;
 

@@ -36,6 +36,12 @@
             <artifactId>exception</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.veerdone</groupId>
+            <artifactId>page</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

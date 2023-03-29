@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.interact_review.factory;
+package com.github.veerdone.yblog.cloud.interact_review.factory.thumbs;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.util.Assert;

@@ -3,9 +3,6 @@ spring:
     url: jdbc:mysql://192.168.2.10:3306/yblog_user?characterEncoding=UTF8&tinyInt1isBit=false
     username: root
     password: root
-  profiles:
-    active:
-      - redis
 
 dubbo:
   registry:

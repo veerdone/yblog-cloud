@@ -43,13 +43,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.veerdone</groupId>
-            <artifactId>response</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <scope>compile</scope>

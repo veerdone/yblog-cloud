@@ -21,4 +21,8 @@ public class AsyncExecutor {
     public static void execute(Runnable runnable) {
         executor.execute(runnable);
     }
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(executor::shutdown));
+    }
 }

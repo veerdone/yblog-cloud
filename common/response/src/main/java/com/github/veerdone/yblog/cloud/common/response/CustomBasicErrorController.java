@@ -57,7 +57,7 @@ public class CustomBasicErrorController extends BasicErrorController {
             body.put("msg", unknownException.getMsg());
             body.put("err_code", unknownException.getErrCode());
         }
-        body.put("request_path", request.getRequestURI());
+
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 }

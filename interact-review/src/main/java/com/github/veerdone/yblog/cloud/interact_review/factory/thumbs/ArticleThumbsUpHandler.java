@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.interact_review.factory;
+package com.github.veerdone.yblog.cloud.interact_review.factory.thumbs;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;

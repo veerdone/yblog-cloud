@@ -5,12 +5,7 @@ import com.github.veerdone.yblog.cloud.base.Dto.post.CreateArticleDto;
 import com.github.veerdone.yblog.cloud.base.Dto.post.UpdateArticleDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,17 +15,17 @@ public class ArticleContentController {
     @Resource
     private ArticleContentService articleContentService;
 
-    @PostMapping("/create")
+    @PostMapping
     public void createPost(@RequestBody @Validated CreateArticleDto dto) {
         articleContentService.create(dto);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public void updateById(@RequestBody @Validated UpdateArticleDto dto) {
         articleContentService.updateById(dto);
     }
 
-    @PostMapping("/detail/{articleId}")
+    @GetMapping("/detail/{articleId}")
     public ArticleDetailVo detail(@PathVariable Long articleId) {
         return articleContentService.getArticleDetailVoById(articleId);
     }

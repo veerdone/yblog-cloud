@@ -1,8 +1,7 @@
 package com.github.veerdone.yblog.cloud.base.convert;
 
-import com.github.veerdone.yblog.cloud.base.Dto.review.ArticleReviewFailDto;
-import com.github.veerdone.yblog.cloud.base.Dto.review.ArticleReviewThroughDto;
-import com.github.veerdone.yblog.cloud.base.model.ArticleReview;
+import com.github.veerdone.yblog.cloud.base.Dto.review.UpdateReviewDto;
+import com.github.veerdone.yblog.cloud.base.model.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,7 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface ReviewConvert {
     ReviewConvert INSTANCE = Mappers.getMapper(ReviewConvert.class);
 
-    ArticleReview toArticleReview(ArticleReviewThroughDto dto);
-
-    ArticleReview toArticleReview(ArticleReviewFailDto dto);
+    Review toReview(UpdateReviewDto dto);
 }

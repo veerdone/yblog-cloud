@@ -8,5 +8,7 @@ public interface ArticleClient {
 
     void updateById(ArticleInfo articleInfo);
 
+    ArticleInfo updateStatusAndGet(Long id, Integer status);
+
     void incrOrDecrColumn(IncrOrDecrColumnDto dto);
 }

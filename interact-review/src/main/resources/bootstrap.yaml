@@ -2,7 +2,7 @@ server:
   port: 8084
 spring:
   application:
-    name: interact-review-application
+    name: interact-review-service
   cloud:
     nacos:
       server-addr: 192.168.2.10:8888
@@ -11,3 +11,8 @@ spring:
       config:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
         file-extension: yaml
+        extension-configs:
+          - data-id: interact-review-service.yaml
+            refresh: true
+          - data-id: base.yaml
+            refresh: true
