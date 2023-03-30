@@ -13,7 +13,7 @@ public interface UserInfoService {
      * @param id user id
      * @return user info
      */
-    UserInfo getUserInfoById(Long id);
+    UserInfo getById(Long id);
 
     /**
      * create user info
@@ -27,13 +27,13 @@ public interface UserInfoService {
      * @param ids list of user id
      * @return list of user
      */
-    List<UserInfo> getUserInfoByIds(List<Long> ids);
+    List<UserInfo> getByIds(List<Long> ids);
 
     /**
      * update user info by dto
      * @param dto user info dto
      */
-    void updateUserInfoById(UpdateUserInfoDto dto);
+    void updateById(UpdateUserInfoDto dto);
 
     /**
      * update user info by mybatis plus wrapper

@@ -59,6 +59,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.veerdone</groupId>
             <artifactId>exception</artifactId>
             <version>${project.version}</version>

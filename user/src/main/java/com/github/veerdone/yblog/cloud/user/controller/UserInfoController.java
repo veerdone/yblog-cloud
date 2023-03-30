@@ -22,11 +22,11 @@ public class UserInfoController {
 
     @PutMapping("/update")
     public void updateUserInfoById(@RequestBody @Validated UpdateUserInfoDto dto) {
-        userInfoService.updateUserInfoById(dto);
+        userInfoService.updateById(dto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/_common")
     public UserInfo getById(@PathVariable("id") Long id) {
-        return userInfoService.getUserInfoById(id);
+        return userInfoService.getById(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.veerdone.yblog.cloud.common.exception;
 
 /*
-* BizException 服务调用异常
-*
+* BizException Rpc服务调用异常
+* ServiceException http 服务调用异常
 */

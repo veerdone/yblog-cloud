@@ -5,7 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
-import org.springframework.beans.factory.InitializingBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -21,13 +22,15 @@ import java.util.List;
 
 @Component
 public class JwtFilter implements GlobalFilter, Ordered {
+    private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
+
     @Value("${config.jwt.key}")
     private byte[] key;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String requestPath = exchange.getRequest().getPath().toString();
-        if (!requestPath.endsWith("/_common")) {
+        if (requestPath.endsWith("/_common")) {
             return chain.filter(exchange);
         }
 

@@ -38,7 +38,7 @@ public class ElasticServiceImpl implements ElasticService {
             );
         } catch (IOException e) {
             log.warn("save article document failed, articleId={}, reason: ", articleInfo.getId(), e);
-            throw new ServiceException(ServiceExceptionEnum.UNKNOWN_EXCEPTION);
+            throw new ServiceException(ServiceExceptionEnum.INNER_SERVICE_ERROR);
         }
     }
 
@@ -65,7 +65,7 @@ public class ElasticServiceImpl implements ElasticService {
             return ElasticUtil.searchResp(response);
         } catch (IOException e) {
             log.warn("search article fail, keyword={}", dto.getKeyword(), e);
-            throw new ServiceException(ServiceExceptionEnum.UNKNOWN_EXCEPTION);
+            throw new ServiceException(ServiceExceptionEnum.INNER_SERVICE_ERROR);
         }
     }
 }

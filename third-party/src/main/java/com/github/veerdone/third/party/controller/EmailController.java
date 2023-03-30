@@ -15,10 +15,13 @@ public class EmailController {
     @Resource
     private EmailService emailService;
 
-    @GetMapping("/register_captcha")
-    public void register_captcha(@RequestParam("email") String email) {
-        AsyncExecutor.execute(() -> {
-            emailService.userRegisterCaptcha(email);
-        });
+    @GetMapping("/register_captcha/_common")
+    public void registerCaptcha(@RequestParam("email") String email) {
+        AsyncExecutor.execute(() -> emailService.userRegisterCaptcha(email));
+    }
+
+    @GetMapping("/login_captcha/_common")
+    public void loginCaptcha(@RequestParam("email") String email) {
+        AsyncExecutor.execute(() -> emailService.userLoginCaptcha(email));
     }
 }

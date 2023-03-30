@@ -46,6 +46,7 @@
         <rocketmq.version>5.0.4</rocketmq.version>
         <elasticsearch.version>7.17.4</elasticsearch.version>
         <jakarta.version>2.0.1</jakarta.version>
+        <skywalking.version>8.13.0</skywalking.version>
     </properties>
 
     <dependencyManagement>
@@ -156,6 +157,11 @@
                 <version>${jakarta.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

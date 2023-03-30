@@ -8,4 +8,5 @@ public class YblogGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(YblogGatewayApplication.class);
     }
+
 }

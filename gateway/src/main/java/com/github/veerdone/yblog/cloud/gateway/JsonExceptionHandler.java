@@ -58,7 +58,7 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
 
             return buildResponse(ex.getStatus().value(), String.valueOf(ex.getRawStatusCode()), ex.getMessage());
         }
-        ServiceExceptionEnum unknownException = ServiceExceptionEnum.UNKNOWN_EXCEPTION;
+        ServiceExceptionEnum unknownException = ServiceExceptionEnum.INNER_SERVICE_ERROR;
         return buildResponse(unknownException.getCode(), unknownException.getErrCode(), unknownException.getMsg());
     }
 

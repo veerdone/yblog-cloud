@@ -28,7 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public UserInfo getUserInfoById(Long id) {
+    public UserInfo getById(Long id) {
         String key = CacheKey.USER_INFO_QUERY_BY_ID + id;
         Object cacheUserInfo = redisTemplate.opsForValue().get(key);
         if (Objects.nonNull(cacheUserInfo)) {
@@ -53,11 +53,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoMapper.insert(userInfo);
         UserRegisterFactory.asyncAfterHandler(userInfo);
 
-        return this.getUserInfoById(userInfo.getId());
+        return this.getById(userInfo.getId());
     }
 
     @Override
-    public List<UserInfo> getUserInfoByIds(List<Long> ids) {
+    public List<UserInfo> getByIds(List<Long> ids) {
         List<UserInfo> userInfoList = new ArrayList<>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
             if (ids.get(i).equals(0L)) {
@@ -70,7 +70,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 continue;
             }
 
-            UserInfo userInfo = this.getUserInfoById(ids.get(i));
+            UserInfo userInfo = this.getById(ids.get(i));
             userInfoList.add(userInfo);
         }
 
@@ -78,7 +78,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void updateUserInfoById(UpdateUserInfoDto dto) {
+    public void updateById(UpdateUserInfoDto dto) {
         redisTemplate.delete(CacheKey.USER_INFO_QUERY_BY_ID + dto.getId());
         UserInfo userInfo = UserConvert.INSTANCE.toUserInfo(dto);
         userInfoMapper.updateById(userInfo);

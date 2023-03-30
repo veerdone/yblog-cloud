@@ -9,5 +9,15 @@ spring:
       config:
         file-extension: yaml
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
+        extension-configs:
+          - data-id: yblog-gateway.yaml
+            refresh: true
+          - data-id: base.yaml
+            refresh: true
+    loadbalancer:
+      cache:
+        enabled: false
+      nacos:
+        enabled: true
 server:
   port: 8082

@@ -1,7 +1,7 @@
 package com.github.veerdone.yblog.cloud.base.Dto;
 
 public class ArticleSearchDto {
-    private Integer from = 1;
+    private Integer from = 0;
 
     private Integer size = 10;
 

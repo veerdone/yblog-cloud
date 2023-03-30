@@ -11,11 +11,15 @@ import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleContent;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
+import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -28,6 +32,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
     @Resource
     private TransactionTemplate transactionTemplate;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private MqProvider mqProvider;
@@ -50,6 +57,19 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     }
 
     @Override
+    public ArticleContent getById(Long id) {
+        String cacheKey = CacheKey.ARTICLE_CONTENT_QUERY_BY_ID + id;
+        Object cache = redisTemplate.opsForValue().get(cacheKey);
+        if (Objects.nonNull(cache)) {
+            return (ArticleContent) cache;
+        }
+        ArticleContent articleContent = articleContentMapper.selectById(id);
+        redisTemplate.opsForValue().set(cacheKey, articleContent, 30, TimeUnit.MINUTES);
+
+        return articleContent;
+    }
+
+    @Override
     @Transactional
     public void updateById(UpdateArticleDto dto) {
         ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(dto);
@@ -67,7 +87,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     @Override
     public ArticleDetailVo getArticleDetailVoById(Long id) {
         ArticleDetailVo articleDetailVo = articleInfoService.getArticleDetailVoById(id);
-        ArticleContent articleContent = articleContentMapper.selectById(id);
+        ArticleContent articleContent = this.getById(id);
         articleDetailVo.setContent(articleContent.getContent());
 
         return articleDetailVo;

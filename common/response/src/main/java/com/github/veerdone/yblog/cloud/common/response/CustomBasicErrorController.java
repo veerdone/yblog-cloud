@@ -17,12 +17,9 @@
 package com.github.veerdone.yblog.cloud.common.response;
 
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
-import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
-import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -52,7 +48,7 @@ public class CustomBasicErrorController extends BasicErrorController {
             body.put("msg", notFound.getMsg());
             body.put("err_code", notFound.getErrCode());
         } else {
-            ServiceExceptionEnum unknownException = ServiceExceptionEnum.UNKNOWN_EXCEPTION;
+            ServiceExceptionEnum unknownException = ServiceExceptionEnum.INNER_SERVICE_ERROR;
             body.put("code", unknownException.getCode());
             body.put("msg", unknownException.getMsg());
             body.put("err_code", unknownException.getErrCode());

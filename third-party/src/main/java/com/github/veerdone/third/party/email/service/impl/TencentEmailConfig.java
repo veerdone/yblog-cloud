@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "config.email")
+@ConfigurationProperties(prefix = "config.email.tencent")
 public class TencentEmailConfig {
     private String secretKey;
 

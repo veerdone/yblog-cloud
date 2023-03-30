@@ -24,5 +24,12 @@ public class EmailServiceImpl implements EmailService {
         redisTemplate.opsForValue().set(CacheKey.USER_REGISTER_CAPTCHA + email, captcha, 5, TimeUnit.MINUTES);
     }
 
+    @Override
+    public void userLoginCaptcha(String email) {
+        String captcha = RandomUtil.randomString(6);
+        emailServerFactory.getDefaultEmailService().sendCaptcha(email, captcha);
+        redisTemplate.opsForValue().set(CacheKey.USER_LOGIN_CAPTCHA + email, captcha, 5, TimeUnit.MINUTES);
+    }
+
 
 }

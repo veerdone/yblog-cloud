@@ -54,11 +54,11 @@ public class QiniuyunImageServerImpl implements ImageServer {
                 log.warn("",e);
             } catch (QiniuException ex) {
                 log.warn("", ex);
-                throw new ServiceException(ServiceExceptionEnum.UNKNOWN_EXCEPTION);
+                throw new ServiceException(ServiceExceptionEnum.INNER_SERVICE_ERROR);
             }
         } catch (IOException e) {
             log.warn("图片上传失败: ", e);
-            throw new ServiceException(ServiceExceptionEnum.UNKNOWN_EXCEPTION);
+            throw new ServiceException(ServiceExceptionEnum.INNER_SERVICE_ERROR);
         }
         return domain + putRet.hash;
     }
