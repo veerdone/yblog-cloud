@@ -5,12 +5,13 @@ import com.github.veerdone.third.party.oss.service.ImageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-
 @Service
 public class ImageServiceImpl implements ImageService {
-    @Resource
-    private ImageServerFactory imageServerFactory;
+    private final ImageServerFactory imageServerFactory;
+
+    public ImageServiceImpl(ImageServerFactory imageServerFactory) {
+        this.imageServerFactory = imageServerFactory;
+    }
 
 
     @Override

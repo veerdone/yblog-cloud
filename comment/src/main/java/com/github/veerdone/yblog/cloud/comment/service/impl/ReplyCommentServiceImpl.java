@@ -14,7 +14,6 @@ import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,11 +21,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class ReplyCommentServiceImpl implements ReplyCommentService {
-    @Resource
-    private ReplyCommentMapper replyCommentMapper;
+    private final ReplyCommentMapper replyCommentMapper;
 
     @DubboReference
     private UserClient userClient;
+
+    public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper) {
+        this.replyCommentMapper = replyCommentMapper;
+    }
 
     @Override
     public void create(CreateReplyCommentDto dto) {

@@ -6,14 +6,16 @@ import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
 @RequestMapping("/comment/reply")
 public class ReplyCommentController {
-    @Resource
-    private ReplyCommentService replyCommentService;
+    private final ReplyCommentService replyCommentService;
+
+    public ReplyCommentController(ReplyCommentService replyCommentService) {
+        this.replyCommentService = replyCommentService;
+    }
 
     @PostMapping("/create")
     public void create(@RequestBody @Validated CreateReplyCommentDto dto) {
@@ -24,8 +26,7 @@ public class ReplyCommentController {
     public List<ReplyCommentVo> list(@RequestParam("item_id") Long itemId,
                                            @RequestParam("comment_id") Long commentId,
                                            @RequestParam("type") Integer type) {
-        List<ReplyCommentVo> replyCommentVoList = replyCommentService.list(itemId, commentId, type);
 
-        return replyCommentVoList;
+        return replyCommentService.list(itemId, commentId, type);
     }
 }

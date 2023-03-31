@@ -7,18 +7,20 @@ import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class ArticleClassifyServiceImpl implements ArticleClassifyService {
-    @Resource
-    private ArticleClassifyMapper articleClassifyMapper;
+    private final ArticleClassifyMapper articleClassifyMapper;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public ArticleClassifyServiceImpl(ArticleClassifyMapper articleClassifyMapper, RedisTemplate<String, Object> redisTemplate) {
+        this.articleClassifyMapper = articleClassifyMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public void create(ArticleClassify articleClassify) {

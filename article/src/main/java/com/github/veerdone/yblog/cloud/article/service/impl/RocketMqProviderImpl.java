@@ -25,16 +25,21 @@ import javax.annotation.Resource;
 public class RocketMqProviderImpl implements MqProvider, InitializingBean, DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(RocketMqProviderImpl.class);
 
-    @Value("${rocketmq.endpoints}")
-    private String endpoints;
+    private final String endpoints;
 
-    @Value("${rocketmq.topic}")
-    private String topic;
+    private final String topic;
 
     @Resource
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     private Producer producer;
+
+    public RocketMqProviderImpl(@Value("${rocketmq.endpoints}") String endpoints, @Value("${rocketmq.topic}") String topic,
+                                ObjectMapper objectMapper) {
+        this.endpoints = endpoints;
+        this.topic = topic;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void reviewArticle(ArticleInfo articleInfo) {
@@ -48,9 +53,9 @@ public class RocketMqProviderImpl implements MqProvider, InitializingBean, Dispo
                     .build();
             producer.send(message);
         } catch (JsonProcessingException e) {
-            log.warn("parse articleInfo to json bytes fail, article id: {}, reason: {},", articleInfo.getId(), e);
+            log.warn("parse articleInfo to json bytes fail, article id: {}, reason: ,", articleInfo.getId(), e);
         } catch (ClientException e) {
-            log.warn("rocketmq send article review message fail, article id: {}, reason: {}", articleInfo.getId(), e);
+            log.warn("rocketmq send article review message fail, article id: {}, reason: ", articleInfo.getId(), e);
         }
     }
 

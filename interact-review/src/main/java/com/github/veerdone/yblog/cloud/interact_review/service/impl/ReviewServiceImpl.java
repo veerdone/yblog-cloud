@@ -12,8 +12,11 @@ import java.util.Objects;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
-    @Resource
-    private ReviewMapper reviewMapper;
+    private final ReviewMapper reviewMapper;
+
+    public ReviewServiceImpl(ReviewMapper reviewMapper) {
+        this.reviewMapper = reviewMapper;
+    }
 
     @Override
     public void create(Review review) {

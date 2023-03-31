@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,8 +23,11 @@ import java.util.List;
 public class ElasticServiceImpl implements ElasticService {
     private static final Logger log = LoggerFactory.getLogger(ElasticServiceImpl.class);
 
-    @Resource
-    private ElasticsearchClient elasticsearchClient;
+    private final ElasticsearchClient elasticsearchClient;
+
+    public ElasticServiceImpl(ElasticsearchClient elasticsearchClient) {
+        this.elasticsearchClient = elasticsearchClient;
+    }
 
     @Override
     public void saveDocument(ArticleInfo articleInfo) {

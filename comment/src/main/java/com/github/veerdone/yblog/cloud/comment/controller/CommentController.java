@@ -7,14 +7,16 @@ import com.github.veerdone.yblog.cloud.comment.service.CommentService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
-    @Resource
-    private CommentService commentService;
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping("create")
     public void create(@RequestBody @Validated CreateCommentDto dto) {

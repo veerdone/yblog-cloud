@@ -8,18 +8,20 @@ import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class ArticleLabelServiceImpl implements ArticleLabelService {
-    @Resource
-    private ArticleLabelMapper articleLabelMapper;
+    private final ArticleLabelMapper articleLabelMapper;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public ArticleLabelServiceImpl(ArticleLabelMapper articleLabelMapper, RedisTemplate<String, Object> redisTemplate) {
+        this.articleLabelMapper = articleLabelMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public void create(ArticleLabel articleLabel) {

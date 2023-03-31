@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-
 @RestController
 @RequestMapping("/interact/thumbs_up")
 public class ThumbsUpController {
-    @Resource
-    private ThumbsUpService thumbsUpService;
+    private final ThumbsUpService thumbsUpService;
+
+    public ThumbsUpController(ThumbsUpService thumbsUpService) {
+        this.thumbsUpService = thumbsUpService;
+    }
 
     @PostMapping("/save")
     public void save(@RequestBody ThumbsUpDto dto) {

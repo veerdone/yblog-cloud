@@ -17,27 +17,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
 @Service
 public class ArticleContentServiceImpl implements ArticleContentService {
-    @Resource
-    private ArticleContentMapper articleContentMapper;
+    private final ArticleContentMapper articleContentMapper;
 
-    @Resource
-    private ArticleInfoService articleInfoService;
+    private final ArticleInfoService articleInfoService;
 
-    @Resource
-    private TransactionTemplate transactionTemplate;
+    private final TransactionTemplate transactionTemplate;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource
-    private MqProvider mqProvider;
+    private final MqProvider mqProvider;
+
+    public ArticleContentServiceImpl(ArticleContentMapper articleContentMapper, ArticleInfoService articleInfoService,
+                                     TransactionTemplate transactionTemplate, RedisTemplate<String, Object> redisTemplate,
+                                     MqProvider mqProvider) {
+        this.articleContentMapper = articleContentMapper;
+        this.articleInfoService = articleInfoService;
+        this.transactionTemplate = transactionTemplate;
+        this.redisTemplate = redisTemplate;
+        this.mqProvider = mqProvider;
+    }
 
     @Override
     public void create(CreateArticleDto dto) {

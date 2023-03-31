@@ -17,9 +17,7 @@ import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
-import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.page.Page;
-import com.github.veerdone.yblog.cloud.common.redis.RecordUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,23 +34,28 @@ import java.util.stream.Collectors;
 public class ArticleInfoServiceImpl implements ArticleInfoService {
     public static final Logger log = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
 
-    @Resource
-    private ArticleInfoMapper articleInfoMapper;
+    private final ArticleInfoMapper articleInfoMapper;
 
-    @Resource
-    private ArticleClassifyService articleClassifyService;
+    private final ArticleClassifyService articleClassifyService;
 
-    @Resource
-    private ArticleLabelService articleLabelService;
+    private final ArticleLabelService articleLabelService;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource
-    private ElasticService elasticService;
+    private final ElasticService elasticService;
 
     @DubboReference
     private UserClient userClient;
+
+    public ArticleInfoServiceImpl(ArticleInfoMapper articleInfoMapper, ArticleClassifyService articleClassifyService,
+                                  ArticleLabelService articleLabelService, RedisTemplate<String, Object> redisTemplate,
+                                  ElasticService elasticService) {
+        this.articleInfoMapper = articleInfoMapper;
+        this.articleClassifyService = articleClassifyService;
+        this.articleLabelService = articleLabelService;
+        this.redisTemplate = redisTemplate;
+        this.elasticService = elasticService;
+    }
 
     @Override
     public void create(ArticleInfo articleInfo) {

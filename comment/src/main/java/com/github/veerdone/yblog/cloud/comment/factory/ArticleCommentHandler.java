@@ -21,14 +21,17 @@ import java.util.Objects;
 
 @Component
 public class ArticleCommentHandler implements CommentHandler {
-    @Resource
-    private CommentMapper commentMapper;
+    private final CommentMapper commentMapper;
 
-    @Resource
-    private ReplyCommentMapper replyCommentMapper;
+    private final ReplyCommentMapper replyCommentMapper;
 
     @DubboReference
     private ArticleClient articleClient;
+
+    public ArticleCommentHandler(CommentMapper commentMapper, ReplyCommentMapper replyCommentMapper) {
+        this.commentMapper = commentMapper;
+        this.replyCommentMapper = replyCommentMapper;
+    }
 
     @Override
     public void createComment(CreateCommentDto dto) {

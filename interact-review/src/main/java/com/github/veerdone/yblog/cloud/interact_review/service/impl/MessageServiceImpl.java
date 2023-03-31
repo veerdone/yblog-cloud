@@ -14,8 +14,11 @@ import java.util.Map;
 
 @Service
 public class MessageServiceImpl implements MessageService {
-    @Resource
-    private MessageMapper messageMapper;
+    private final MessageMapper messageMapper;
+
+    public MessageServiceImpl(MessageMapper messageMapper) {
+        this.messageMapper = messageMapper;
+    }
 
     @Override
     public void create(Message message) {

@@ -8,14 +8,16 @@ import com.github.veerdone.yblog.cloud.common.elasticsearch.ElasticUtil;
 import com.github.veerdone.yblog.cloud.common.response.result.ListResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
 @RequestMapping("/article")
 public class ArticleInfoController {
-    @Resource
-    private ArticleInfoService articleInfoService;
+    private final ArticleInfoService articleInfoService;
+
+    public ArticleInfoController(ArticleInfoService articleInfoService) {
+        this.articleInfoService = articleInfoService;
+    }
 
     @PostMapping("/list/_common")
     public List<ArticleInfoVo> list(@RequestBody ArticleInfo articleInfo) {

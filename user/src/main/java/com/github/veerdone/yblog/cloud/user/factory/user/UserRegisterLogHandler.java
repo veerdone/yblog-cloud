@@ -21,15 +21,17 @@ import com.github.veerdone.yblog.cloud.base.model.UserRegisterLog;
 import com.github.veerdone.yblog.cloud.user.service.UserRegisterLogService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 
 @Component
 public class UserRegisterLogHandler implements UserRegisterHandler {
-    @Resource
-    private UserRegisterLogService userRegisterLogService;
+    private final UserRegisterLogService userRegisterLogService;
+
+    public UserRegisterLogHandler(UserRegisterLogService userRegisterLogService) {
+        this.userRegisterLogService = userRegisterLogService;
+    }
 
     @Override
     public void afterRegisterUser(UserInfo userInfo) {

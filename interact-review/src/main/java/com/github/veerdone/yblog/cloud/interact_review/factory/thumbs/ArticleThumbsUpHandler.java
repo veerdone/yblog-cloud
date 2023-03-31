@@ -22,20 +22,24 @@ import javax.annotation.Resource;
 
 @Component
 public class ArticleThumbsUpHandler implements ThumbsUpHandler {
-    @Resource
-    private ThumbsUpMapper thumbsUpMapper;
+    private final ThumbsUpMapper thumbsUpMapper;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource
-    private MessageService messageService;
+    private final MessageService messageService;
 
     @DubboReference
     private ArticleClient articleClient;
 
     @DubboReference
     private UserClient userClient;
+
+    public ArticleThumbsUpHandler(ThumbsUpMapper thumbsUpMapper, RedisTemplate<String, Object> redisTemplate,
+                                  MessageService messageService) {
+        this.thumbsUpMapper = thumbsUpMapper;
+        this.redisTemplate = redisTemplate;
+        this.messageService = messageService;
+    }
 
     @Override
     public void save(ThumbsUp thumbsUp) {

@@ -7,15 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserRegisterLogController {
-    @Resource
-    private UserRegisterLogService userRegisterLogService;
+    private final UserRegisterLogService userRegisterLogService;
+
+    public UserRegisterLogController(UserRegisterLogService userRegisterLogService) {
+        this.userRegisterLogService = userRegisterLogService;
+    }
 
     @GetMapping("/count/register_last_week/_common")
     public Long countRegisterOfLastWeek() {

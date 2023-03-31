@@ -20,10 +20,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.veerdone.yblog.cloud.base.KeyValue;
 import com.github.veerdone.yblog.cloud.base.model.UserRegisterLog;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Repository
 public interface UserRegisterLogMapper extends BaseMapper<UserRegisterLog> {
 
     List<KeyValue<LocalDate, Long>> countCurrentMonthGroupByDay(@Param("year") int year, @Param("month") int month);

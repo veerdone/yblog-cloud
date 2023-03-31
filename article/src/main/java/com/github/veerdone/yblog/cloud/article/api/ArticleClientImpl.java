@@ -11,16 +11,17 @@ import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-
 @DubboService
 @Service
 public class ArticleClientImpl implements ArticleClient {
-    @Resource
-    private ArticleInfoService articleInfoService;
+    private final ArticleInfoService articleInfoService;
 
-    @Resource
-    private ElasticService elasticService;
+    private final ElasticService elasticService;
+
+    public ArticleClientImpl(ArticleInfoService articleInfoService, ElasticService elasticService) {
+        this.articleInfoService = articleInfoService;
+        this.elasticService = elasticService;
+    }
 
     @Override
     public ArticleInfo getById(Long id) {

@@ -7,13 +7,14 @@ import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-
 @RestController
 @RequestMapping("/article")
 public class ArticleContentController {
-    @Resource
-    private ArticleContentService articleContentService;
+    private final ArticleContentService articleContentService;
+
+    public ArticleContentController(ArticleContentService articleContentService) {
+        this.articleContentService = articleContentService;
+    }
 
     @PostMapping
     public void createPost(@RequestBody @Validated CreateArticleDto dto) {

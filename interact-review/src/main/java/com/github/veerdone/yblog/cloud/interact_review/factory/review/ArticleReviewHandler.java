@@ -1,7 +1,6 @@
 package com.github.veerdone.yblog.cloud.interact_review.factory.review;
 
 import cn.hutool.core.util.StrUtil;
-import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.client.ArticleClient;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.Message;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
@@ -27,14 +25,17 @@ import java.util.Objects;
 public class ArticleReviewHandler implements ReviewHandler {
     private static final Logger log = LoggerFactory.getLogger(ArticleReviewHandler.class);
 
-    @Resource
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
-    @Resource
-    private MessageService messageService;
+    private final MessageService messageService;
 
     @DubboReference
     private ArticleClient articleClient;
+
+    public ArticleReviewHandler(ReviewService reviewService, MessageService messageService) {
+        this.reviewService = reviewService;
+        this.messageService = messageService;
+    }
 
     @Override
     public void review(MessageView messageView) throws IOException {

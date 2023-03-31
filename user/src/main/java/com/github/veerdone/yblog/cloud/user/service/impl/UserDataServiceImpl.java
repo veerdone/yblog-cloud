@@ -12,9 +12,9 @@ import com.github.veerdone.yblog.cloud.base.Vo.UserInfoVo;
 import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
+import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
-import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.util.PassEncoderUtil;
 import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
 import com.github.veerdone.yblog.cloud.user.mapper.UserDataMapper;
@@ -27,7 +27,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 
 
@@ -41,14 +40,18 @@ public class UserDataServiceImpl implements UserDataService {
     @Value("${config.jwt.expireHour}")
     private Integer expireHour;
 
-    @Resource
-    private UserDataMapper userDataMapper;
+    private final UserDataMapper userDataMapper;
 
-    @Resource
-    private UserInfoService userInfoService;
+    private final UserInfoService userInfoService;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public UserDataServiceImpl(UserDataMapper userDataMapper, UserInfoService userInfoService,
+                               RedisTemplate<String, Object> redisTemplate) {
+        this.userDataMapper = userDataMapper;
+        this.userInfoService = userInfoService;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public UserData getByEmail(String email) {

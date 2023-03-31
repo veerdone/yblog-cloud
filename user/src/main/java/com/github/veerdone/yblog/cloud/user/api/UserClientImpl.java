@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service
@@ -19,8 +18,11 @@ import java.util.List;
 public class UserClientImpl implements UserClient {
     private static final Logger log = LoggerFactory.getLogger(UserClientImpl.class);
 
-    @Resource
-    private UserInfoService userInfoService;
+    private final UserInfoService userInfoService;
+
+    public UserClientImpl(UserInfoService userInfoService) {
+        this.userInfoService = userInfoService;
+    }
 
     @Override
     public UserInfo getUserInfoById(Long id) {

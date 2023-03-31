@@ -13,7 +13,6 @@ import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,11 +20,14 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
-    @Resource
-    private UserInfoMapper userInfoMapper;
+    private final UserInfoMapper userInfoMapper;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public UserInfoServiceImpl(UserInfoMapper userInfoMapper, RedisTemplate<String, Object> redisTemplate) {
+        this.userInfoMapper = userInfoMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public UserInfo getById(Long id) {

@@ -4,19 +4,21 @@ import cn.hutool.core.util.RandomUtil;
 import com.github.veerdone.third.party.email.EmailServerFactory;
 import com.github.veerdone.third.party.email.service.EmailService;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
-import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Resource
-    private EmailServerFactory emailServerFactory;
+    private final EmailServerFactory emailServerFactory;
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public EmailServiceImpl(EmailServerFactory emailServerFactory, RedisTemplate<String, Object> redisTemplate) {
+        this.emailServerFactory = emailServerFactory;
+        this.redisTemplate = redisTemplate;
+    }
 
     public void userRegisterCaptcha(String email) {
         String captcha = RandomUtil.randomString(6);

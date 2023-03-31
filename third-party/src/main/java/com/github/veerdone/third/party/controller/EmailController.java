@@ -12,8 +12,11 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/email")
 public class EmailController {
-    @Resource
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public EmailController(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @GetMapping("/register_captcha/_common")
     public void registerCaptcha(@RequestParam("email") String email) {

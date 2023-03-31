@@ -25,7 +25,6 @@ import com.github.veerdone.yblog.cloud.user.mapper.UserRegisterLogMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserRegisterLogService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
@@ -34,8 +33,11 @@ import java.util.Objects;
 
 @Service
 public class UserRegisterLogServiceImpl implements UserRegisterLogService {
-    @Resource
-    private UserRegisterLogMapper userRegisterLogMapper;
+    private final UserRegisterLogMapper userRegisterLogMapper;
+
+    public UserRegisterLogServiceImpl(UserRegisterLogMapper userRegisterLogMapper) {
+        this.userRegisterLogMapper = userRegisterLogMapper;
+    }
 
 
     @Override
