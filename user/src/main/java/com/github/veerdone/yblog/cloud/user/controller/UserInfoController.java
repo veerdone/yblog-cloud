@@ -16,7 +16,7 @@ public class UserInfoController {
         this.userInfoService = userInfoService;
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public void updateUserInfoById(@RequestBody @Validated UpdateUserInfoDto dto) {
         userInfoService.updateById(dto);
     }

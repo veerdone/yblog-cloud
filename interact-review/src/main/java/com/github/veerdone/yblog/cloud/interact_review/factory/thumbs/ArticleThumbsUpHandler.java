@@ -18,8 +18,6 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 @Component
 public class ArticleThumbsUpHandler implements ThumbsUpHandler {
     private final ThumbsUpMapper thumbsUpMapper;
@@ -53,7 +51,7 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
         // 用户点赞加1
         ArticleInfo articleInfo = articleClient.getById(thumbsUp.getItemId());
         userClient.incrOrDecrColumn(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", 1));
-        UserInfo userInfo = userClient.getUserInfoById(thumbsUp.getUserId());
+        UserInfo userInfo = userClient.getById(thumbsUp.getUserId());
         String msg = StrUtil.format("{} 点赞了您的文章: {}", userInfo.getUserName(), articleInfo.getTitle());
         Message message = new Message();
         message.setMsg(msg);

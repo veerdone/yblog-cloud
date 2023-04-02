@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.article.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
+import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
@@ -21,11 +22,7 @@ public interface ArticleInfoService {
      */
     void updateById(ArticleInfo articleInfo);
 
-    /**
-     * update userInfo by wrapper
-     * @param wrapper update wrapper
-     */
-    void updateByWrapper(Wrapper<ArticleInfo> wrapper);
+    void updateByIncrOrDecrColumnDto(IncrOrDecrColumnDto dto);
 
     /**
      * query userInfo by id

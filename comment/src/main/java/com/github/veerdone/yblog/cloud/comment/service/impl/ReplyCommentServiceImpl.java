@@ -57,8 +57,8 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
 
         List<Long> replyUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyUserId).collect(Collectors.toList());
         List<Long> replyToUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyToUserId).collect(Collectors.toList());
-        List<UserInfo> replyUserInfoList = userClient.getUserInfoByIds(replyUserInfoIds);
-        List<UserInfo> replyToUserInfoList = userClient.getUserInfoByIds(replyToUserInfoIds);
+        List<UserInfo> replyUserInfoList = userClient.getByIds(replyUserInfoIds);
+        List<UserInfo> replyToUserInfoList = userClient.getByIds(replyToUserInfoIds);
 
         List<ReplyCommentVo> replyCommentVoList = new ArrayList<>();
         for (int i = 0; i < replyCommentList.size(); i++) {

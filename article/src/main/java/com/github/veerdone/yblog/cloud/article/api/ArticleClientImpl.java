@@ -1,7 +1,5 @@
 package com.github.veerdone.yblog.cloud.article.api;
 
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
 import com.github.veerdone.yblog.cloud.article.service.ElasticService;
 import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
@@ -35,12 +33,12 @@ public class ArticleClientImpl implements ArticleClient {
 
     @Override
     public ArticleInfo updateStatusAndGet(Long id, Integer status) {
-        LambdaUpdateWrapper<ArticleInfo> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(ArticleInfo::getId, id)
-                .set(ArticleInfo::getStatus, status);
-        articleInfoService.updateByWrapper(wrapper);
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setId(id);
+        articleInfo.setStatus(status);
+        articleInfoService.updateById(articleInfo);
 
-        ArticleInfo articleInfo = articleInfoService.getById(id);
+        articleInfo = articleInfoService.getById(id);
         if (status.equals(StatusConstant.REVIEW_THROUGH)) {
             elasticService.saveDocument(articleInfo);
         }
@@ -50,10 +48,7 @@ public class ArticleClientImpl implements ArticleClient {
 
     @Override
     public void incrOrDecrColumn(IncrOrDecrColumnDto dto) {
-        LambdaUpdateWrapper<ArticleInfo> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(ArticleInfo::getId, dto.getItemId())
-                .setSql(StrUtil.format("{}={}+{}", dto.getColumn(), dto.getColumn(), dto.getNum()));
-        articleInfoService.updateByWrapper(wrapper);
+
     }
 
 }

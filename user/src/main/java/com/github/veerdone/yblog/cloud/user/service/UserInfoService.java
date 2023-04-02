@@ -1,6 +1,7 @@
 package com.github.veerdone.yblog.cloud.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
@@ -35,9 +36,5 @@ public interface UserInfoService {
      */
     void updateById(UpdateUserInfoDto dto);
 
-    /**
-     * update user info by mybatis plus wrapper
-     * @param wrapper update wrapper
-     */
-    void updateByWrapper(Wrapper<UserInfo> wrapper);
+    void updateByIncrOrDecrColumnDto(IncrOrDecrColumnDto dto);
 }

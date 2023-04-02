@@ -26,6 +26,14 @@ public class CacheKey {
      */
     public static final String ARTICLE_LABEL_QUERY_BY_ID = "article:label:query:by:id:";
 
+
+    public static final String ARTICLE_LABEL_HASH = "article:label:hash";
+
+    /**
+     * 文章信息缓存key, key + article_id
+     */
+    public static final String ARTICLE_INFO_QUERY_BY_ID = "article:info:query:by:id:";
+
     /**
      * 文章点赞 set key, key + 用户id
      */

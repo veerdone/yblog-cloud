@@ -28,7 +28,7 @@ public class CommentController {
         commentService.delete(itemId, type);
     }
 
-    @PostMapping("/list/query")
+    @PostMapping("/list/query/_common")
     public List<CommentVo> listByQuery(@RequestBody @Validated ListQueryCommentDto dto) {
         return commentService.listByQuery(dto);
     }

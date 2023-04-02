@@ -12,9 +12,10 @@ import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleContent;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Objects;
@@ -23,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ArticleContentServiceImpl implements ArticleContentService {
+    private static final Logger log = LoggerFactory.getLogger(ArticleContentServiceImpl.class);
+
+
     private final ArticleContentMapper articleContentMapper;
 
     private final ArticleInfoService articleInfoService;
@@ -63,6 +67,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     @Override
     public ArticleContent getById(Long id) {
         String cacheKey = CacheKey.ARTICLE_CONTENT_QUERY_BY_ID + id;
+        log.debug("set article_content cache by cache_key={}", cacheKey);
         Object cache = redisTemplate.opsForValue().get(cacheKey);
         if (Objects.nonNull(cache)) {
             return (ArticleContent) cache;
@@ -74,18 +79,24 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     }
 
     @Override
-    @Transactional
     public void updateById(UpdateArticleDto dto) {
         ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(dto);
-        articleInfoService.updateById(articleInfo);
+        transactionTemplate.executeWithoutResult(status -> {
+            articleInfoService.updateById(articleInfo);
 
-        if (StrUtil.isNotBlank(dto.getContent())) {
-            ArticleContent articleContent = new ArticleContent();
-            articleContent.setId(dto.getId());
-            articleContent.setContent(dto.getContent());
+            if (StrUtil.isNotBlank(dto.getContent())) {
+                ArticleContent articleContent = new ArticleContent();
+                articleContent.setId(dto.getId());
+                articleContent.setContent(dto.getContent());
 
-            articleContentMapper.updateById(articleContent);
-        }
+                articleContentMapper.updateById(articleContent);
+            }
+        });
+
+        mqProvider.reviewArticle(articleInfo);
+        String cacheKey = CacheKey.ARTICLE_CONTENT_QUERY_BY_ID + dto.getId();
+        log.debug("del article_content cache by cache_key={}", cacheKey);
+        redisTemplate.delete(cacheKey);
     }
 
     @Override

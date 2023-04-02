@@ -1,7 +1,8 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.article.service.ArticleInfoService;
@@ -9,6 +10,7 @@ import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
 import com.github.veerdone.yblog.cloud.article.service.ElasticService;
 import com.github.veerdone.yblog.cloud.base.Dto.ArticleDocumentDto;
 import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
+import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
@@ -17,6 +19,7 @@ import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
+import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.page.Page;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
@@ -24,10 +27,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,28 +70,46 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     public void updateById(ArticleInfo articleInfo) {
         articleInfo.setStatus(0);
         articleInfoMapper.updateById(articleInfo);
+        String cacheKey = CacheKey.ARTICLE_INFO_QUERY_BY_ID + articleInfo.getId();
+        log.debug("delete article_info cache by cache_key={}", cacheKey);
+        redisTemplate.delete(cacheKey);
     }
 
     @Override
-    public void updateByWrapper(Wrapper<ArticleInfo> wrapper) {
+    public void updateByIncrOrDecrColumnDto(IncrOrDecrColumnDto dto) {
+        LambdaUpdateWrapper<ArticleInfo> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(ArticleInfo::getId, dto.getItemId())
+                .setSql(StrUtil.format("{}={}+{}", dto.getColumn(), dto.getColumn(), dto.getNum()));
         articleInfoMapper.update(null, wrapper);
+        String cacheKey = CacheKey.ARTICLE_INFO_QUERY_BY_ID + dto.getItemId();
+        log.debug("delete article_info cache by cache_key={}", cacheKey);
+        redisTemplate.delete(cacheKey);
     }
 
     @Override
     public ArticleInfo getById(Long id) {
-        return articleInfoMapper.selectById(id);
+        String cacheKey = CacheKey.ARTICLE_INFO_QUERY_BY_ID + id;
+        log.debug("set article_info cache by cache_key={}", cacheKey);
+        Object cache = redisTemplate.opsForValue().get(cacheKey);
+        if (Objects.nonNull(cache)) {
+            return (ArticleInfo) cache;
+        }
+        ArticleInfo articleInfo = articleInfoMapper.selectById(id);
+        redisTemplate.opsForValue().set(cacheKey, articleInfo, 30, TimeUnit.MINUTES);
+
+        return articleInfo;
     }
 
     @Override
     public ArticleDetailVo getArticleDetailVoById(Long id) {
-        ArticleInfo articleInfo = articleInfoMapper.selectById(id);
+        ArticleInfo articleInfo = this.getById(id);
         ArticleDetailVo articleDetailVo = ArticleConvert.INSTANCE.toArticleDetailVo(articleInfo);
 
         articleDetailVo.setArticleClassify(articleClassifyService.getById(articleInfo.getClassify()));
         List<ArticleLabel> articleLabelList = articleLabelService.getByIds(articleInfo.getLabel());
         articleDetailVo.setArticleLabelList(articleLabelList);
 
-        UserInfo userInfo = userClient.getUserInfoById(articleInfo.getUserId());
+        UserInfo userInfo = userClient.getById(articleInfo.getUserId());
         articleDetailVo.setUserInfo(userInfo);
 
         return articleDetailVo;
@@ -95,15 +117,15 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Page
     @Override
-    public List<ArticleInfoVo> listArticleInfoVo(ArticleInfo articleInfo) {
-        articleInfo.setStatus(1);
-        List<ArticleInfo> articleInfoList = articleInfoMapper.listByEntity(articleInfo);
+    public List<ArticleInfoVo> listArticleInfoVo(ArticleInfo entity) {
+        entity.setStatus(1);
+        List<ArticleInfo> articleInfoList = articleInfoMapper.listByEntity(entity);
         if (CollectionUtil.isEmpty(articleInfoList)) {
             return Collections.emptyList();
         }
 
         List<Long> userIds = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
-        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+        List<UserInfo> userInfoList = userClient.getByIds(userIds);
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
         for (int i = 0; i < articleInfoList.size(); i++) {
@@ -124,7 +146,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleDocumentDtoList.size());
         List<Long> userIds = articleDocumentDtoList.stream().map(ArticleDocumentDto::getUserId).collect(Collectors.toList());
-        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+        List<UserInfo> userInfoList = userClient.getByIds(userIds);
 
         for (int i = 0; i < articleDocumentDtoList.size(); i++) {
             ArticleDocumentDto articleDocumentDto = articleDocumentDtoList.get(i);

@@ -22,7 +22,7 @@ public class ReplyCommentController {
         replyCommentService.create(dto);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/list/_common")
     public List<ReplyCommentVo> list(@RequestParam("item_id") Long itemId,
                                            @RequestParam("comment_id") Long commentId,
                                            @RequestParam("type") Integer type) {

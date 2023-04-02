@@ -25,22 +25,18 @@ public class UserClientImpl implements UserClient {
     }
 
     @Override
-    public UserInfo getUserInfoById(Long id) {
+    public UserInfo getById(Long id) {
         return userInfoService.getById(id);
     }
 
     @Override
-    public List<UserInfo> getUserInfoByIds(List<Long> ids) {
-        log.info("ids={}", ids);
+    public List<UserInfo> getByIds(List<Long> ids) {
+        log.info("get users by ids={}", ids);
         return userInfoService.getByIds(ids);
     }
 
     @Override
     public void incrOrDecrColumn(IncrOrDecrColumnDto dto) {
-        LambdaUpdateWrapper<UserInfo> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(UserInfo::getId, dto.getItemId())
-                // eg: count=count+1 or count=count+-1
-                .setSql(StrUtil.format("{}={}+{}", dto.getColumn(), dto.getColumn(), dto.getItemId()));
-        userInfoService.updateByWrapper(wrapper);
+        userInfoService.updateByIncrOrDecrColumnDto(dto);
     }
 }

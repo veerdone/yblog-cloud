@@ -72,6 +72,7 @@ public class UserDataServiceImpl implements UserDataService {
         }
 
         String key = CacheKey.USER_REGISTER_CAPTCHA + dto.getEmail();
+        log.debug("get user_register_captcha by cache_key={}", key);
         Object cacheCaptcha = redisTemplate.opsForValue().get(key);
         if (Objects.isNull(cacheCaptcha) || !Objects.equals(cacheCaptcha, dto.getCaptcha())) {
             throw new ServiceException(ServiceExceptionEnum.CAPTCHA_MISTAKE);
@@ -96,10 +97,13 @@ public class UserDataServiceImpl implements UserDataService {
         LambdaQueryWrapper<UserData> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserData::getEmail, dto.getEmail());
         UserData dbUserData = userDataMapper.selectOne(wrapper);
-        Object cacheCaptcha = redisTemplate.opsForValue().get(CacheKey.USER_LOGIN_CAPTCHA + dto.getEmail());
+        String cacheKey = CacheKey.USER_LOGIN_CAPTCHA + dto.getEmail();
+        log.debug("get user_login_captcha by cache_key={}", cacheKey);
+        Object cacheCaptcha = redisTemplate.opsForValue().get(cacheKey);
         if (Objects.isNull(dbUserData) || (Objects.isNull(cacheCaptcha) || !Objects.equals(cacheCaptcha, dto.getCaptcha()))) {
             throw new ServiceException(ServiceExceptionEnum.EMAIL_OR_CAPTCHA_MISTAKE);
         }
+        redisTemplate.delete(cacheKey);
 
         return generateUserInfoVo(dbUserData, null);
     }

@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleLabelMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
@@ -8,9 +9,12 @@ import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleLabelServiceImpl implements ArticleLabelService {
@@ -30,23 +34,35 @@ public class ArticleLabelServiceImpl implements ArticleLabelService {
 
     @Override
     public ArticleLabel getById(Long id) {
-        String key = CacheKey.ARTICLE_LABEL_QUERY_BY_ID + id;
-        Object cache = redisTemplate.opsForValue().get(key);
+        Object cache = redisTemplate.opsForHash().get(CacheKey.ARTICLE_LABEL_HASH, id);
         if (Objects.nonNull(cache)) {
             return (ArticleLabel) cache;
         }
         ArticleLabel articleLabel = articleLabelMapper.selectById(id);
-        redisTemplate.opsForValue().set(key, articleLabel, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForHash().put(CacheKey.ARTICLE_LABEL_HASH, id, articleLabel);
 
         return articleLabel;
     }
 
     @Override
     public List<ArticleLabel> getByIds(List<Long> ids) {
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(CacheKey.ARTICLE_LABEL_HASH);
+        if (CollectionUtil.isNotEmpty(entries)) {
+            List<ArticleLabel> articleLabelList = new ArrayList<>(entries.size());
+            ids.forEach(id -> articleLabelList.add((ArticleLabel) entries.get(id)));
+
+            return articleLabelList;
+        }
+
         LambdaQueryWrapper<ArticleLabel> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(ArticleLabel::getId, ids);
 
-        return articleLabelMapper.selectList(wrapper);
+        List<ArticleLabel> articleLabelList = articleLabelMapper.selectList(wrapper);
+        Map<Long, ArticleLabel> map = articleLabelList.stream()
+                .collect(Collectors.toMap(ArticleLabel::getId, articleLabel -> articleLabel));
+        redisTemplate.opsForHash().putAll(CacheKey.ARTICLE_LABEL_HASH, map);
+
+        return articleLabelList;
     }
 
     @Override

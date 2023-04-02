@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Long> userIds = commentList.stream().map(Comment::getUserId).collect(Collectors.toList());
-        List<UserInfo> userInfoList = userClient.getUserInfoByIds(userIds);
+        List<UserInfo> userInfoList = userClient.getByIds(userIds);
 
         List<CommentVo> commentVoList = new ArrayList<>();
         for (int i = 0; i < commentList.size(); i++) {

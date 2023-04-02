@@ -6,9 +6,9 @@ import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import java.util.List;
 
 public interface UserClient {
-    UserInfo getUserInfoById(Long id);
+    UserInfo getById(Long id);
 
-    List<UserInfo> getUserInfoByIds(List<Long> ids);
+    List<UserInfo> getByIds(List<Long> ids);
 
     void incrOrDecrColumn(IncrOrDecrColumnDto dto);
 }

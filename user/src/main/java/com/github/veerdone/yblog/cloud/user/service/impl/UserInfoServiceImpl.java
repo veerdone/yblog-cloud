@@ -1,7 +1,10 @@
 package com.github.veerdone.yblog.cloud.user.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
@@ -10,6 +13,8 @@ import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
 import com.github.veerdone.yblog.cloud.user.mapper.UserInfoMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
+    private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
+
     private final UserInfoMapper userInfoMapper;
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -32,6 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo getById(Long id) {
         String key = CacheKey.USER_INFO_QUERY_BY_ID + id;
+        log.debug("get user_info by cache_key={}", key);
         Object cacheUserInfo = redisTemplate.opsForValue().get(key);
         if (Objects.nonNull(cacheUserInfo)) {
             return (UserInfo) cacheUserInfo;
@@ -81,13 +89,21 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void updateById(UpdateUserInfoDto dto) {
-        redisTemplate.delete(CacheKey.USER_INFO_QUERY_BY_ID + dto.getId());
+        String cacheKey = CacheKey.USER_INFO_QUERY_BY_ID + dto.getId();
+        log.debug("del user_info cache by cache_key={}", cacheKey);
+        redisTemplate.delete(cacheKey);
         UserInfo userInfo = UserConvert.INSTANCE.toUserInfo(dto);
         userInfoMapper.updateById(userInfo);
     }
 
     @Override
-    public void updateByWrapper(Wrapper<UserInfo> wrapper) {
+    public void updateByIncrOrDecrColumnDto(IncrOrDecrColumnDto dto) {
+        String cacheKey = CacheKey.USER_INFO_QUERY_BY_ID + dto.getItemId();
+        log.debug("del user_info cache by cache_key={}", cacheKey);
+        redisTemplate.delete(cacheKey);
+        LambdaUpdateWrapper<UserInfo> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(UserInfo::getId, dto.getItemId())
+                .setSql(StrUtil.format("{}={}+{}", dto.getColumn(), dto.getColumn(), dto.getItemId()));
         userInfoMapper.update(null, wrapper);
     }
 }
