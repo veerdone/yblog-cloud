@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.article.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleInfoMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
@@ -48,7 +49,6 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ElasticService elasticService;
 
-    @DubboReference
     private UserClient userClient;
 
     public ArticleInfoServiceImpl(ArticleInfoMapper articleInfoMapper, ArticleClassifyService articleClassifyService,
@@ -59,6 +59,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         this.articleLabelService = articleLabelService;
         this.redisTemplate = redisTemplate;
         this.elasticService = elasticService;
+    }
+
+    @DubboReference
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @Override
@@ -124,20 +129,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             return Collections.emptyList();
         }
 
-        List<Long> userIds = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
-        List<UserInfo> userInfoList = userClient.getByIds(userIds);
-
-        List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
-        for (int i = 0; i < articleInfoList.size(); i++) {
-            ArticleInfo articleInfoItem = articleInfoList.get(i);
-            ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfoItem);
-
-            setArticleInfoVoField(articleInfoVo, userInfoList.get(i), articleInfoItem.getClassify(), articleInfoItem.getLabel());
-
-            articleInfoVoList.add(articleInfoVo);
-        }
-
-        return articleInfoVoList;
+        return getArticleInfoVos(articleInfoList);
     }
 
     @Override
@@ -154,6 +146,34 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
             setArticleInfoVoField(articleInfoVo, userInfoList.get(i), articleDocumentDto.getClassify(), articleDocumentDto.getLabel());
 
+            articleInfoVoList.add(articleInfoVo);
+        }
+
+        return articleInfoVoList;
+    }
+
+    @Override
+    public List<ArticleInfoVo> getByIds(List<Long> ids) {
+        LambdaQueryWrapper<ArticleInfo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(ArticleInfo::getId, ids);
+        List<ArticleInfo> articleInfoList = articleInfoMapper.selectList(wrapper);
+        if (CollectionUtil.isEmpty(articleInfoList)) {
+            return Collections.emptyList();
+        }
+
+        return getArticleInfoVos(articleInfoList);
+    }
+
+    private List<ArticleInfoVo> getArticleInfoVos(List<ArticleInfo> articleInfoList) {
+        List<Long> userIdList = articleInfoList.stream().map(ArticleInfo::getUserId).toList();
+        List<UserInfo> useInfoList = userClient.getByIds(userIdList);
+
+        List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
+
+        for (int i = 0; i < articleInfoList.size(); i++) {
+            ArticleInfo articleInfo = articleInfoList.get(i);
+            ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfo);
+            setArticleInfoVoField(articleInfoVo, useInfoList.get(i), articleInfo.getClassify(), articleInfo.getLabel());
             articleInfoVoList.add(articleInfoVo);
         }
 

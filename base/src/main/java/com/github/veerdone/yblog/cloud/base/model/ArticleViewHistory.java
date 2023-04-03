@@ -1,24 +1,22 @@
 package com.github.veerdone.yblog.cloud.base.model;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-@TableName("yblog_article_content")
-public class ArticleContent implements Serializable {
-    private static final long serialVersionUID = 4545454545454L;
+@TableName("yblog_article_view_history")
+public class ArticleViewHistory implements Serializable {
+    private static final long serialVersionUID = 3545234325442L;
 
     private Long id;
 
-    private String content;
+    private Long articleId;
 
-    @TableField(fill = FieldFill.INSERT)
+    private Long userId;
+
     private Long createTime;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateTime;
 
     public Long getId() {
@@ -29,12 +27,20 @@ public class ArticleContent implements Serializable {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getCreateTime() {
@@ -61,20 +67,21 @@ public class ArticleContent implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ArticleContent that = (ArticleContent) o;
-        return Objects.equals(id, that.id) && Objects.equals(content, that.content) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime);
+        ArticleViewHistory that = (ArticleViewHistory) o;
+        return Objects.equals(id, that.id) && Objects.equals(articleId, that.articleId) && Objects.equals(userId, that.userId) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, createTime, updateTime);
+        return Objects.hash(id, articleId, userId, createTime, updateTime);
     }
 
     @Override
     public String toString() {
-        return "ArticleContent{" +
+        return "ArticleViewHistory{" +
                 "id=" + id +
-                ", content='" + content + '\'' +
+                ", articleId=" + articleId +
+                ", userId=" + userId +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @TableName("yblog_reply_comment")
 public class ReplyComment implements Serializable {
-    public static final Long serialVersionUID = 2323534522343L;
+    private static final long serialVersionUID = 2323534522343L;
 
     private Long id;
 

@@ -28,12 +28,16 @@ public class CommentServiceImpl implements CommentService {
 
     private final ReplyCommentService replyCommentService;
 
-    @DubboReference
     private UserClient userClient;
 
     public CommentServiceImpl(CommentMapper commentMapper, ReplyCommentService replyCommentService) {
         this.commentMapper = commentMapper;
         this.replyCommentService = replyCommentService;
+    }
+
+    @DubboReference
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @Override
@@ -74,6 +78,7 @@ public class CommentServiceImpl implements CommentService {
             commentVo.setReplyCommentList(replyCommentVoList);
             commentVoList.add(commentVo);
         }
+
         return commentVoList;
     }
 }

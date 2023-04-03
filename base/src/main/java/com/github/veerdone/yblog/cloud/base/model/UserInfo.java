@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @TableName("yblog_user_info")
 public class UserInfo implements Serializable {
-    public static final Long serialVersionUID = 5353454545345453L;
+    private static final long serialVersionUID = 5353454545345453L;
 
     private Long id;
 

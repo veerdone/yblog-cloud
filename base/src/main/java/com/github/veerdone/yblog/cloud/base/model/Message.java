@@ -2,10 +2,13 @@ package com.github.veerdone.yblog.cloud.base.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @TableName("yblog_message")
-public class Message {
+public class Message implements Serializable {
+    private static final long serialVersionUID = 4434234345452L;
+
     private Long id;
 
     private Long receiverId;

@@ -2,10 +2,13 @@ package com.github.veerdone.yblog.cloud.base.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @TableName("yblog_article_review")
-public class ArticleReview {
+public class ArticleReview implements Serializable {
+    private static final long serialVersionUID = 3243354242343534L;
+
     private Long id;
 
     private Long articleId;

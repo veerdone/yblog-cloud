@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @TableName(value = "yblog_article_info", autoResultMap = true)
 public class ArticleInfo implements Serializable {
-    private static final Long serialVersionUID = 43435345435454L;
+    private static final long serialVersionUID = 43435345435454L;
 
     private Long id;
 

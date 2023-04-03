@@ -26,10 +26,8 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
 
     private final MessageService messageService;
 
-    @DubboReference
     private ArticleClient articleClient;
 
-    @DubboReference
     private UserClient userClient;
 
     public ArticleThumbsUpHandler(ThumbsUpMapper thumbsUpMapper, RedisTemplate<String, Object> redisTemplate,
@@ -37,6 +35,16 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
         this.thumbsUpMapper = thumbsUpMapper;
         this.redisTemplate = redisTemplate;
         this.messageService = messageService;
+    }
+
+    @DubboReference
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
+    }
+
+    @DubboReference
+    public void setArticleClient(ArticleClient articleClient) {
+        this.articleClient = articleClient;
     }
 
     @Override

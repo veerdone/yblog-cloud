@@ -23,11 +23,15 @@ import java.util.stream.Collectors;
 public class ReplyCommentServiceImpl implements ReplyCommentService {
     private final ReplyCommentMapper replyCommentMapper;
 
-    @DubboReference
     private UserClient userClient;
 
     public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper) {
         this.replyCommentMapper = replyCommentMapper;
+    }
+
+    @DubboReference
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @Override

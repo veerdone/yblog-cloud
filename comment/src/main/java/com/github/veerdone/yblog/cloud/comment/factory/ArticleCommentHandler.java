@@ -25,12 +25,16 @@ public class ArticleCommentHandler implements CommentHandler {
 
     private final ReplyCommentMapper replyCommentMapper;
 
-    @DubboReference
     private ArticleClient articleClient;
 
     public ArticleCommentHandler(CommentMapper commentMapper, ReplyCommentMapper replyCommentMapper) {
         this.commentMapper = commentMapper;
         this.replyCommentMapper = replyCommentMapper;
+    }
+
+    @DubboReference
+    public void setArticleClient(ArticleClient articleClient) {
+        this.articleClient = articleClient;
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @TableName("yblog_article_label")
 public class ArticleLabel implements Serializable {
-    public static final Long serialVersionUID = 545454545424234L;
+    private static final long serialVersionUID = 545454545424234L;
 
     @TableId(type = IdType.AUTO)
     private Long id;

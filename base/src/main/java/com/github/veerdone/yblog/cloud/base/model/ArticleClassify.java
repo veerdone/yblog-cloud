@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @TableName("yblog_article_classify")
 public class ArticleClassify implements Serializable {
-    public static final Long serialVersionUID = 4345353546545L;
+    private static final long serialVersionUID = 4345353546545L;
 
     @TableId(type = IdType.AUTO)
     private Long id;

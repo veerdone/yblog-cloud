@@ -46,4 +46,6 @@ public interface ArticleInfoService {
     List<ArticleInfoVo> listArticleInfoVo(ArticleInfo articleInfo);
 
     List<ArticleInfoVo> searchArticleVo(ArticleSearchDto dto);
+
+    List<ArticleInfoVo> getByIds(List<Long> ids);
 }

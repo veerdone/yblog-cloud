@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class ArticleReviewHandler implements ReviewHandler {
@@ -29,12 +30,16 @@ public class ArticleReviewHandler implements ReviewHandler {
 
     private final MessageService messageService;
 
-    @DubboReference
     private ArticleClient articleClient;
 
     public ArticleReviewHandler(ReviewService reviewService, MessageService messageService) {
         this.reviewService = reviewService;
         this.messageService = messageService;
+    }
+
+    @DubboReference
+    public void setArticleClient(ArticleClient articleClient) {
+        this.articleClient = articleClient;
     }
 
     @Override
@@ -56,29 +61,29 @@ public class ArticleReviewHandler implements ReviewHandler {
     @Override
     public void reviewThrough(Review review) {
         ArticleInfo articleInfo = articleClient.updateStatusAndGet(review.getItemId(), StatusConstant.REVIEW_THROUGH);
-        if (Objects.nonNull(articleInfo)) {
+        Optional.ofNullable(articleInfo).ifPresent(info -> {
             Message msg = new Message();
             msg.setReceiverId(review.getUserId());
-            msg.setMsg(StrUtil.format("您的文章: {} 已通过审核!", articleInfo.getTitle()));
+            msg.setMsg(StrUtil.format("您的文章: {} 已通过审核!", info.getTitle()));
             msg.setMsgType(MessageConstant.ARTICLE);
             messageService.create(msg);
-        }
+        });
     }
 
     @Override
     public void reviewFailed(Review review) {
         ArticleInfo articleInfo = articleClient.updateStatusAndGet(review.getItemId(), StatusConstant.REVIEW_FAIL);
-        if (Objects.nonNull(articleInfo)) {
+        Optional.ofNullable(articleInfo).ifPresent(info -> {
             Message msg = new Message();
             msg.setReceiverId(review.getUserId());
             msg.setMsg(
                     StrUtil.format("您的文章: {} 未通过审核, 原因是: {}",
-                            articleInfo.getTitle(),
+                            info.getTitle(),
                             review.getFailReason())
             );
             msg.setMsgType(MessageConstant.ARTICLE);
             messageService.create(msg);
-        }
+        });
     }
 
     @Override

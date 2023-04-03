@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @TableName("yblog_user_register_log")
 public class UserRegisterLog implements Serializable {
-    private static final Long serialVersionUID = 434324324234343L;
+    private static final long serialVersionUID = 434324324234343L;
 
     private Long id;
 

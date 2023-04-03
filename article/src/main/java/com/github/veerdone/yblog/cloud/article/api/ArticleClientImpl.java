@@ -48,7 +48,7 @@ public class ArticleClientImpl implements ArticleClient {
 
     @Override
     public void incrOrDecrColumn(IncrOrDecrColumnDto dto) {
-
+        articleInfoService.updateByIncrOrDecrColumnDto(dto);
     }
 
 }
