@@ -33,6 +33,11 @@ public class ArticleDetailVo {
 
     private UserInfo userInfo;
 
+    private Boolean isLikes;
+
+    private Boolean isCollection;
+
+
     public Long getId() {
         return id;
     }
@@ -135,5 +140,13 @@ public class ArticleDetailVo {
 
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public void setLikes(Boolean likes) {
+        isLikes = likes;
+    }
+
+    public void setCollection(Boolean collection) {
+        isCollection = collection;
     }
 }

@@ -17,7 +17,7 @@
         <module>third-party</module>
         <module>common/util</module>
         <module>common/redis</module>
-        <module>common/response</module>
+        <module>common/web</module>
         <module>common/page</module>
         <module>common/constant</module>
         <module>comment</module>

@@ -1,9 +1,9 @@
-package com.github.veerdone.yblog.cloud.common.response;
+package com.github.veerdone.yblog.cloud.common.web;
 
 import com.github.pagehelper.PageInfo;
-import com.github.veerdone.yblog.cloud.common.response.result.BaseResult;
-import com.github.veerdone.yblog.cloud.common.response.result.ListResult;
-import com.github.veerdone.yblog.cloud.common.response.result.ObjectResult;
+import com.github.veerdone.yblog.cloud.common.web.result.BaseResult;
+import com.github.veerdone.yblog.cloud.common.web.result.ListResult;
+import com.github.veerdone.yblog.cloud.common.web.result.ObjectResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

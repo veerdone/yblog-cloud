@@ -5,7 +5,7 @@ import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.common.elasticsearch.ElasticUtil;
-import com.github.veerdone.yblog.cloud.common.response.result.ListResult;
+import com.github.veerdone.yblog.cloud.common.web.result.ListResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

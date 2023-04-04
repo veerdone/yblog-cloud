@@ -56,14 +56,15 @@ public class ArticleViewHistoryServiceImpl implements ArticleViewHistoryService 
     @Page
     public List<ArticleViewHistoryVo> list() {
         LambdaQueryWrapper<ArticleViewHistory> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(ArticleViewHistory::getUpdateTime);
+        wrapper.orderByDesc(ArticleViewHistory::getUpdateTime)
+                .eq(ArticleViewHistory::getDeleted, 0);
         List<ArticleViewHistory> articleViewHistoryList = articleViewHistoryMapper.selectList(wrapper);
-        List<Long> articleIdList = articleViewHistoryList.stream().map(ArticleViewHistory::getArticleId).toList();
-        List<ArticleInfoVo> articleInfoVoList = articleInfoService.getByIds(articleIdList);
-        if (CollectionUtil.isEmpty(articleInfoVoList)) {
+        if (CollectionUtil.isEmpty(articleViewHistoryList)) {
             return Collections.emptyList();
         }
 
+        List<Long> articleIdList = articleViewHistoryList.stream().map(ArticleViewHistory::getArticleId).toList();
+        List<ArticleInfoVo> articleInfoVoList = articleInfoService.getByIds(articleIdList);
         List<ArticleViewHistoryVo> articleViewHistoryVoList = new ArrayList<>(articleViewHistoryList.size());
         for (int i = 0; i < articleInfoVoList.size(); i++) {
             ArticleViewHistoryVo articleViewHistoryVo = new ArticleViewHistoryVo();

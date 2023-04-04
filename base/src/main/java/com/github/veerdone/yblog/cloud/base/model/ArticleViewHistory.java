@@ -15,6 +15,8 @@ public class ArticleViewHistory implements Serializable {
 
     private Long userId;
 
+    private Integer deleted;
+
     private Long createTime;
 
     private Long updateTime;
@@ -43,6 +45,14 @@ public class ArticleViewHistory implements Serializable {
         this.userId = userId;
     }
 
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
+    }
+
     public Long getCreateTime() {
         return createTime;
     }
@@ -68,12 +78,12 @@ public class ArticleViewHistory implements Serializable {
             return false;
         }
         ArticleViewHistory that = (ArticleViewHistory) o;
-        return Objects.equals(id, that.id) && Objects.equals(articleId, that.articleId) && Objects.equals(userId, that.userId) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime);
+        return Objects.equals(id, that.id) && Objects.equals(articleId, that.articleId) && Objects.equals(userId, that.userId) && Objects.equals(deleted, that.deleted) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleId, userId, createTime, updateTime);
+        return Objects.hash(id, articleId, userId, deleted, createTime, updateTime);
     }
 
     @Override
@@ -82,6 +92,7 @@ public class ArticleViewHistory implements Serializable {
                 "id=" + id +
                 ", articleId=" + articleId +
                 ", userId=" + userId +
+                ", deleted=" + deleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.veerdone.yblog.cloud.common.response;
+package com.github.veerdone.yblog.cloud.common.web;
 
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import org.springframework.boot.autoconfigure.web.ServerProperties;

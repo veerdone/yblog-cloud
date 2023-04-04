@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.common.response;
+package com.github.veerdone.yblog.cloud.common.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConf
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
+import javax.servlet.Filter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 @AutoConfiguration
 @Import({ExceptionController.class, ResponseAdvice.class, CustomBasicErrorController.class})
-public class ResponseAutoConfiguration {
+public class WebAutoConfiguration {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
@@ -39,5 +40,10 @@ public class ResponseAutoConfiguration {
             builder.deserializerByType(LocalDate.class,
                     new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         };
+    }
+
+    @Bean
+    public Filter currentUserFilter() {
+        return new CurrentUserFilter();
     }
 }

@@ -3,7 +3,7 @@ package com.github.veerdone.yblog.cloud.base.Dto;
 import java.io.Serializable;
 
 public class IncrOrDecrColumnDto implements Serializable {
-    private static final Long serialVersionUID = 434343242342343224L;
+    private static final long serialVersionUID = 434343242342343224L;
 
     private Long itemId;
 

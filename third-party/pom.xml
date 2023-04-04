@@ -86,7 +86,7 @@
 
         <dependency>
             <groupId>com.github.veerdone</groupId>
-            <artifactId>response</artifactId>
+            <artifactId>web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

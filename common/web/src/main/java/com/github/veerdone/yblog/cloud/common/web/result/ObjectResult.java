@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.common.response.result;
+package com.github.veerdone.yblog.cloud.common.web.result;
 
 public class ObjectResult<T> extends BaseResult {
     private T data;
