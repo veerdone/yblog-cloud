@@ -16,12 +16,12 @@ public class ArticleClassifyController {
         this.articleClassifyService = articleClassifyService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void create(@RequestBody @Validated ArticleClassify classify) {
         articleClassifyService.create(classify);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/_common")
     public List<ArticleClassify> list() {
         return articleClassifyService.list();
     }

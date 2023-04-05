@@ -35,9 +35,17 @@ public class CacheKey {
     public static final String ARTICLE_INFO_QUERY_BY_ID = "article:info:query:by:id:";
 
     /**
-     * 文章点赞 set key, key + 用户id
+     * 用户文章点赞 Set key, key + user_id
      */
-    public static final String ARTICLE_THUMBS_UP = "article:thumbs:up:";
+    public static final String USER_ARTICLE_THUMBS_UP = "user:article:thumbsUp:";
 
+    /**
+     * 用户文章收藏 Set key, key + user_id
+     */
+    public static final String USER_ARTICLE_COLLECTION = "user:article:collection:";
+
+    /**
+     * 文章内容缓存key, key + article_id
+     */
     public static final String ARTICLE_CONTENT_QUERY_BY_ID = "article:content:query:by:id:";
 }

@@ -142,11 +142,19 @@ public class ArticleDetailVo {
         this.userInfo = userInfo;
     }
 
-    public void setLikes(Boolean likes) {
-        isLikes = likes;
+    public void setIsLikes(Boolean isLikes) {
+        this.isLikes = isLikes;
     }
 
-    public void setCollection(Boolean collection) {
-        isCollection = collection;
+    public Boolean getIsLikes() {
+        return this.isLikes;
+    }
+
+    public void setIsCollection(Boolean isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Boolean getIsCollection() {
+        return this.isCollection;
     }
 }

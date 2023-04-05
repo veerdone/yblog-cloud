@@ -12,20 +12,22 @@ import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleContent;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
+import com.github.veerdone.yblog.cloud.common.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
 @Service
 public class ArticleContentServiceImpl implements ArticleContentService {
     private static final Logger log = LoggerFactory.getLogger(ArticleContentServiceImpl.class);
-
 
     private final ArticleContentMapper articleContentMapper;
 
@@ -105,7 +107,15 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         ArticleContent articleContent = this.getById(id);
         articleDetailVo.setContent(articleContent.getContent());
 
-
+        Optional.ofNullable(RequestUtil.getUserId()).ifPresent(userId -> {
+            SetOperations<String, Object> opsForSet = redisTemplate.opsForSet();
+            if (Boolean.TRUE.equals(opsForSet.isMember(CacheKey.USER_ARTICLE_THUMBS_UP + userId, id))) {
+                articleDetailVo.setIsLikes(true);
+            }
+            if (Boolean.TRUE.equals(opsForSet.isMember(CacheKey.USER_ARTICLE_COLLECTION + userId, id))) {
+                articleDetailVo.setIsCollection(true);
+            }
+        });
 
         return articleDetailVo;
     }

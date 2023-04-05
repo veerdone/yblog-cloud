@@ -53,7 +53,7 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
         if (i == 0) {
             thumbsUpMapper.insert(thumbsUp);
         }
-        redisTemplate.opsForSet().add(CacheKey.ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
+        redisTemplate.opsForSet().add(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
         // 文章点赞加1
         articleClient.incrOrDecrColumn(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", 1));
         // 用户点赞加1
@@ -75,7 +75,7 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
             thumbsUp.setStatus(1);
             thumbsUpMapper.insert(thumbsUp);
         }
-        redisTemplate.opsForSet().remove(CacheKey.ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
+        redisTemplate.opsForSet().remove(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
         articleClient.incrOrDecrColumn(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", -1));
         ArticleInfo articleInfo = articleClient.getById(thumbsUp.getItemId());
         userClient.incrOrDecrColumn(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", -1));
