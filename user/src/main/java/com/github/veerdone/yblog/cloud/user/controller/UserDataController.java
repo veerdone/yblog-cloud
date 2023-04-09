@@ -1,6 +1,7 @@
 package com.github.veerdone.yblog.cloud.user.controller;
 
 import com.github.veerdone.yblog.cloud.base.Dto.user.CreateUserDto;
+import com.github.veerdone.yblog.cloud.base.Dto.user.LoginUserDto;
 import com.github.veerdone.yblog.cloud.base.Vo.UserInfoVo;
 import com.github.veerdone.yblog.cloud.user.service.UserDataService;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +19,18 @@ public class UserDataController {
         this.userDataService = userDataService;
     }
 
-    @PostMapping("/register/_common")
+    @PostMapping("/register")
     public UserInfoVo createUser(@RequestBody @Validated CreateUserDto dto) {
         return userDataService.register(dto);
+    }
+
+    @PostMapping("/login/pass")
+    public UserInfoVo loginByPass(@RequestBody @Validated LoginUserDto dto) {
+        return userDataService.loginByPass(dto);
+    }
+
+    @PostMapping("/login/captcha")
+    public UserInfoVo loginByCaptcha(@RequestBody @Validated LoginUserDto dto) {
+        return userDataService.loginByCaptcha(dto);
     }
 }

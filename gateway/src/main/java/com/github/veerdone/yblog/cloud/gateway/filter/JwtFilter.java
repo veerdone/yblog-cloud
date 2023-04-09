@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-@Component
 public class JwtFilter implements GlobalFilter, Ordered {
     private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
 

@@ -21,7 +21,7 @@ public class ArticleClassifyController {
         articleClassifyService.create(classify);
     }
 
-    @GetMapping("/_common")
+    @GetMapping
     public List<ArticleClassify> list() {
         return articleClassifyService.list();
     }

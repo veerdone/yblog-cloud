@@ -1,19 +1,18 @@
 package com.github.veerdone.yblog.cloud.gateway;
 
+import cn.dev33.satoken.exception.SaTokenException;
 import com.github.veerdone.yblog.cloud.common.exception.BizException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.reactive.function.server.RequestPredicates;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
@@ -21,6 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(JsonExceptionHandler.class);
+
     public JsonExceptionHandler(ErrorAttributes errorAttributes,
                                 WebProperties.Resources resources,
                                 ErrorProperties errorProperties,
@@ -45,19 +46,19 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
     @Override
     protected Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         Throwable error = super.getError(request);
-        if (error instanceof BizException) {
-            BizException bizEx = (BizException) error;
-
+        if (error instanceof BizException bizEx) {
             return buildResponse(bizEx.getCode(), bizEx.getErrCode(), bizEx.getMessage());
-        } else if (error instanceof ServiceException) {
-            ServiceException serviceEx = (ServiceException) error;
-
+        } else if (error instanceof ServiceException serviceEx) {
             return buildResponse(serviceEx.getCode(), serviceEx.getErrCode(), serviceEx.getMessage());
-        } else if (error instanceof ResponseStatusException) {
-            ResponseStatusException ex = (ResponseStatusException) error;
-
+        } else if (error instanceof ResponseStatusException ex) {
             return buildResponse(ex.getStatus().value(), String.valueOf(ex.getRawStatusCode()), ex.getMessage());
+        } else if (error instanceof SaTokenException) {
+            ServiceExceptionEnum notLogin = ServiceExceptionEnum.NOT_LOGIN;
+
+            return buildResponse(notLogin.getCode(), notLogin.getErrCode(), notLogin.getMsg());
         }
+        log.warn("gateway unknown error: ", error);
+
         ServiceExceptionEnum unknownException = ServiceExceptionEnum.INNER_SERVICE_ERROR;
         return buildResponse(unknownException.getCode(), unknownException.getErrCode(), unknownException.getMsg());
     }

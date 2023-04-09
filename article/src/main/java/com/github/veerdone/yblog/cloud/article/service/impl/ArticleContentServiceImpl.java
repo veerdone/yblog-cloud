@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleContentMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleContentService;
@@ -12,7 +13,6 @@ import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleContent;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
-import com.github.veerdone.yblog.cloud.common.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -107,7 +107,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         ArticleContent articleContent = this.getById(id);
         articleDetailVo.setContent(articleContent.getContent());
 
-        Optional.ofNullable(RequestUtil.getUserId()).ifPresent(userId -> {
+        Optional.ofNullable(StpUtil.getLoginIdDefaultNull()).ifPresent(userId -> {
             SetOperations<String, Object> opsForSet = redisTemplate.opsForSet();
             if (Boolean.TRUE.equals(opsForSet.isMember(CacheKey.USER_ARTICLE_THUMBS_UP + userId, id))) {
                 articleDetailVo.setIsLikes(true);

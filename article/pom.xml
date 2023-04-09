@@ -91,6 +91,16 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis-jackson</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.veerdone</groupId>
             <artifactId>base</artifactId>
             <version>${project.parent.version}</version>
@@ -119,7 +129,6 @@
             <artifactId>elasticsearch</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>

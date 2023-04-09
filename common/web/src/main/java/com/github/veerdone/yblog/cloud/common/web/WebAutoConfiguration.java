@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConf
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-import javax.servlet.Filter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,10 +39,5 @@ public class WebAutoConfiguration {
             builder.deserializerByType(LocalDate.class,
                     new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         };
-    }
-
-    @Bean
-    public Filter currentUserFilter() {
-        return new CurrentUserFilter();
     }
 }

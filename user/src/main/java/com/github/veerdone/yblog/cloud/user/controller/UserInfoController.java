@@ -21,7 +21,7 @@ public class UserInfoController {
         userInfoService.updateById(dto);
     }
 
-    @GetMapping("/{id}/_common")
+    @GetMapping("/{id}")
     public UserInfo getById(@PathVariable("id") Long id) {
         return userInfoService.getById(id);
     }

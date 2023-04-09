@@ -1,10 +1,7 @@
 package com.github.veerdone.yblog.cloud.user.service.impl;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.user.CreateUserDto;
 import com.github.veerdone.yblog.cloud.base.Dto.user.LoginUserDto;
@@ -22,7 +19,6 @@ import com.github.veerdone.yblog.cloud.user.service.UserDataService;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +29,6 @@ import java.util.Objects;
 @Service
 public class UserDataServiceImpl implements UserDataService {
     private static final Logger log = LoggerFactory.getLogger(UserDataServiceImpl.class);
-
-    @Value("${config.jwt.key}")
-    private byte[] key;
-
-    @Value("${config.jwt.expireHour}")
-    private Integer expireHour;
 
     private final UserDataMapper userDataMapper;
 
@@ -125,17 +115,9 @@ public class UserDataServiceImpl implements UserDataService {
             userInfo = userInfoService.getById(userData.getId());
         }
         UserInfoVo userInfoVo = UserConvert.INSTANCE.toUserInfoVo(userInfo);
-
-        DateTime date = DateUtil.date();
-        String token = JWT.create()
-                .setKey(this.key)
-                .setPayload("uid", userData.getId())
-                .setPayload("role", userData.getRole())
-                .setIssuedAt(date)
-                .setNotBefore(date)
-                .setExpiresAt(date.offsetNew(DateField.HOUR, expireHour))
-                .sign();
-        userInfoVo.setToken(token);
+        StpUtil.login(userData.getId());
+        String tokenValue = StpUtil.getTokenValue();
+        userInfoVo.setToken(tokenValue);
 
         return userInfoVo;
     }

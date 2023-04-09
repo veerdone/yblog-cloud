@@ -16,12 +16,12 @@ public class ArticleLabelController {
         this.articleLabelService = articleLabelService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void create(@RequestBody @Validated ArticleLabel label) {
         articleLabelService.create(label);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public List<ArticleLabel> list(@RequestParam(value = "classify_id", required = false) Long classifyId) {
         return articleLabelService.listByClassifyId(classifyId);
     }
