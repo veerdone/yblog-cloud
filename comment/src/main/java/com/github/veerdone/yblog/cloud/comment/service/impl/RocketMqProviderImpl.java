@@ -1,9 +1,11 @@
-package com.github.veerdone.yblog.cloud.article.service.impl;
+package com.github.veerdone.yblog.cloud.comment.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.veerdone.yblog.cloud.article.service.MqProvider;
-import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
+import com.github.veerdone.yblog.cloud.base.Dto.comment.ReviewCommentDto;
+import com.github.veerdone.yblog.cloud.base.model.Comment;
+import com.github.veerdone.yblog.cloud.base.model.ReplyComment;
+import com.github.veerdone.yblog.cloud.comment.service.MqProvider;
 import com.github.veerdone.yblog.cloud.common.constant.ReviewConstant;
 import com.github.veerdone.yblog.cloud.common.constant.RocketMqConst;
 import org.apache.rocketmq.client.apis.ClientConfiguration;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class RocketMqProviderImpl implements MqProvider, InitializingBean, DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(RocketMqProviderImpl.class);
@@ -29,8 +33,6 @@ public class RocketMqProviderImpl implements MqProvider, InitializingBean, Dispo
 
     private final ObjectMapper objectMapper;
 
-    private Producer producer;
-
     public RocketMqProviderImpl(@Value("${rocketmq.endpoints}") String endpoints, @Value("${rocketmq.topic}") String topic,
                                 ObjectMapper objectMapper) {
         this.endpoints = endpoints;
@@ -38,21 +40,45 @@ public class RocketMqProviderImpl implements MqProvider, InitializingBean, Dispo
         this.objectMapper = objectMapper;
     }
 
+
+    private Producer producer;
+
     @Override
-    public void reviewArticle(ArticleInfo articleInfo) {
+    public void reviewComment(Comment comment) {
+        ReviewCommentDto dto = new ReviewCommentDto();
+        dto.setItemId(comment.getId());
+        dto.setItemType(comment.getType());
+        dto.setUserId(comment.getUserId());
+        dto.setExtra(ReviewConstant.EXTRA_COMMENT);
+
+        this.sendMessage(dto);
+    }
+
+    @Override
+    public void reviewReplyComment(ReplyComment replyComment) {
+        ReviewCommentDto dto = new ReviewCommentDto();
+        dto.setItemId(replyComment.getId());
+        dto.setItemType(replyComment.getType());
+        dto.setUserId(replyComment.getReplyUserId());
+        dto.setExtra(ReviewConstant.EXTRA_REPLY_COMMENT);
+
+        this.sendMessage(dto);
+    }
+
+    private void sendMessage(ReviewCommentDto dto) {
         try {
-            byte[] body = objectMapper.writeValueAsBytes(articleInfo);
+            byte[] body = objectMapper.writeValueAsBytes(dto);
             Message message = new MessageBuilderImpl()
                     .setTopic(topic)
                     .setTag(RocketMqConst.REVIEW_TAG)
-                    .addProperty(ReviewConstant.MQ_PROPERTIES_KEY, ReviewConstant.ARTICLE_PROPERTIES)
+                    .addProperty(ReviewConstant.MQ_PROPERTIES_KEY, ReviewConstant.COMMENT_PROPERTIES)
                     .setBody(body)
                     .build();
             producer.send(message);
         } catch (JsonProcessingException e) {
-            log.warn("parse articleInfo to json bytes fail, article id: {}, reason: ,", articleInfo.getId(), e);
+            log.warn("parse articleInfo to json bytes fail, article id: {}, reason: ,", dto.getItemId(), e);
         } catch (ClientException e) {
-            log.warn("rocketmq send article review message fail, article id: {}, reason: ", articleInfo.getId(), e);
+            log.warn("rocketmq send article review message fail, article id: {}, reason: ", dto.getItemId(), e);
         }
     }
 
@@ -69,7 +95,11 @@ public class RocketMqProviderImpl implements MqProvider, InitializingBean, Dispo
                 .build();
     }
 
+    @Override
     public void destroy() throws Exception {
-        producer.close();
+        if (Objects.nonNull(producer)) {
+            producer.close();
+        }
     }
+
 }

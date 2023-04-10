@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -46,16 +45,14 @@ public class ArticleReviewHandler implements ReviewHandler {
     public void review(MessageView messageView) throws IOException {
         ByteBuffer body = messageView.getBody();
         ArticleInfo articleInfo = ByteBufferUtil.readValue(body, ArticleInfo.class);
-        if (Objects.isNull(articleInfo)) {
-            return;
-        }
+        Optional.ofNullable(articleInfo).ifPresent(info -> {
+            Review review = new Review();
+            review.setItemId(articleInfo.getId());
+            review.setItemType(ReviewConstant.ARTICLE_TYPE);
+            review.setUserId(articleInfo.getUserId());
 
-        Review review = new Review();
-        review.setItemId(articleInfo.getId());
-        review.setItemType(ReviewConstant.ARTICLE_TYPE);
-        review.setUserId(articleInfo.getUserId());
-
-        reviewService.create(review);
+            reviewService.create(review);
+        });
     }
 
     @Override
@@ -88,6 +85,6 @@ public class ArticleReviewHandler implements ReviewHandler {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ReviewFactory.addReview(ReviewConstant.ARTICLE, this);
+        ReviewFactory.addReview(ReviewConstant.ARTICLE_PROPERTIES, this);
     }
 }

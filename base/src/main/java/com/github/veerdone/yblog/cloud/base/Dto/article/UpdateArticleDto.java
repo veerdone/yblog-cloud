@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.base.Dto.post;
+package com.github.veerdone.yblog.cloud.base.Dto.article;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

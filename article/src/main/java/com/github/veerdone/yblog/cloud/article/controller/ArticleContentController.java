@@ -1,8 +1,8 @@
 package com.github.veerdone.yblog.cloud.article.controller;
 
 import com.github.veerdone.yblog.cloud.article.service.ArticleContentService;
-import com.github.veerdone.yblog.cloud.base.Dto.post.CreateArticleDto;
-import com.github.veerdone.yblog.cloud.base.Dto.post.UpdateArticleDto;
+import com.github.veerdone.yblog.cloud.base.Dto.article.CreateArticleDto;
+import com.github.veerdone.yblog.cloud.base.Dto.article.UpdateArticleDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class ArticleContentController {
     }
 
     @PostMapping
-    public void createPost(@RequestBody @Validated CreateArticleDto dto) {
+    public void create(@RequestBody @Validated CreateArticleDto dto) {
         articleContentService.create(dto);
     }
 

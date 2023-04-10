@@ -38,6 +38,8 @@ public class ArticleInfoVo {
 
     private List<ArticleLabel> articleLabelList;
 
+    private Boolean isLike;
+
     public Long getId() {
         return id;
     }
@@ -158,41 +160,11 @@ public class ArticleInfoVo {
         this.userInfo = userInfo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ArticleInfoVo that = (ArticleInfoVo) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(views, that.views) && Objects.equals(userId, that.userId) && Objects.equals(collection, that.collection) && Objects.equals(likes, that.likes) && Objects.equals(comments, that.comments) && Objects.equals(coverPicture, that.coverPicture) && Objects.equals(createTime, that.createTime) && Objects.equals(userInfo, that.userInfo) && Objects.equals(label, that.label) && Objects.equals(classify, that.classify) && Objects.equals(articleClassify, that.articleClassify) && Objects.equals(articleLabelList, that.articleLabelList);
+    public void setIsLike(Boolean isLike) {
+        this.isLike = isLike;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, views, userId, collection, likes, comments, coverPicture, createTime, userInfo, label, classify, articleClassify, articleLabelList);
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleInfoVo{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", views=" + views +
-                ", userId=" + userId +
-                ", collection=" + collection +
-                ", likes=" + likes +
-                ", comments=" + comments +
-                ", coverPicture='" + coverPicture + '\'' +
-                ", createTime=" + createTime +
-                ", userInfo=" + userInfo +
-                ", label=" + label +
-                ", classify=" + classify +
-                ", articleClassify=" + articleClassify +
-                ", articleLabelList=" + articleLabelList +
-                '}';
+    public Boolean getIsLike() {
+        return this.isLike;
     }
 }

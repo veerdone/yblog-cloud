@@ -26,6 +26,7 @@
             <if test="title != null and title != ''">
                 and title like #{title}"%"
             </if>
+            and deleted = 1
         </where>
     </select>
 

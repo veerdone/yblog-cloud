@@ -12,7 +12,7 @@ public class TokenFilter {
     public SaReactorFilter saReactorFilter() {
         return new SaReactorFilter()
                 .addInclude("/**")
-                .addExclude("/user/info/*", "/article/classify", "/article/label", "/user/login/*")
+                .addExclude("/user/info/*", "/article/classify", "/article/label", "/user/login/*", "/article/*")
                 .setAuth(a -> StpUtil.checkLogin());
     }
 }

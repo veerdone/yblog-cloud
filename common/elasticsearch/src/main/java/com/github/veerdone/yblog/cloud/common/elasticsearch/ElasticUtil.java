@@ -23,7 +23,7 @@ public class ElasticUtil {
         return LOCAL_TOTAL.get();
     }
 
-    public static void cleanPage() {
+    public static void cleanThreadLocal() {
         LOCAL_TOTAL.remove();
     }
 

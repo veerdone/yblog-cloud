@@ -24,6 +24,8 @@ public interface ArticleInfoService {
 
     void updateByIncrOrDecrColumnDto(IncrOrDecrColumnDto dto);
 
+    void deleteById(Long id);
+
     /**
      * query userInfo by id
      * @param id user id

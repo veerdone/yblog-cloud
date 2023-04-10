@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.comment.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateReplyCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ReplyCommentVo;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
@@ -10,7 +11,9 @@ import com.github.veerdone.yblog.cloud.base.model.ReplyComment;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.comment.factory.CommentHandlerStrategyFactory;
 import com.github.veerdone.yblog.cloud.comment.mapper.ReplyCommentMapper;
+import com.github.veerdone.yblog.cloud.comment.service.MqProvider;
 import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
+import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +26,13 @@ import java.util.stream.Collectors;
 public class ReplyCommentServiceImpl implements ReplyCommentService {
     private final ReplyCommentMapper replyCommentMapper;
 
+    private final MqProvider mqProvider;
+
     private UserClient userClient;
 
-    public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper) {
+    public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper, MqProvider mqProvider) {
         this.replyCommentMapper = replyCommentMapper;
+        this.mqProvider = mqProvider;
     }
 
     @DubboReference
@@ -36,7 +42,8 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
 
     @Override
     public void create(CreateReplyCommentDto dto) {
-        CommentHandlerStrategyFactory.getHandler(dto.getType()).createReplyComment(dto);
+        ReplyComment replyComment = CommentHandlerStrategyFactory.getHandler(dto.getType()).createReplyComment(dto);
+        mqProvider.reviewReplyComment(replyComment);
     }
 
     @Override
@@ -45,6 +52,19 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
         wrapper.eq(ReplyComment::getCommentId, commentId)
                 .eq(ReplyComment::getType, type);
         replyCommentMapper.delete(wrapper);
+    }
+
+    @Override
+    public void updateStatus(Long id, Integer type, Integer status) {
+        LambdaUpdateWrapper<ReplyComment> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(ReplyComment::getId, id)
+                .eq(ReplyComment::getType, type)
+                .set(ReplyComment::getStatus, status);
+
+        replyCommentMapper.update(null, wrapper);
+        if (StatusConstant.REVIEW_THROUGH.equals(status)) {
+            CommentHandlerStrategyFactory.getHandler(type).reviewThrough(id);
+        }
     }
 
     @Override
@@ -59,17 +79,16 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
             return Collections.emptyList();
         }
 
-        List<Long> replyUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyUserId).collect(Collectors.toList());
-        List<Long> replyToUserInfoIds = replyCommentList.stream().map(ReplyComment::getReplyToUserId).collect(Collectors.toList());
-        List<UserInfo> replyUserInfoList = userClient.getByIds(replyUserInfoIds);
-        List<UserInfo> replyToUserInfoList = userClient.getByIds(replyToUserInfoIds);
+        List<Long> userIdList = replyCommentList.stream().map(ReplyComment::getReplyUserId).collect(Collectors.toList());
+        replyCommentList.stream().map(ReplyComment::getReplyToUserId).forEach(userIdList::add);
+        List<UserInfo> userInfoList = userClient.getByIds(userIdList);
 
         List<ReplyCommentVo> replyCommentVoList = new ArrayList<>();
         for (int i = 0; i < replyCommentList.size(); i++) {
             ReplyComment replyComment = replyCommentList.get(i);
             ReplyCommentVo replyCommentVo = CommentConvert.INSTANCE.toVo(replyComment);
-            replyCommentVo.setReplyUserInfo(replyUserInfoList.get(i));
-            replyCommentVo.setReplyToUserInfo(replyToUserInfoList.get(i));
+            replyCommentVo.setReplyUserInfo(userInfoList.get(i));
+            replyCommentVo.setReplyToUserInfo(userInfoList.get(i+replyCommentList.size()));
             replyCommentVoList.add(replyCommentVo);
         }
 

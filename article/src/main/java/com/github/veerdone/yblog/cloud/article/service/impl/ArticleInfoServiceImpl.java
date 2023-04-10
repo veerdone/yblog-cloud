@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -28,10 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -92,6 +90,15 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setId(id);
+        articleInfo.setDeleted(1);
+
+        articleInfoMapper.updateById(articleInfo);
+    }
+
+    @Override
     public ArticleInfo getById(Long id) {
         String cacheKey = CacheKey.ARTICLE_INFO_QUERY_BY_ID + id;
         log.debug("set article_info cache by cache_key={}", cacheKey);
@@ -123,7 +130,6 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Page
     @Override
     public List<ArticleInfoVo> listArticleInfoVo(ArticleInfo entity) {
-        entity.setStatus(1);
         List<ArticleInfo> articleInfoList = articleInfoMapper.listByEntity(entity);
         if (CollectionUtil.isEmpty(articleInfoList)) {
             return Collections.emptyList();
@@ -174,6 +180,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
             ArticleInfo articleInfo = articleInfoList.get(i);
             ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfo);
             setArticleInfoVoField(articleInfoVo, useInfoList.get(i), articleInfo.getClassify(), articleInfo.getLabel());
+            Optional.ofNullable(StpUtil.getLoginIdDefaultNull()).ifPresent(userId -> {
+                String cacheKey = CacheKey.USER_ARTICLE_THUMBS_UP + userId;
+                if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(cacheKey, articleInfo.getId()))) {
+                    articleInfoVo.setIsLike(true);
+                }
+            });
             articleInfoVoList.add(articleInfoVo);
         }
 

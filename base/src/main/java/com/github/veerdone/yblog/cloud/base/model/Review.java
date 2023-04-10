@@ -15,7 +15,7 @@ public class Review implements Serializable {
 
     private Long itemId;
 
-    private Long itemType;
+    private Integer itemType;
 
     private Long userId;
 
@@ -26,6 +26,8 @@ public class Review implements Serializable {
     private String failReason;
 
     private Integer done;
+
+    private Integer extra;
 
     @TableField(fill = FieldFill.INSERT)
     private Long createTime;
@@ -49,11 +51,11 @@ public class Review implements Serializable {
         this.itemId = itemId;
     }
 
-    public Long getItemType() {
+    public Integer getItemType() {
         return itemType;
     }
 
-    public void setItemType(Long itemType) {
+    public void setItemType(Integer itemType) {
         this.itemType = itemType;
     }
 
@@ -113,6 +115,14 @@ public class Review implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public Integer getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Integer extra) {
+        this.extra = extra;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,12 +132,12 @@ public class Review implements Serializable {
             return false;
         }
         Review review = (Review) o;
-        return Objects.equals(id, review.id) && Objects.equals(itemId, review.itemId) && Objects.equals(itemType, review.itemType) && Objects.equals(userId, review.userId) && Objects.equals(status, review.status) && Objects.equals(reviewUserId, review.reviewUserId) && Objects.equals(failReason, review.failReason) && Objects.equals(done, review.done) && Objects.equals(createTime, review.createTime) && Objects.equals(updateTime, review.updateTime);
+        return Objects.equals(id, review.id) && Objects.equals(itemId, review.itemId) && Objects.equals(itemType, review.itemType) && Objects.equals(userId, review.userId) && Objects.equals(status, review.status) && Objects.equals(reviewUserId, review.reviewUserId) && Objects.equals(failReason, review.failReason) && Objects.equals(done, review.done) && Objects.equals(extra, review.extra) && Objects.equals(createTime, review.createTime) && Objects.equals(updateTime, review.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, itemId, itemType, userId, status, reviewUserId, failReason, done, createTime, updateTime);
+        return Objects.hash(id, itemId, itemType, userId, status, reviewUserId, failReason, done, extra, createTime, updateTime);
     }
 
     @Override
@@ -141,6 +151,7 @@ public class Review implements Serializable {
                 ", reviewUserId=" + reviewUserId +
                 ", failReason='" + failReason + '\'' +
                 ", done=" + done +
+                ", extra=" + extra +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

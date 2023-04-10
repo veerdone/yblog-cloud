@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.base.Dto.post;
+package com.github.veerdone.yblog.cloud.base.Dto.article;
 
 import org.hibernate.validator.constraints.Length;
 

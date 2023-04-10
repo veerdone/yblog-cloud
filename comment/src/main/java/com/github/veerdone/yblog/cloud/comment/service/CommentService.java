@@ -9,7 +9,9 @@ import java.util.List;
 public interface CommentService {
     void create(CreateCommentDto dto);
 
-    void delete(Long itemId, Integer type);
+    void delete(Long id, Integer type);
+
+    void updateStatus(Long id, Integer type, Integer status);
 
     List<CommentVo> listByQuery(ListQueryCommentDto dto);
 }

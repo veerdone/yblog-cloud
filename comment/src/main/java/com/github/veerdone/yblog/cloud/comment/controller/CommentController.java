@@ -18,17 +18,17 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("create")
+    @PostMapping
     public void create(@RequestBody @Validated CreateCommentDto dto) {
         commentService.create(dto);
     }
 
-    @PutMapping("/delete")
-    public void delete(@RequestParam("item_id") Long itemId, @RequestParam("type") Integer type) {
+    @PutMapping("/{itemId}")
+    public void delete(@PathVariable Long itemId, @RequestParam("type") Integer type) {
         commentService.delete(itemId, type);
     }
 
-    @PostMapping("/list/query/_common")
+    @PostMapping("/list")
     public List<CommentVo> listByQuery(@RequestBody @Validated ListQueryCommentDto dto) {
         return commentService.listByQuery(dto);
     }

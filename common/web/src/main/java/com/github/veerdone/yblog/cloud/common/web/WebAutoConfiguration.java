@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 @AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 @AutoConfiguration
 @Import({ExceptionController.class, ResponseAdvice.class, CustomBasicErrorController.class})

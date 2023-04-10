@@ -2,6 +2,7 @@ package com.github.veerdone.yblog.cloud.comment.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateCommentDto;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.ListQueryCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
@@ -13,7 +14,11 @@ import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.comment.factory.CommentHandlerStrategyFactory;
 import com.github.veerdone.yblog.cloud.comment.mapper.CommentMapper;
 import com.github.veerdone.yblog.cloud.comment.service.CommentService;
+import com.github.veerdone.yblog.cloud.comment.service.MqProvider;
 import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
+import com.github.veerdone.yblog.cloud.common.constant.ReviewConstant;
+import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
+import com.github.veerdone.yblog.cloud.common.page.Page;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +33,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final ReplyCommentService replyCommentService;
 
+    private final MqProvider mqProvider;
+
     private UserClient userClient;
 
-    public CommentServiceImpl(CommentMapper commentMapper, ReplyCommentService replyCommentService) {
+    public CommentServiceImpl(CommentMapper commentMapper, ReplyCommentService replyCommentService, MqProvider mqProvider) {
         this.commentMapper = commentMapper;
         this.replyCommentService = replyCommentService;
+        this.mqProvider = mqProvider;
     }
 
     @DubboReference
@@ -42,7 +50,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void create(CreateCommentDto dto) {
-        CommentHandlerStrategyFactory.getHandler(dto.getType()).createComment(dto);
+        Comment comment = CommentHandlerStrategyFactory.getHandler(dto.getType()).createComment(dto);
+        mqProvider.reviewComment(comment);
     }
 
     @Override
@@ -56,6 +65,20 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public void updateStatus(Long id, Integer type, Integer status) {
+        LambdaUpdateWrapper<Comment> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Comment::getId, id)
+                .eq(Comment::getType, type)
+                .set(Comment::getStatus, status);
+
+        commentMapper.update(null, wrapper);
+        if (StatusConstant.REVIEW_THROUGH.equals(status)) {
+            CommentHandlerStrategyFactory.getHandler(type).reviewThrough(id);
+        }
+    }
+
+    @Override
+    @Page
     public List<CommentVo> listByQuery(ListQueryCommentDto dto) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Comment::getItemId, dto.getItemId())

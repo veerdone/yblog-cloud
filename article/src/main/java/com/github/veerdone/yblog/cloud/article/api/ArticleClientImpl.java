@@ -51,4 +51,14 @@ public class ArticleClientImpl implements ArticleClient {
         articleInfoService.updateByIncrOrDecrColumnDto(dto);
     }
 
+    @Override
+    public void updateStatusAndIncrOrDecrColumn(Long id, Integer status, IncrOrDecrColumnDto dto) {
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setId(id);
+        articleInfo.setStatus(status);
+        articleInfoService.updateById(articleInfo);
+
+        this.incrOrDecrColumn(dto);
+    }
+
 }
