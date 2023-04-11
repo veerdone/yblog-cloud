@@ -1,14 +1,16 @@
 package com.github.veerdone.yblog.cloud.interact_review.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.veerdone.yblog.cloud.base.Dto.review.UpdateReviewDto;
 import com.github.veerdone.yblog.cloud.base.model.Review;
+import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import com.github.veerdone.yblog.cloud.interact_review.factory.review.ReviewFactory;
 import com.github.veerdone.yblog.cloud.interact_review.mapper.ReviewMapper;
 import com.github.veerdone.yblog.cloud.interact_review.service.ReviewService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -32,18 +34,33 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void reviewThrough(Review review) {
-        int i = reviewMapper.updateById(review);
-        if (i > 0) {
-            ReviewFactory.getReview(String.valueOf(review.getItemType())).reviewThrough(review);
-        }
+    public void reviewThrough(UpdateReviewDto dto) {
+        Review dbReview = reviewMapper.selectById(dto.getId());
+        Optional.ofNullable(dbReview).ifPresent(review -> {
+            review.setReviewUserId(dto.getReviewUserId());
+            review.setStatus(StatusConstant.REVIEW_THROUGH);
+            review.setDone(StatusConstant.REVIEW_DONE);
+
+            int i = reviewMapper.updateById(review);
+            if (i > 0) {
+                ReviewFactory.getReview(String.valueOf(review.getItemType())).reviewThrough(review);
+            }
+        });
     }
 
     @Override
-    public void reviewFailed(Review review) {
-        int i = reviewMapper.updateById(review);
-        if (i > 0) {
-            ReviewFactory.getReview(String.valueOf(review.getItemType())).reviewFailed(review);
-        }
+    public void reviewFailed(UpdateReviewDto dto) {
+        Review dbReview = reviewMapper.selectById(dto.getId());
+        Optional.ofNullable(dbReview).ifPresent(review -> {
+            review.setReviewUserId(dto.getReviewUserId());
+            review.setFailReason(dto.getFailReason());
+            review.setStatus(StatusConstant.REVIEW_FAIL);
+            review.setDone(StatusConstant.REVIEW_DONE);
+
+            int i = reviewMapper.updateById(review);
+            if (i > 0) {
+                ReviewFactory.getReview(String.valueOf(review.getItemType())).reviewFailed(review);
+            }
+        });
     }
 }

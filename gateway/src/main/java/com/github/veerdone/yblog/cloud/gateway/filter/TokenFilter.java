@@ -6,13 +6,14 @@ import cn.dev33.satoken.stp.StpUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class TokenFilter {
     @Bean
     public SaReactorFilter saReactorFilter() {
         return new SaReactorFilter()
                 .addInclude("/**")
-                .addExclude("/user/info/*", "/article/classify", "/article/label", "/user/login/*", "/article/*")
+                .addExclude("/user/info/*", "/article/classify", "/article/label", "/user/login/*", "/article/*",
+                        "/comment", "/comment/list")
                 .setAuth(a -> StpUtil.checkLogin());
     }
 }

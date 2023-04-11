@@ -13,4 +13,6 @@ public interface ArticleClient {
     void incrOrDecrColumn(IncrOrDecrColumnDto dto);
 
     void updateStatusAndIncrOrDecrColumn(Long id, Integer status, IncrOrDecrColumnDto dto);
+
+    ArticleInfo incrOrDecrColumnAndGet(IncrOrDecrColumnDto dto);
 }

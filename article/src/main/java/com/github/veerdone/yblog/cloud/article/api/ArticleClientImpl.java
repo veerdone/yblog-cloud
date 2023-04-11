@@ -61,4 +61,11 @@ public class ArticleClientImpl implements ArticleClient {
         this.incrOrDecrColumn(dto);
     }
 
+    @Override
+    public ArticleInfo incrOrDecrColumnAndGet(IncrOrDecrColumnDto dto) {
+        this.incrOrDecrColumn(dto);
+
+        return this.getById(dto.getItemId());
+    }
+
 }

@@ -7,6 +7,11 @@ spring:
       config:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
         file-extension: yaml
+        extension-configs:
+          - data-id: interact-review-service.yaml
+            refresh: true
+          - data-id: base.yaml
+            refresh: true
   application:
     name: comment-service
 

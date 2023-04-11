@@ -11,4 +11,6 @@ public interface UserClient {
     List<UserInfo> getByIds(List<Long> ids);
 
     void incrOrDecrColumn(IncrOrDecrColumnDto dto);
+
+    UserInfo incrOrDecrColumnAndGet(IncrOrDecrColumnDto dto);
 }

@@ -49,46 +49,39 @@ public class ArticleThumbsUpHandler implements ThumbsUpHandler {
 
     @Override
     public void save(ThumbsUp thumbsUp) {
-        int i = this.tryUpdate(thumbsUp, 0);
-        if (i == 0) {
+        Long i = redisTemplate.opsForSet().add(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
+        if (i != null && i > 0L) {
+            thumbsUp.setStatus(ThumbsUpConstant.LIKE);
             thumbsUpMapper.insert(thumbsUp);
+            // 文章点赞加1
+            ArticleInfo articleInfo = articleClient.incrOrDecrColumnAndGet(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", 1));
+            // 用户点赞加1
+            UserInfo userInfo = userClient.incrOrDecrColumnAndGet(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", 1));
+
+            String msg = StrUtil.format("{} 点赞了您的文章: {}", userInfo.getUserName(), articleInfo.getTitle());
+            Message message = new Message();
+            message.setMsg(msg);
+            message.setReceiverId(articleInfo.getUserId());
+            message.setMsgType(MessageConstant.THUMBS_UP);
+            messageService.create(message);
         }
-        redisTemplate.opsForSet().add(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
-        // 文章点赞加1
-        articleClient.incrOrDecrColumn(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", 1));
-        // 用户点赞加1
-        ArticleInfo articleInfo = articleClient.getById(thumbsUp.getItemId());
-        userClient.incrOrDecrColumn(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", 1));
-        UserInfo userInfo = userClient.getById(thumbsUp.getUserId());
-        String msg = StrUtil.format("{} 点赞了您的文章: {}", userInfo.getUserName(), articleInfo.getTitle());
-        Message message = new Message();
-        message.setMsg(msg);
-        message.setReceiverId(articleInfo.getUserId());
-        message.setMsgType(MessageConstant.THUMBS_UP);
-        messageService.create(message);
     }
 
     @Override
     public void cancel(ThumbsUp thumbsUp) {
-        int i = this.tryUpdate(thumbsUp, 1);
-        if (i == 0) {
-            thumbsUp.setStatus(1);
-            thumbsUpMapper.insert(thumbsUp);
+        Long i = redisTemplate.opsForSet().remove(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
+        if (i != null && i > 0L) {
+            LambdaUpdateWrapper<ThumbsUp> wrapper = new LambdaUpdateWrapper<>(thumbsUp);
+            wrapper.set(ThumbsUp::getStatus, ThumbsUpConstant.UNLIKE);
+            thumbsUpMapper.update(null, wrapper);
+
+            ArticleInfo articleInfo = articleClient.incrOrDecrColumnAndGet(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", -1));
+            userClient.incrOrDecrColumn(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", -1));
         }
-        redisTemplate.opsForSet().remove(CacheKey.USER_ARTICLE_THUMBS_UP + thumbsUp.getUserId(), thumbsUp.getItemId());
-        articleClient.incrOrDecrColumn(new IncrOrDecrColumnDto(thumbsUp.getItemId(), "likes", -1));
-        ArticleInfo articleInfo = articleClient.getById(thumbsUp.getItemId());
-        userClient.incrOrDecrColumn(new IncrOrDecrColumnDto(articleInfo.getUserId(), "likes", -1));
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         ThumbsUpHandlerStrategyFactory.registerHandler(ThumbsUpConstant.ARTICLE, this);
-    }
-
-    private int tryUpdate(ThumbsUp thumbsUp, Integer status) {
-        LambdaUpdateWrapper<ThumbsUp> wrapper = new LambdaUpdateWrapper<>(thumbsUp);
-        wrapper.set(ThumbsUp::getStatus, status);
-        return thumbsUpMapper.update(null, wrapper);
     }
 }

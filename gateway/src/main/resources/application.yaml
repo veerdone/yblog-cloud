@@ -6,20 +6,23 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/user/**
+
         - id: article-service
           uri: lb://article-service
           predicates:
             - Path=/article/**
+
         - id: third-party
           uri: lb://third-party-service
           predicates:
             - Path=/email/**
+
         - id: comment
           uri: lb://comment-service
           predicates:
             - Path=/comment/**
+
         - id: interact-review
           uri: lb://interact-review-service
           predicates:
-            - Path=/interact/**
-            - Path=/review/**
+            - Path=/review/**,/interact/**

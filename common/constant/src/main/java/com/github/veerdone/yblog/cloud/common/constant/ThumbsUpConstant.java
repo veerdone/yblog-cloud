@@ -14,5 +14,5 @@ public class ThumbsUpConstant {
     /**
      * 文章类型
      */
-    public static final Integer ARTICLE = 1;
+    public static final Integer ARTICLE = 2;
 }

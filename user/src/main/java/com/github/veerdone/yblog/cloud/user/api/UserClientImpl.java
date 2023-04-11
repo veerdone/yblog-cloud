@@ -39,4 +39,11 @@ public class UserClientImpl implements UserClient {
     public void incrOrDecrColumn(IncrOrDecrColumnDto dto) {
         userInfoService.updateByIncrOrDecrColumnDto(dto);
     }
+
+    @Override
+    public UserInfo incrOrDecrColumnAndGet(IncrOrDecrColumnDto dto) {
+        this.incrOrDecrColumn(dto);
+
+        return this.getById(dto.getItemId());
+    }
 }
