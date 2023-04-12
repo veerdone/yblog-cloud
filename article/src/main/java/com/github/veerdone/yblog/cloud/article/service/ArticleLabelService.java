@@ -11,6 +11,8 @@ public interface ArticleLabelService {
      */
     void create(ArticleLabel articleLabel);
 
+    void updateById(ArticleLabel articleLabel);
+
     /**
      * query articleLabel by id
      * @param id articleLabel id

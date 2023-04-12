@@ -1,7 +1,7 @@
 package com.github.veerdone.yblog.cloud.comment.controller;
 
 import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateCommentDto;
-import com.github.veerdone.yblog.cloud.base.Dto.comment.ListQueryCommentDto;
+import com.github.veerdone.yblog.cloud.base.Dto.comment.QueryListCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
 import com.github.veerdone.yblog.cloud.comment.service.CommentService;
 import org.springframework.validation.annotation.Validated;
@@ -23,13 +23,13 @@ public class CommentController {
         commentService.create(dto);
     }
 
-    @PutMapping("/{itemId}")
-    public void delete(@PathVariable Long itemId, @RequestParam("type") Integer type) {
-        commentService.delete(itemId, type);
+    @PutMapping("/{id}")
+    public void delete(@PathVariable Long id, @RequestParam("type") Integer type) {
+        commentService.delete(id, type);
     }
 
     @PostMapping("/list")
-    public List<CommentVo> listByQuery(@RequestBody @Validated ListQueryCommentDto dto) {
+    public List<CommentVo> listByQuery(@RequestBody @Validated QueryListCommentDto dto) {
         return commentService.listByQuery(dto);
     }
 }

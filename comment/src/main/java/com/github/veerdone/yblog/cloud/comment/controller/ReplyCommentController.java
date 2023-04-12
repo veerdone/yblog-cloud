@@ -17,12 +17,12 @@ public class ReplyCommentController {
         this.replyCommentService = replyCommentService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void create(@RequestBody @Validated CreateReplyCommentDto dto) {
         replyCommentService.create(dto);
     }
 
-    @GetMapping("/list/_common")
+    @GetMapping
     public List<ReplyCommentVo> list(@RequestParam("item_id") Long itemId,
                                            @RequestParam("comment_id") Long commentId,
                                            @RequestParam("type") Integer type) {

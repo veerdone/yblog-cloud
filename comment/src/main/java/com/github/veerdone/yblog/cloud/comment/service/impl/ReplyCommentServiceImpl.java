@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.comment.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +54,23 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
         wrapper.eq(ReplyComment::getCommentId, commentId)
                 .eq(ReplyComment::getType, type);
         replyCommentMapper.delete(wrapper);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        long userId = StpUtil.getLoginIdAsLong();
+        Object role = StpUtil.getSession().get("role");
+
+        ReplyComment replyComment = replyCommentMapper.selectById(id);
+        if (replyComment.getReplyUserId().equals(userId) || Objects.equals(2, role)) {
+            LambdaUpdateWrapper<ReplyComment> wrapper = new LambdaUpdateWrapper<>();
+            wrapper.eq(ReplyComment::getId, id)
+                    .or()
+                    .eq(ReplyComment::getReplyCommentId, id)
+                    .set(ReplyComment::getDeleted, 1);
+
+            replyCommentMapper.update(null, wrapper);
+        }
     }
 
     @Override

@@ -28,6 +28,11 @@ public class ArticleClassifyServiceImpl implements ArticleClassifyService {
     }
 
     @Override
+    public void updateById(ArticleClassify articleClassify) {
+        articleClassifyMapper.updateById(articleClassify);
+    }
+
+    @Override
     public ArticleClassify getById(Long id) {
         String key = CacheKey.ARTICLE_CLASSIFY_QUERY_BY_ID + id;
         Object cache = redisTemplate.opsForValue().get(key);

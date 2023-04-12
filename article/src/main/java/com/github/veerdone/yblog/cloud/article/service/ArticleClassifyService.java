@@ -11,6 +11,8 @@ public interface ArticleClassifyService {
      */
     void create(ArticleClassify articleClassify);
 
+    void updateById(ArticleClassify articleClassify);
+
     /**
      * query articleClassify by id
      * @param id classify id

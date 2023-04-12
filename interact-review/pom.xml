@@ -79,11 +79,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-logback-1.x</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.veerdone</groupId>
             <artifactId>redis</artifactId>
             <version>${project.parent.version}</version>

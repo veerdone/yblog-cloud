@@ -1,10 +1,11 @@
 package com.github.veerdone.yblog.cloud.comment.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateCommentDto;
-import com.github.veerdone.yblog.cloud.base.Dto.comment.ListQueryCommentDto;
+import com.github.veerdone.yblog.cloud.base.Dto.comment.QueryListCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ReplyCommentVo;
 import com.github.veerdone.yblog.cloud.base.client.UserClient;
@@ -16,7 +17,6 @@ import com.github.veerdone.yblog.cloud.comment.mapper.CommentMapper;
 import com.github.veerdone.yblog.cloud.comment.service.CommentService;
 import com.github.veerdone.yblog.cloud.comment.service.MqProvider;
 import com.github.veerdone.yblog.cloud.comment.service.ReplyCommentService;
-import com.github.veerdone.yblog.cloud.common.constant.ReviewConstant;
 import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import com.github.veerdone.yblog.cloud.common.page.Page;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,13 +56,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void delete(Long itemId, Integer type) {
-        replyCommentService.deleteByCommentId(itemId, type);
+    public void delete(Long id, Integer type) {
+        long userId = StpUtil.getLoginIdAsLong();
+        Object role = StpUtil.getSession().get("role");
 
-        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getItemId, itemId)
-                .eq(Comment::getType, type);
-        commentMapper.delete(wrapper);
+        Comment comment = commentMapper.selectById(id);
+        if (comment.getUserId().equals(userId) || Objects.equals(role, 2)) {
+            replyCommentService.deleteByCommentId(id, type);
+            commentMapper.deleteById(id);
+        }
     }
 
     @Override
@@ -79,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Page
-    public List<CommentVo> listByQuery(ListQueryCommentDto dto) {
+    public List<CommentVo> listByQuery(QueryListCommentDto dto) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Comment::getItemId, dto.getItemId())
                 .eq(Comment::getType, dto.getType())

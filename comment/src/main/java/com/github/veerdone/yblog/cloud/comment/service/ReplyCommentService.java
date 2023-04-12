@@ -10,6 +10,8 @@ public interface ReplyCommentService {
 
     void deleteByCommentId(Long commentId, Integer type);
 
+    void deleteById(Long id);
+
     void updateStatus(Long id, Integer type, Integer status);
 
     List<ReplyCommentVo> list(Long itemId, Long commentId, Integer type);

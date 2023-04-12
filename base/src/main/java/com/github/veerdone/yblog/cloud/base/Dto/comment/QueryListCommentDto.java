@@ -5,7 +5,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class ListQueryCommentDto {
+public class QueryListCommentDto {
     @NotNull(message = "itemId 不能为空")
     @Min(0)
     @Max(Long.MAX_VALUE)

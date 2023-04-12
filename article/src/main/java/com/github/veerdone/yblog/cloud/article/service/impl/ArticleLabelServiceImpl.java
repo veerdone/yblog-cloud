@@ -33,6 +33,11 @@ public class ArticleLabelServiceImpl implements ArticleLabelService {
     }
 
     @Override
+    public void updateById(ArticleLabel articleLabel) {
+        articleLabelMapper.updateById(articleLabel);
+    }
+
+    @Override
     public ArticleLabel getById(Long id) {
         Object cache = redisTemplate.opsForHash().get(CacheKey.ARTICLE_LABEL_HASH, id);
         if (Objects.nonNull(cache)) {
