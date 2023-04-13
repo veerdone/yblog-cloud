@@ -1,6 +1,5 @@
 package com.github.veerdone.yblog.cloud.article.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.article.mapper.ArticleLabelMapper;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
@@ -11,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class ArticleLabelServiceImpl implements ArticleLabelService {
@@ -51,21 +47,8 @@ public class ArticleLabelServiceImpl implements ArticleLabelService {
 
     @Override
     public List<ArticleLabel> getByIds(List<Long> ids) {
-        Map<Object, Object> entries = redisTemplate.opsForHash().entries(CacheKey.ARTICLE_LABEL_HASH);
-        if (CollectionUtil.isNotEmpty(entries)) {
-            List<ArticleLabel> articleLabelList = new ArrayList<>(entries.size());
-            ids.forEach(id -> articleLabelList.add((ArticleLabel) entries.get(id)));
-
-            return articleLabelList;
-        }
-
-        LambdaQueryWrapper<ArticleLabel> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(ArticleLabel::getId, ids);
-
-        List<ArticleLabel> articleLabelList = articleLabelMapper.selectList(wrapper);
-        Map<Long, ArticleLabel> map = articleLabelList.stream()
-                .collect(Collectors.toMap(ArticleLabel::getId, articleLabel -> articleLabel));
-        redisTemplate.opsForHash().putAll(CacheKey.ARTICLE_LABEL_HASH, map);
+        List<ArticleLabel> articleLabelList = new ArrayList<>(ids.size());
+        ids.forEach(id -> articleLabelList.add(this.getById(id)));
 
         return articleLabelList;
     }

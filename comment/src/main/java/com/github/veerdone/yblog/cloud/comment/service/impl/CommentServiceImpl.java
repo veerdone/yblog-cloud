@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
         Object role = StpUtil.getSession().get("role");
 
         Comment comment = commentMapper.selectById(id);
-        if (comment.getUserId().equals(userId) || Objects.equals(role, 2)) {
+        if (comment.getUserId().equals(userId) || Objects.equals(2, role)) {
             replyCommentService.deleteByCommentId(id, type);
             commentMapper.deleteById(id);
         }
@@ -93,6 +93,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<Long> userIds = commentList.stream().map(Comment::getUserId).collect(Collectors.toList());
+        System.out.println(userIds.getClass());
         List<UserInfo> userInfoList = userClient.getByIds(userIds);
 
         List<CommentVo> commentVoList = new ArrayList<>();

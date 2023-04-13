@@ -82,23 +82,27 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
     @Override
     public void updateById(UpdateArticleDto dto) {
-        ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(dto);
-        transactionTemplate.executeWithoutResult(status -> {
-            articleInfoService.updateById(articleInfo);
+        long userId = StpUtil.getLoginIdAsLong();
+        ArticleInfo dbArticleInfo = articleInfoService.getById(dto.getId());
+        if (Objects.equals(dbArticleInfo.getUserId(), userId)) {
+            ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(dto);
+            transactionTemplate.executeWithoutResult(status -> {
+                articleInfoService.updateById(articleInfo);
 
-            if (StrUtil.isNotBlank(dto.getContent())) {
-                ArticleContent articleContent = new ArticleContent();
-                articleContent.setId(dto.getId());
-                articleContent.setContent(dto.getContent());
+                if (StrUtil.isNotBlank(dto.getContent())) {
+                    ArticleContent articleContent = new ArticleContent();
+                    articleContent.setId(dto.getId());
+                    articleContent.setContent(dto.getContent());
 
-                articleContentMapper.updateById(articleContent);
-            }
-        });
+                    articleContentMapper.updateById(articleContent);
+                }
+            });
 
-        mqProvider.reviewArticle(articleInfo);
-        String cacheKey = CacheKey.ARTICLE_CONTENT_QUERY_BY_ID + dto.getId();
-        log.debug("del article_content cache by cache_key={}", cacheKey);
-        redisTemplate.delete(cacheKey);
+            mqProvider.reviewArticle(articleInfo);
+            String cacheKey = CacheKey.ARTICLE_CONTENT_QUERY_BY_ID + dto.getId();
+            log.debug("del article_content cache by cache_key={}", cacheKey);
+            redisTemplate.delete(cacheKey);
+        }
     }
 
     @Override

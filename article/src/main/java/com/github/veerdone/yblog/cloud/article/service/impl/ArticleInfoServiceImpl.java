@@ -22,6 +22,9 @@ import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
+import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
+import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.common.page.Page;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
@@ -91,11 +94,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public void deleteById(Long id) {
-        ArticleInfo articleInfo = new ArticleInfo();
-        articleInfo.setId(id);
-        articleInfo.setDeleted(1);
-
-        articleInfoMapper.updateById(articleInfo);
+        long userId = StpUtil.getLoginIdAsLong();
+        ArticleInfo articleInfo = this.getById(id);
+        if (Objects.equals(articleInfo.getUserId(), userId)) {
+            articleInfo.setDeleted(1);
+            articleInfoMapper.updateById(articleInfo);
+        }
     }
 
     @Override
@@ -115,6 +119,10 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public ArticleDetailVo getArticleDetailVoById(Long id) {
         ArticleInfo articleInfo = this.getById(id);
+        if (!Objects.equals(articleInfo.getStatus(), StatusConstant.REVIEW_THROUGH) || Objects.equals(articleInfo.getDeleted(), 1)) {
+            throw new ServiceException(ServiceExceptionEnum.ARTICLE_NOT_EXIST);
+        }
+
         ArticleDetailVo articleDetailVo = ArticleConvert.INSTANCE.toArticleDetailVo(articleInfo);
 
         articleDetailVo.setArticleClassify(articleClassifyService.getById(articleInfo.getClassify()));
@@ -171,7 +179,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     private List<ArticleInfoVo> getArticleInfoVos(List<ArticleInfo> articleInfoList) {
-        List<Long> userIdList = articleInfoList.stream().map(ArticleInfo::getUserId).toList();
+        List<Long> userIdList = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
         List<UserInfo> useInfoList = userClient.getByIds(userIdList);
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());

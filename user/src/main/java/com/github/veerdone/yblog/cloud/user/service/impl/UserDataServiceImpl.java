@@ -116,6 +116,7 @@ public class UserDataServiceImpl implements UserDataService {
         }
         UserInfoVo userInfoVo = UserConvert.INSTANCE.toUserInfoVo(userInfo);
         StpUtil.login(userData.getId());
+        StpUtil.getSession().set("role", userData.getRole());
         String tokenValue = StpUtil.getTokenValue();
         userInfoVo.setToken(tokenValue);
 

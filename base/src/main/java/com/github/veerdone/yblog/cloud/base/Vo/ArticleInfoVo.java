@@ -38,7 +38,7 @@ public class ArticleInfoVo {
 
     private List<ArticleLabel> articleLabelList;
 
-    private Boolean isLike;
+    private boolean isLike;
 
     public Long getId() {
         return id;
@@ -160,11 +160,11 @@ public class ArticleInfoVo {
         this.userInfo = userInfo;
     }
 
-    public void setIsLike(Boolean isLike) {
+    public void setIsLike(boolean isLike) {
         this.isLike = isLike;
     }
 
-    public Boolean getIsLike() {
+    public boolean getIsLike() {
         return this.isLike;
     }
 }

@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.github.veerdone.yblog.cloud.article.service.ArticleClassifyService;
 import com.github.veerdone.yblog.cloud.base.Dto.article.CreateArticleClassifyDto;
 import com.github.veerdone.yblog.cloud.base.Dto.article.UpdateArticleClassifyDto;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/article/classify")
@@ -26,14 +28,20 @@ public class ArticleClassifyController {
 
     @PostMapping
     public void create(@RequestBody @Validated CreateArticleClassifyDto dto) {
-        ArticleClassify classify = ArticleConvert.INSTANCE.toArticleclassify(dto);
-        articleClassifyService.create(classify);
+        Object role = StpUtil.getSession().get("role");
+        if (Objects.equals(2, role)) {
+            ArticleClassify classify = ArticleConvert.INSTANCE.toArticleclassify(dto);
+            articleClassifyService.create(classify);
+        }
     }
 
     @PutMapping
     public void updateById(@RequestBody @Validated UpdateArticleClassifyDto dto) {
-        ArticleClassify classify = ArticleConvert.INSTANCE.toArticleClassify(dto);
-        articleClassifyService.updateById(classify);
+        Object role = StpUtil.getSession().get("role");
+        if (Objects.equals(2, role)) {
+            ArticleClassify classify = ArticleConvert.INSTANCE.toArticleClassify(dto);
+            articleClassifyService.updateById(classify);
+        }
     }
 
     @GetMapping

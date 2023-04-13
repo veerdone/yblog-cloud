@@ -1,5 +1,6 @@
 package com.github.veerdone.yblog.cloud.article.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.github.veerdone.yblog.cloud.article.service.ArticleLabelService;
 import com.github.veerdone.yblog.cloud.base.Dto.article.CreateArticleLabelDto;
 import com.github.veerdone.yblog.cloud.base.Dto.article.UpdateArticleLabelDto;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/article/label")
@@ -27,14 +29,20 @@ public class ArticleLabelController {
 
     @PostMapping
     public void create(@RequestBody @Validated CreateArticleLabelDto dto) {
-        ArticleLabel label = ArticleConvert.INSTANCE.toArticleLabel(dto);
-        articleLabelService.create(label);
+        Object role = StpUtil.getSession().get("role");
+        if (Objects.equals(2, role)) {
+            ArticleLabel label = ArticleConvert.INSTANCE.toArticleLabel(dto);
+            articleLabelService.create(label);
+        }
     }
 
     @PutMapping
     public void updateById(@RequestBody @Validated UpdateArticleLabelDto dto) {
-        ArticleLabel label = ArticleConvert.INSTANCE.toArticleLabel(dto);
-        articleLabelService.updateById(label);
+        Object role = StpUtil.getSession().get("role");
+        if (Objects.equals(2, role)) {
+            ArticleLabel label = ArticleConvert.INSTANCE.toArticleLabel(dto);
+            articleLabelService.updateById(label);
+        }
     }
 
     @GetMapping

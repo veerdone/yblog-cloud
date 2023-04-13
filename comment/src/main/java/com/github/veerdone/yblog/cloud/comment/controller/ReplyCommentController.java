@@ -22,6 +22,11 @@ public class ReplyCommentController {
         replyCommentService.create(dto);
     }
 
+    @PutMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        replyCommentService.deleteById(id);
+    }
+
     @GetMapping
     public List<ReplyCommentVo> list(@RequestParam("item_id") Long itemId,
                                            @RequestParam("comment_id") Long commentId,

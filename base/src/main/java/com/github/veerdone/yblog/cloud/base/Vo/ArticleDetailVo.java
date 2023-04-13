@@ -33,9 +33,9 @@ public class ArticleDetailVo {
 
     private UserInfo userInfo;
 
-    private Boolean isLikes;
+    private boolean isLikes;
 
-    private Boolean isCollection;
+    private boolean isCollection;
 
 
     public Long getId() {
@@ -142,19 +142,19 @@ public class ArticleDetailVo {
         this.userInfo = userInfo;
     }
 
-    public void setIsLikes(Boolean isLikes) {
+    public void setIsLikes(boolean isLikes) {
         this.isLikes = isLikes;
     }
 
-    public Boolean getIsLikes() {
+    public boolean getIsLikes() {
         return this.isLikes;
     }
 
-    public void setIsCollection(Boolean isCollection) {
+    public void setIsCollection(boolean isCollection) {
         this.isCollection = isCollection;
     }
 
-    public Boolean getIsCollection() {
+    public boolean getIsCollection() {
         return this.isCollection;
     }
 }
