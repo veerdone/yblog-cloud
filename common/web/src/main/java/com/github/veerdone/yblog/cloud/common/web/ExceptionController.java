@@ -31,7 +31,9 @@ public class ExceptionController {
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public BaseResult methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException e) {
         String message = getMessage(e);
-        return new BaseResult(100401,  message, "PARAMS_MISTAKE");
+        ServiceExceptionEnum paramMistake = ServiceExceptionEnum.PARAM_MISTAKE;
+
+        return new BaseResult(paramMistake.getCode(), message, paramMistake.getErrCode());
     }
 
     @ExceptionHandler(BizException.class)
@@ -46,9 +48,10 @@ public class ExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public BaseResult runtimeExceptionHandler(RuntimeException e) {
-        log.warn("{}", e.getClass());
         log.warn("", e);
-        return new BaseResult(10500, "系统繁忙, 请稍后再试");
+        ServiceExceptionEnum error = ServiceExceptionEnum.INNER_SERVICE_ERROR;
+
+        return new BaseResult(error.getCode(), error.getMsg(), error.getErrCode());
     }
 
     private String getMessage(Exception e) {
@@ -61,9 +64,7 @@ public class ExceptionController {
         StringBuilder builder = new StringBuilder();
         if (result != null) {
             List<FieldError> fieldErrors = result.getFieldErrors();
-            fieldErrors.forEach(fieldError -> {
-                builder.append(fieldError.getDefaultMessage()).append("!");
-            });
+            fieldErrors.forEach(fieldError -> builder.append(fieldError.getDefaultMessage()).append("!"));
         }
 
         return builder.toString();

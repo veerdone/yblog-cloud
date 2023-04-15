@@ -9,6 +9,9 @@ import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @DubboService
 @Service
 public class ArticleClientImpl implements ArticleClient {
@@ -24,6 +27,14 @@ public class ArticleClientImpl implements ArticleClient {
     @Override
     public ArticleInfo getById(Long id) {
         return articleInfoService.getById(id);
+    }
+
+    @Override
+    public List<ArticleInfo> listByIds(List<Long> ids) {
+        List<ArticleInfo> list = new ArrayList<>(ids.size());
+        ids.forEach(id -> list.add(this.getById(id)));
+
+        return list;
     }
 
     @Override

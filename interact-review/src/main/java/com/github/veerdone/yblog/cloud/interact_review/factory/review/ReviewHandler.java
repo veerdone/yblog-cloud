@@ -5,6 +5,7 @@ import org.apache.rocketmq.client.apis.message.MessageView;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ReviewHandler extends InitializingBean {
     void review(MessageView messageView) throws IOException;
@@ -12,4 +13,6 @@ public interface ReviewHandler extends InitializingBean {
     void reviewThrough(Review review);
 
     void reviewFailed(Review review);
+
+    List<Review> list(Integer type);
 }

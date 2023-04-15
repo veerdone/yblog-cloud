@@ -68,6 +68,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Comment getById(Long id) {
+        return this.commentMapper.selectById(id);
+    }
+
+    @Override
     public void updateStatus(Long id, Integer type, Integer status) {
         LambdaUpdateWrapper<Comment> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Comment::getId, id)

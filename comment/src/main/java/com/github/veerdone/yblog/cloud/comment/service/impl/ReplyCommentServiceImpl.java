@@ -74,6 +74,11 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     }
 
     @Override
+    public ReplyComment getById(Long id) {
+        return replyCommentMapper.selectById(id);
+    }
+
+    @Override
     public void updateStatus(Long id, Integer type, Integer status) {
         LambdaUpdateWrapper<ReplyComment> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(ReplyComment::getId, id)

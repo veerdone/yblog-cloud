@@ -1,6 +1,7 @@
 package com.github.veerdone.yblog.cloud.user.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
@@ -29,5 +30,12 @@ public class UserInfoController {
     @GetMapping("/{id}")
     public UserInfo getById(@PathVariable("id") Long id) {
         return userInfoService.getById(id);
+    }
+
+    @GetMapping("/byToken")
+    public UserInfo byToken() {
+        long userId = StpUtil.getLoginIdAsLong();
+
+        return userInfoService.getById(userId);
     }
 }

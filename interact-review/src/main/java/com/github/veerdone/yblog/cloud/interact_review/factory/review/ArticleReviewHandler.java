@@ -1,7 +1,11 @@
 package com.github.veerdone.yblog.cloud.interact_review.factory.review;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.veerdone.yblog.cloud.base.Vo.ArticleReviewVo;
 import com.github.veerdone.yblog.cloud.base.client.ArticleClient;
+import com.github.veerdone.yblog.cloud.base.convert.ReviewConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.Message;
 import com.github.veerdone.yblog.cloud.base.model.Review;
@@ -19,7 +23,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class ArticleReviewHandler implements ReviewHandler {
@@ -81,6 +89,29 @@ public class ArticleReviewHandler implements ReviewHandler {
             msg.setMsgType(MessageConstant.ARTICLE);
             messageService.create(msg);
         });
+    }
+
+    @Override
+    public List<Review> list(Integer type) {
+        LambdaQueryWrapper<Review> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Review::getDone, StatusConstant.REVIEW_NOT_DONE)
+                .eq(Review::getItemType, type)
+                .eq(Review::getStatus, StatusConstant.REVIEW);
+        List<Review> reviewList = reviewService.listByWrapper(wrapper);
+        if (CollectionUtil.isEmpty(reviewList)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> itemIdList = reviewList.stream().map(Review::getItemId).collect(Collectors.toList());
+        List<ArticleInfo> articleInfoList = articleClient.listByIds(itemIdList);
+        List<Review> list = new ArrayList<>(reviewList.size());
+        for (int i = 0; i < reviewList.size(); i++) {
+            ArticleReviewVo articleReviewVo = ReviewConvert.INSTANCE.toArticleReviewVo(reviewList.get(i));
+            articleReviewVo.setArticleInfo(articleInfoList.get(i));
+            list.add(articleReviewVo);
+        }
+
+        return list;
     }
 
     @Override
