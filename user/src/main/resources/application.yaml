@@ -9,6 +9,7 @@ dubbo:
     register-mode: instance
   application:
     name: user-api
+    qos-enable: false
   protocol:
     name: tri
     port: -1

@@ -13,3 +13,4 @@ dubbo:
     port: -1
   application:
     name: article-api
+    qos-enable: false

@@ -11,3 +11,5 @@ dubbo:
   protocol:
     name: tri
     port: -1
+  application:
+    qos-enable: false

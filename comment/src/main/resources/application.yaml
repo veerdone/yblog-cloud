@@ -13,3 +13,4 @@ dubbo:
     port: -1
   application:
     name: comment-api
+    qos-enable: false

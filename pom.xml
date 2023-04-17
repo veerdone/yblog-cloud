@@ -40,7 +40,7 @@
         <page-helper.version>1.4.5</page-helper.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <protobuf.version>3.19.6</protobuf.version>
-        <dubbo.version>3.2.0-beta.1</dubbo.version>
+        <dubbo.version>3.2.0</dubbo.version>
         <tencentcloud.api.version>3.1.530</tencentcloud.api.version>
         <qiniuyun.version>7.11.0</qiniuyun.version>
         <rocketmq.version>5.0.4</rocketmq.version>

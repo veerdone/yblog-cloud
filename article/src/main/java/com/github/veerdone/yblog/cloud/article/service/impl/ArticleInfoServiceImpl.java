@@ -119,7 +119,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Override
     public ArticleDetailVo getArticleDetailVoById(Long id) {
         ArticleInfo articleInfo = this.getById(id);
-        if (!Objects.equals(articleInfo.getStatus(), StatusConstant.REVIEW_THROUGH) || Objects.equals(articleInfo.getDeleted(), 1)) {
+        if (Objects.isNull(articleInfo) || !Objects.equals(articleInfo.getStatus(), StatusConstant.REVIEW_THROUGH) ||
+                Objects.equals(articleInfo.getDeleted(), 1)) {
             throw new ServiceException(ServiceExceptionEnum.ARTICLE_NOT_EXIST);
         }
 
