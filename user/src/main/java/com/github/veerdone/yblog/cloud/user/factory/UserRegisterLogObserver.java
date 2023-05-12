@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.veerdone.yblog.cloud.user.factory.user;
+package com.github.veerdone.yblog.cloud.user.factory;
 
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.base.model.UserRegisterLog;
@@ -26,10 +26,10 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 
 @Component
-public class UserRegisterLogHandler implements UserRegisterHandler {
+public class UserRegisterLogObserver implements UserRegisterObserver {
     private final UserRegisterLogService userRegisterLogService;
 
-    public UserRegisterLogHandler(UserRegisterLogService userRegisterLogService) {
+    public UserRegisterLogObserver(UserRegisterLogService userRegisterLogService) {
         this.userRegisterLogService = userRegisterLogService;
     }
 

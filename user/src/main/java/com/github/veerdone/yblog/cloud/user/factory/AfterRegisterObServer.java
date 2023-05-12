@@ -1,7 +1,7 @@
-package com.github.veerdone.yblog.cloud.user.factory.user;
+package com.github.veerdone.yblog.cloud.user.factory;
 
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 
-public interface AfterRegisterHandler {
+public interface AfterRegisterObServer {
     default void afterRegisterUser(UserInfo userInfo) {}
 }

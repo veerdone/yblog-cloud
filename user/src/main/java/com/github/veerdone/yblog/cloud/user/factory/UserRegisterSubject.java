@@ -1,4 +1,4 @@
-package com.github.veerdone.yblog.cloud.user.factory.user;
+package com.github.veerdone.yblog.cloud.user.factory;
 
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
@@ -7,10 +7,10 @@ import com.github.veerdone.yblog.cloud.common.util.async.AsyncExecutor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRegisterFactory {
-    private static final List<UserRegisterHandler> handlerList = new ArrayList<>();
+public class UserRegisterSubject {
+    private static final List<UserRegisterObserver> handlerList = new ArrayList<>();
 
-    public static void addHandler(UserRegisterHandler handler) {
+    public static void subscribe(UserRegisterObserver handler) {
         handlerList.add(handler);
     }
 

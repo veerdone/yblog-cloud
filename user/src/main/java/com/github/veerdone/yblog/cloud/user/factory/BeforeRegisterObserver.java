@@ -1,7 +1,7 @@
-package com.github.veerdone.yblog.cloud.user.factory.user;
+package com.github.veerdone.yblog.cloud.user.factory;
 
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 
-public interface BeforeRegisterHandler {
+public interface BeforeRegisterObserver {
     default void beforeRegister(UserData userData) {}
 }

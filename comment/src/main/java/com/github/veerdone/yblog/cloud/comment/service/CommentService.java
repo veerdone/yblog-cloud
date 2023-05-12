@@ -10,6 +10,7 @@ import java.util.List;
 public interface CommentService {
 
     void create(CreateCommentDto dto);
+
     void delete(Long id, Integer type);
 
     Comment getById(Long id);

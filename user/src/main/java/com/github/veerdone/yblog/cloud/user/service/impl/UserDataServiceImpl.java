@@ -13,7 +13,7 @@ import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.common.util.PassEncoderUtil;
-import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
+import com.github.veerdone.yblog.cloud.user.factory.UserRegisterSubject;
 import com.github.veerdone.yblog.cloud.user.mapper.UserDataMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserDataService;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
@@ -72,7 +72,7 @@ public class UserDataServiceImpl implements UserDataService {
         String account = String.valueOf(System.currentTimeMillis()).substring(0, 6) + RandomUtil.randomNumbers(5);
         userData.setAccount(Long.valueOf(account));
 
-        UserRegisterFactory.beforeHandler(userData);
+        UserRegisterSubject.beforeHandler(userData);
         userDataMapper.insert(userData);
 
         UserInfo result = userInfoService.register(userData);

@@ -2,7 +2,6 @@ package com.github.veerdone.yblog.cloud.user.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Dto.user.UpdateUserInfoDto;
@@ -10,7 +9,7 @@ import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.UserData;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.common.constant.CacheKey;
-import com.github.veerdone.yblog.cloud.user.factory.user.UserRegisterFactory;
+import com.github.veerdone.yblog.cloud.user.factory.UserRegisterSubject;
 import com.github.veerdone.yblog.cloud.user.mapper.UserInfoMapper;
 import com.github.veerdone.yblog.cloud.user.service.UserInfoService;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserName("用户" + RandomUtil.randomString(6));
 
         userInfoMapper.insert(userInfo);
-        UserRegisterFactory.asyncAfterHandler(userInfo);
+        UserRegisterSubject.asyncAfterHandler(userInfo);
 
         return this.getById(userInfo.getId());
     }
