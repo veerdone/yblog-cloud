@@ -15,8 +15,13 @@ import com.github.veerdone.yblog.cloud.base.Dto.ArticleSearchDto;
 import com.github.veerdone.yblog.cloud.base.Dto.IncrOrDecrColumnDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleDetailVo;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleInfoVo;
-import com.github.veerdone.yblog.cloud.base.client.UserClient;
+import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdReq;
+import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdResp;
+import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdsReq;
+import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdsResp;
+import com.github.veerdone.yblog.cloud.base.api.user.UserClientGrpc;
 import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
+import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleClassify;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.ArticleLabel;
@@ -26,13 +31,16 @@ import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceException;
 import com.github.veerdone.yblog.cloud.common.exception.ServiceExceptionEnum;
 import com.github.veerdone.yblog.cloud.common.page.Page;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -50,21 +58,17 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ElasticService elasticService;
 
-    private UserClient userClient;
+    private final UserClientGrpc.UserClientBlockingStub userClientBlockingStub;
 
     public ArticleInfoServiceImpl(ArticleInfoMapper articleInfoMapper, ArticleClassifyService articleClassifyService,
                                   ArticleLabelService articleLabelService, RedisTemplate<String, Object> redisTemplate,
-                                  ElasticService elasticService) {
+                                  ElasticService elasticService, UserClientGrpc.UserClientBlockingStub userClientBlockingStub) {
         this.articleInfoMapper = articleInfoMapper;
         this.articleClassifyService = articleClassifyService;
         this.articleLabelService = articleLabelService;
         this.redisTemplate = redisTemplate;
         this.elasticService = elasticService;
-    }
-
-    @DubboReference
-    public void setUserClient(UserClient userClient) {
-        this.userClient = userClient;
+        this.userClientBlockingStub = userClientBlockingStub;
     }
 
     @Override
@@ -130,8 +134,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         List<ArticleLabel> articleLabelList = articleLabelService.getByIds(articleInfo.getLabel());
         articleDetailVo.setArticleLabelList(articleLabelList);
 
-        UserInfo userInfo = userClient.getById(articleInfo.getUserId());
-        articleDetailVo.setUserInfo(userInfo);
+        QueryUserByIdResp queryUserByIdResp = userClientBlockingStub.queryById(QueryUserByIdReq.newBuilder().setId(articleInfo.getUserId()).build());
+        articleDetailVo.setUserInfo(UserConvert.INSTANCE.toUserInfo(queryUserByIdResp.getUserInfo()));
 
         return articleDetailVo;
     }
@@ -153,7 +157,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleDocumentDtoList.size());
         List<Long> userIds = articleDocumentDtoList.stream().map(ArticleDocumentDto::getUserId).collect(Collectors.toList());
-        List<UserInfo> userInfoList = userClient.getByIds(userIds);
+
+        QueryUserByIdsResp queryUserByIdsResp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIds).build());
+        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = queryUserByIdsResp.getUserInfosList();
+        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
+        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
 
         for (int i = 0; i < articleDocumentDtoList.size(); i++) {
             ArticleDocumentDto articleDocumentDto = articleDocumentDtoList.get(i);
@@ -180,15 +188,19 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     private List<ArticleInfoVo> getArticleInfoVos(List<ArticleInfo> articleInfoList) {
-        List<Long> userIdList = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
-        List<UserInfo> useInfoList = userClient.getByIds(userIdList);
+        List<Long> userIds = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
+
+        QueryUserByIdsResp queryUserByIdsResp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIds).build());
+        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = queryUserByIdsResp.getUserInfosList();
+        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
+        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
 
         for (int i = 0; i < articleInfoList.size(); i++) {
             ArticleInfo articleInfo = articleInfoList.get(i);
             ArticleInfoVo articleInfoVo = ArticleConvert.INSTANCE.toArticleInfoVo(articleInfo);
-            setArticleInfoVoField(articleInfoVo, useInfoList.get(i), articleInfo.getClassify(), articleInfo.getLabel());
+            setArticleInfoVoField(articleInfoVo, userInfoList.get(i), articleInfo.getClassify(), articleInfo.getLabel());
             Optional.ofNullable(StpUtil.getLoginIdDefaultNull()).ifPresent(userId -> {
                 String cacheKey = CacheKey.USER_ARTICLE_THUMBS_UP + userId;
                 if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(cacheKey, articleInfo.getId()))) {

@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+
+option java_multiple_files = true;
+option java_package = "com.github.veerdone.yblog.cloud.base.api.article";
+option java_outer_classname = "ArticleGRpcApi";
+
+import "base.proto";
+
+message ArticleInfo {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+  int32 views = 4;
+  int32 collection = 5;
+  int32 likes = 6;
+  int32 status = 7;
+  int32 comments = 8;
+  string cover_picture = 9;
+  int32 deleted = 10;
+  int64 create_time = 11;
+  int64 update_time = 12;
+  int64 user_id = 13;
+  repeated int64 label = 14;
+  int64 classify = 15;
+}
+
+message QueryArticleByIdReq {
+  int64 id = 1;
+}
+
+message QueryArticleByIdResp {
+  ArticleInfo article_info = 1;
+}
+
+message QueryArticleByIdsReq {
+  repeated int64 ids = 1;
+}
+
+message QueryArticleByIdsResp {
+  repeated ArticleInfo article_infos = 1;
+}
+
+message UpdateArticleByIdReq {
+  ArticleInfo article_info = 1;
+}
+
+message UpdateArticleByIdResp {}
+
+message UpdateStatusAndGetArticleReq {
+  int64 id = 1;
+  int32 status = 2;
+}
+
+message UpdateStatusAndGetArticleResp {
+  ArticleInfo article_info = 1;
+}
+
+message UpdateStatusAndIncrOrDecrColumnReq {
+  int64 id = 1;
+  int32 status = 2;
+  IncrOrDecrColumnReq incr_or_decr_column = 3;
+}
+
+message UpdateStatusAndIncrOrDecrColumnResp {
+}
+
+message IncrOrDecrColumnAndGetArticleResp {
+  ArticleInfo article_info = 1;
+}
+
+service ArticleClient {
+  rpc QueryArticleInfoById(QueryArticleByIdReq) returns (QueryArticleByIdResp) {}
+  rpc QueryArticleInfoByIds(QueryArticleByIdsReq) returns (QueryArticleByIdsResp) {}
+  rpc UpdateById(UpdateArticleByIdReq) returns (UpdateArticleByIdResp) {}
+  rpc UpdateStatusAndGet(UpdateStatusAndGetArticleReq) returns (UpdateStatusAndGetArticleResp) {}
+  rpc IncrOrDecrColumn(IncrOrDecrColumnReq) returns (IncrOrDecrColumnResp) {}
+  rpc UpdateStatusAndIncrOrDecrColumn(UpdateStatusAndIncrOrDecrColumnReq) returns (UpdateStatusAndIncrOrDecrColumnResp) {}
+  rpc IncrOrDecrColumnAndGet(IncrOrDecrColumnReq) returns (IncrOrDecrColumnAndGetArticleResp) {}
+}

@@ -13,4 +13,8 @@ public interface UserConvert {
     UserInfo toUserInfo(UpdateUserInfoDto dto);
 
     UserInfoVo toUserInfoVo(UserInfo userInfo);
+
+    UserInfo toUserInfo(com.github.veerdone.yblog.cloud.base.api.user.UserInfo userInfo);
+
+    com.github.veerdone.yblog.cloud.base.api.user.UserInfo toUserInfo(UserInfo userInfo);
 }

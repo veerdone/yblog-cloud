@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+
+option java_multiple_files = true;
+option java_package = "com.github.veerdone.yblog.cloud.base.api.user";
+option java_outer_classname = "UserGrpcApi";
+
+import "base.proto";
+
+message UserInfo {
+  int64 id = 1;
+  string user_name = 2;
+  int32 sex = 3;
+  string self_description = 4;
+  int32 fan = 5;
+  int32 collection = 6;
+  int32 likes = 7;
+  string avatar = 8;
+  int64 create_time = 9;
+  int64 update_time = 10;
+}
+
+message QueryUserByIdReq {
+  int64 id = 1;
+}
+
+message QueryUserByIdResp {
+  UserInfo user_info = 1;
+}
+
+message QueryUserByIdsReq {
+  repeated int64 ids = 1;
+}
+
+message QueryUserByIdsResp {
+  repeated UserInfo user_infos = 1;
+}
+
+
+message IncrOrDecrColumnAndGetUserResp {
+  UserInfo user_info = 1;
+}
+
+service UserClient {
+  rpc QueryById(QueryUserByIdReq) returns (QueryUserByIdResp) {}
+  rpc QueryByIds(QueryUserByIdsReq) returns (QueryUserByIdsResp) {}
+  rpc IncrOrDecrColumn(IncrOrDecrColumnReq) returns (IncrOrDecrColumnResp) {}
+  rpc IncrOrDecrColumnAndGet(IncrOrDecrColumnReq) returns (IncrOrDecrColumnAndGetUserResp) {}
+}

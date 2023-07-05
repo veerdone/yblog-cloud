@@ -4,14 +4,16 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.ReviewCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.CommentReviewVo;
-import com.github.veerdone.yblog.cloud.base.client.CommentClient;
+import com.github.veerdone.yblog.cloud.base.api.comment.CommentClientGrpc;
+import com.github.veerdone.yblog.cloud.base.api.comment.ListCommentContentByIdExtraMapReq;
+import com.github.veerdone.yblog.cloud.base.api.comment.ListCommentContentByIdExtraMapResp;
+import com.github.veerdone.yblog.cloud.base.api.comment.UpdateCommentStatusReq;
 import com.github.veerdone.yblog.cloud.base.convert.ReviewConvert;
 import com.github.veerdone.yblog.cloud.base.model.Review;
 import com.github.veerdone.yblog.cloud.common.constant.ReviewConstant;
 import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import com.github.veerdone.yblog.cloud.common.util.ByteBufferUtil;
 import com.github.veerdone.yblog.cloud.interact_review.service.ReviewService;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.rocketmq.client.apis.message.MessageView;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +30,10 @@ import java.util.Optional;
 public class CommentReviewHandler implements ReviewHandler {
     private final ReviewService reviewService;
 
-    private CommentClient commentClient;
+    private CommentClientGrpc.CommentClientBlockingStub commentClientBlockingStub;
 
     public CommentReviewHandler(ReviewService reviewService) {
         this.reviewService = reviewService;
-    }
-
-    @DubboReference
-    public void setCommentClient(CommentClient commentClient) {
-        this.commentClient = commentClient;
     }
 
     @Override
@@ -56,12 +53,24 @@ public class CommentReviewHandler implements ReviewHandler {
 
     @Override
     public void reviewThrough(Review review) {
-        commentClient.updateStatus(review.getItemId(), review.getItemType(), review.getStatus(), review.getExtra());
+        UpdateCommentStatusReq req = UpdateCommentStatusReq.newBuilder()
+                .setCommentType(review.getItemType())
+                .setExtra(review.getExtra())
+                .setId(review.getItemId())
+                .setStatus(review.getStatus())
+                .build();
+        commentClientBlockingStub.updateStatus(req);
     }
 
     @Override
     public void reviewFailed(Review review) {
-        commentClient.updateStatus(review.getItemId(), review.getItemType(), review.getStatus(), review.getExtra());
+        UpdateCommentStatusReq req = UpdateCommentStatusReq.newBuilder()
+                .setCommentType(review.getItemType())
+                .setExtra(review.getExtra())
+                .setId(review.getItemId())
+                .setStatus(review.getStatus())
+                .build();
+        commentClientBlockingStub.updateStatus(req);
     }
 
     @Override
@@ -77,7 +86,9 @@ public class CommentReviewHandler implements ReviewHandler {
 
         Map<Long, Integer> idExtraMap = new HashMap<>(reviewList.size());
         reviewList.forEach(review -> idExtraMap.put(review.getItemId(), review.getExtra()));
-        List<String> commentContentList = commentClient.listCommentContentByIdExtraMap(idExtraMap);
+        ListCommentContentByIdExtraMapReq req = ListCommentContentByIdExtraMapReq.newBuilder().putAllIdExtraMap(idExtraMap).build();
+        ListCommentContentByIdExtraMapResp resp = commentClientBlockingStub.listCommentContentByIdExtraMap(req);
+        List<String> commentContentList = resp.getCommentContentsList();
 
         List<Review> list = new ArrayList<>(reviewList.size());
         for (int i = 0; i < reviewList.size(); i++) {

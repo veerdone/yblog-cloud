@@ -4,7 +4,11 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.veerdone.yblog.cloud.base.Vo.ArticleReviewVo;
-import com.github.veerdone.yblog.cloud.base.client.ArticleClient;
+import com.github.veerdone.yblog.cloud.base.api.article.ArticleClientGrpc;
+import com.github.veerdone.yblog.cloud.base.api.article.QueryArticleByIdsReq;
+import com.github.veerdone.yblog.cloud.base.api.article.UpdateStatusAndGetArticleReq;
+import com.github.veerdone.yblog.cloud.base.api.article.UpdateStatusAndGetArticleResp;
+import com.github.veerdone.yblog.cloud.base.convert.ArticleConvert;
 import com.github.veerdone.yblog.cloud.base.convert.ReviewConvert;
 import com.github.veerdone.yblog.cloud.base.model.ArticleInfo;
 import com.github.veerdone.yblog.cloud.base.model.Message;
@@ -15,7 +19,6 @@ import com.github.veerdone.yblog.cloud.common.constant.StatusConstant;
 import com.github.veerdone.yblog.cloud.common.util.ByteBufferUtil;
 import com.github.veerdone.yblog.cloud.interact_review.service.MessageService;
 import com.github.veerdone.yblog.cloud.interact_review.service.ReviewService;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.rocketmq.client.apis.message.MessageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,16 +40,13 @@ public class ArticleReviewHandler implements ReviewHandler {
 
     private final MessageService messageService;
 
-    private ArticleClient articleClient;
+    private final ArticleClientGrpc.ArticleClientBlockingStub articleClientBlockingStub;
 
-    public ArticleReviewHandler(ReviewService reviewService, MessageService messageService) {
+    public ArticleReviewHandler(ReviewService reviewService, MessageService messageService,
+                                ArticleClientGrpc.ArticleClientBlockingStub articleClientBlockingStub) {
         this.reviewService = reviewService;
         this.messageService = messageService;
-    }
-
-    @DubboReference
-    public void setArticleClient(ArticleClient articleClient) {
-        this.articleClient = articleClient;
+        this.articleClientBlockingStub = articleClientBlockingStub;
     }
 
     @Override
@@ -65,7 +65,12 @@ public class ArticleReviewHandler implements ReviewHandler {
 
     @Override
     public void reviewThrough(Review review) {
-        ArticleInfo articleInfo = articleClient.updateStatusAndGet(review.getItemId(), StatusConstant.REVIEW_THROUGH);
+        UpdateStatusAndGetArticleReq req = UpdateStatusAndGetArticleReq.newBuilder()
+                .setId(review.getItemId())
+                .setStatus(StatusConstant.REVIEW_THROUGH)
+                .build();
+        UpdateStatusAndGetArticleResp resp = articleClientBlockingStub.updateStatusAndGet(req);
+        ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(resp.getArticleInfo());
         Optional.ofNullable(articleInfo).ifPresent(info -> {
             Message msg = new Message();
             msg.setReceiverId(review.getUserId());
@@ -77,7 +82,13 @@ public class ArticleReviewHandler implements ReviewHandler {
 
     @Override
     public void reviewFailed(Review review) {
-        ArticleInfo articleInfo = articleClient.updateStatusAndGet(review.getItemId(), StatusConstant.REVIEW_FAIL);
+        UpdateStatusAndGetArticleReq req = UpdateStatusAndGetArticleReq.newBuilder()
+                .setId(review.getItemId())
+                .setStatus(StatusConstant.REVIEW_THROUGH)
+                .build();
+        UpdateStatusAndGetArticleResp resp = articleClientBlockingStub.updateStatusAndGet(req);
+        ArticleInfo articleInfo = ArticleConvert.INSTANCE.toArticleInfo(resp.getArticleInfo());
+
         Optional.ofNullable(articleInfo).ifPresent(info -> {
             Message msg = new Message();
             msg.setReceiverId(review.getUserId());
@@ -103,7 +114,13 @@ public class ArticleReviewHandler implements ReviewHandler {
         }
 
         List<Long> itemIdList = reviewList.stream().map(Review::getItemId).collect(Collectors.toList());
-        List<ArticleInfo> articleInfoList = articleClient.listByIds(itemIdList);
+        QueryArticleByIdsReq req = QueryArticleByIdsReq.newBuilder()
+                .addAllIds(itemIdList)
+                .build();
+        List<com.github.veerdone.yblog.cloud.base.api.article.ArticleInfo> respArticleInfoList = articleClientBlockingStub.queryArticleInfoByIds(req).getArticleInfosList();
+        List<ArticleInfo> articleInfoList = new ArrayList<>(respArticleInfoList.size());
+        respArticleInfoList.forEach(articleInfo -> articleInfoList.add(ArticleConvert.INSTANCE.toArticleInfo(articleInfo)));
+
         List<Review> list = new ArrayList<>(reviewList.size());
         for (int i = 0; i < reviewList.size(); i++) {
             ArticleReviewVo articleReviewVo = ReviewConvert.INSTANCE.toArticleReviewVo(reviewList.get(i));

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+
+option java_multiple_files = true;
+option java_package = "com.github.veerdone.yblog.cloud.base.api.comment";
+option java_outer_classname = "CommentGRpcApi";
+
+import "base.proto";
+
+message UpdateCommentStatusReq {
+  int64 id = 1;
+  int32 commentType = 2;
+  int32 status = 3;
+  int32 extra = 4;
+}
+
+message UpdateCommentStatusResp {}
+
+message ListCommentContentByIdExtraMapReq {
+  map<int64, int32> idExtraMap = 1;
+}
+
+message ListCommentContentByIdExtraMapResp {
+  repeated string comment_contents = 1;
+}
+
+service CommentClient {
+  rpc UpdateStatus(UpdateCommentStatusReq) returns (UpdateCommentStatusResp) {}
+  rpc ListCommentContentByIdExtraMap(ListCommentContentByIdExtraMapReq) returns (ListCommentContentByIdExtraMapResp) {}
+}

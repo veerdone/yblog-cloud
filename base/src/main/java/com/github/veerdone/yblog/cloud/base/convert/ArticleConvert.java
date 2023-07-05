@@ -25,6 +25,8 @@ public interface ArticleConvert {
 
     ArticleInfo toArticleInfo(QueryArticleInfoDto dto);
 
+    ArticleInfo toArticleInfo(com.github.veerdone.yblog.cloud.base.api.article.ArticleInfo articleInfo);
+
     ArticleViewHistory toArticleViewHistory(CreateArticleViewHistoryDto dto);
 
     ArticleDetailVo toArticleDetailVo(ArticleInfo articleInfo);
@@ -38,4 +40,6 @@ public interface ArticleConvert {
     ArticleLabel toArticleLabel(CreateArticleLabelDto dto);
 
     ArticleLabel toArticleLabel(UpdateArticleLabelDto dto);
+
+    com.github.veerdone.yblog.cloud.base.api.article.ArticleInfo toArticle(ArticleInfo articleInfo);
 }

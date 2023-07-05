@@ -5,7 +5,7 @@ spring:
     name: interact-review-service
   cloud:
     nacos:
-      server-addr: 192.168.2.10:8888
+      server-addr: localhost:8848
       discovery:
         namespace: 4238579d-355d-4a8f-907c-7da94b094dd4
       config:
@@ -16,3 +16,12 @@ spring:
             refresh: true
           - data-id: base.yaml
             refresh: true
+
+grpc:
+  client:
+    user-service:
+      address: 'discovery:///user-service'
+      negotiation-type: plaintext
+    article-service:
+      address: 'discovery:///article-service'
+      negotiation-type: plaintext
