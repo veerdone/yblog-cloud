@@ -6,11 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.veerdone.yblog.cloud.base.Dto.comment.CreateReplyCommentDto;
 import com.github.veerdone.yblog.cloud.base.Vo.ReplyCommentVo;
-import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdsReq;
-import com.github.veerdone.yblog.cloud.base.api.user.QueryUserByIdsResp;
 import com.github.veerdone.yblog.cloud.base.api.user.UserClientGrpc;
 import com.github.veerdone.yblog.cloud.base.convert.CommentConvert;
-import com.github.veerdone.yblog.cloud.base.convert.UserConvert;
 import com.github.veerdone.yblog.cloud.base.model.ReplyComment;
 import com.github.veerdone.yblog.cloud.base.model.UserInfo;
 import com.github.veerdone.yblog.cloud.comment.factory.CommentHandlerStrategyFactory;
@@ -32,11 +29,12 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
 
     private final MqProvider mqProvider;
 
-    private UserClientGrpc.UserClientBlockingStub userClientBlockingStub;
+    private final UserClientGrpc.UserClientBlockingStub userClientBlockingStub;
 
-    public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper, MqProvider mqProvider) {
+    public ReplyCommentServiceImpl(ReplyCommentMapper replyCommentMapper, MqProvider mqProvider, UserClientGrpc.UserClientBlockingStub userClientBlockingStub) {
         this.replyCommentMapper = replyCommentMapper;
         this.mqProvider = mqProvider;
+        this.userClientBlockingStub = userClientBlockingStub;
     }
 
     @Override
@@ -102,11 +100,7 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
 
         List<Long> userIdList = replyCommentList.stream().map(ReplyComment::getReplyUserId).collect(Collectors.toList());
         replyCommentList.stream().map(ReplyComment::getReplyToUserId).forEach(userIdList::add);
-
-        QueryUserByIdsResp resp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIdList).build());
-        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = resp.getUserInfosList();
-        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
-        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
+        List<UserInfo> userInfoList = CommonUtil.queryUserInfoByUserIds(userIdList, userClientBlockingStub);
 
         List<ReplyCommentVo> replyCommentVoList = new ArrayList<>();
         for (int i = 0; i < replyCommentList.size(); i++) {

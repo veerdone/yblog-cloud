@@ -157,11 +157,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleDocumentDtoList.size());
         List<Long> userIds = articleDocumentDtoList.stream().map(ArticleDocumentDto::getUserId).collect(Collectors.toList());
-
-        QueryUserByIdsResp queryUserByIdsResp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIds).build());
-        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = queryUserByIdsResp.getUserInfosList();
-        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
-        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
+        List<UserInfo> userInfoList = this.queryUserInfoByUserIds(userIds);
 
         for (int i = 0; i < articleDocumentDtoList.size(); i++) {
             ArticleDocumentDto articleDocumentDto = articleDocumentDtoList.get(i);
@@ -189,11 +185,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private List<ArticleInfoVo> getArticleInfoVos(List<ArticleInfo> articleInfoList) {
         List<Long> userIds = articleInfoList.stream().map(ArticleInfo::getUserId).collect(Collectors.toList());
-
-        QueryUserByIdsResp queryUserByIdsResp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIds).build());
-        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = queryUserByIdsResp.getUserInfosList();
-        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
-        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
+        List<UserInfo> userInfoList = this.queryUserInfoByUserIds(userIds);
 
         List<ArticleInfoVo> articleInfoVoList = new ArrayList<>(articleInfoList.size());
 
@@ -211,6 +203,15 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         }
 
         return articleInfoVoList;
+    }
+
+    private List<UserInfo> queryUserInfoByUserIds(List<Long> userIds) {
+        QueryUserByIdsResp queryUserByIdsResp = userClientBlockingStub.queryByIds(QueryUserByIdsReq.newBuilder().addAllIds(userIds).build());
+        List<com.github.veerdone.yblog.cloud.base.api.user.UserInfo> respUserInfosList = queryUserByIdsResp.getUserInfosList();
+        List<UserInfo> userInfoList = new ArrayList<>(respUserInfosList.size());
+        respUserInfosList.forEach(userInfo -> userInfoList.add(UserConvert.INSTANCE.toUserInfo(userInfo)));
+
+        return userInfoList;
     }
 
     private void setArticleInfoVoField(ArticleInfoVo articleInfoVo, UserInfo userInfo, Long classifyId, List<Long> labelIdList) {
